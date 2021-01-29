@@ -43,4 +43,4 @@ Now that we have everything installed lets start building our first playbook.
 
 ### Lab Pod Diagram
 
-[![Lab Pod diagram](https://github.com/TwistByrn/Ansible_Workshop/blob/main/images/Ansible-WorkShop.png)
+[Lab Pod diagram](https://github.com/TwistByrn/Ansible_Workshop/blob/main/images/Ansible-WorkShop.png)
