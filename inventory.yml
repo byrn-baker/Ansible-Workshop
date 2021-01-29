@@ -1,0 +1,15 @@
+---
+all:
+  children:
+    podx:
+      children:
+        routers:
+          hosts:
+            podxr1:
+        switches:
+          hosts:
+            podxsw1
+            podxsw2
+            podxsw3
+          
+              
