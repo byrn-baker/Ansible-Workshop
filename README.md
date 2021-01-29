@@ -1,38 +1,41 @@
 # Ansible_Workshop
+## Section 1: Install Python3, pip3 and Ansible
+Open the terminal window. type pwd in the terminal and it should be showing you your home directory (/home/lab_user1) for example.
+In the terminal window type the below commands one at a time.
 ```
-#### LAB POD1 NODES ####
-192.168.4.17 POD1R1
-192.168.4.18 POD1SW1
-192.168.4.19 POD1SW2
-192.168.4.20 POD1SW3
-
-#### LAB POD2 NODES ####
-192.168.4.21 POD2R1
-192.168.4.22 POD2SW1
-192.168.4.23 POD2SW2
-192.168.4.24 POD2SW3
-
-#### LAB POD3 NODES ####
-192.168.4.51 POD3R1
-192.168.4.52 POD3SW1
-192.168.4.53 POD3SW2
-192.168.4.54 POD3SW3
-
-#### LAB POD4 NODES ####
-192.168.4.55 POD4R1
-192.168.4.56 POD4SW1
-192.168.4.57 POD4SW2
-192.168.4.58 POD4SW3
-
-#### LAB POD5 NODES ####
-192.168.4.59 POD5R1
-192.168.4.60 POD5SW1
-192.168.4.61 POD5SW2
-192.168.4.62 POD5SW3
-
-#### LAB POD6 NODES ####
-192.168.4.63 POD6R1
-192.168.4.64 POD6SW1
-192.168.4.65 POD6SW2
-192.168.4.66 POD6SW3
+mkdir Ansible_workshop && cd Ansible_workshop
+apt update
+apt install software-properties-common
+apt install python3-pip
 ```
+Now we will create a new python virtual environment
+```
+python3 -m venv .venv
+```
+Activate the virtual environment
+```
+source .venv/bin/activate
+```
+Now that we are inside the python environment we can install packages here that will not affect our system python environment. This allows you to use different versions of ansible or other python packages that can potentially conflict. This also helps make your Ansible playbooks portable.
+
+Create a text file using your terminal and name it requirements.txt we will use this to install the required python packages.
+```
+nano requirements.txt
+```
+Paste in the following text. 
+```
+ansible
+napalm-ansible
+```
+Now run the below command in terminal to install the packages
+```
+pip3 install -r requirements.txt
+```
+Now that we have ansible installed we need to add a module that will help us connect and configure our topolgy
+```
+ansible-galaxy collection install cisco.ios
+```
+
+## Section 2: Lets build our first playbook
+Now that we have everything installed lets start building our first playbook.
+
