@@ -7,7 +7,7 @@ mkdir Ansible_workshop && cd Ansible_workshop
 apt update
 apt install software-properties-common
 apt install python3-pip
-install python3-venv
+apt install python3-venv
 ```
 Now we will create a new python virtual environment
 ```
