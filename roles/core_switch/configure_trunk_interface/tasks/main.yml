@@ -1,0 +1,31 @@
+---
+- name: Add new vlan to vlan database on {{ inventory_hostname }}
+  cisco.ios.ios_config:
+    lines:
+      - vlan {{hostvars['localhost']['access_vlan']}}
+
+- name: Name the new vlan in the database on {{ inventory_hostname }}
+  cisco.ios.ios_config:
+    lines:
+      - name {{hostvars['localhost']['vlan_name']}}
+    parents: vlan {{hostvars['localhost']['access_vlan']}}
+
+- name: configuring south bound trunk interface on {{ inventory_hostname }}
+  cisco.ios.ios_config:
+    lines:
+    - switchport trunk allowed vlan add {{hostvars['localhost']['access_vlan']}}
+    - switchport trunk encapsulation dot1q
+    - switchport mode trunk
+    parents: interface {{ south_trunk_port }}
+
+# - name: configuring south bound trunk interface on {{ inventory_hostname }}
+#   cisco.ios.ios_config:
+#     lines:
+#     - switchport trunk allowed vlan add {{hostvars['localhost']['access_vlan']}}
+#     - switchport trunk encapsulation dot1q
+#     - switchport mode trunk
+#     parents: interface {{ north_trunk_port }}
+
+- name: Save the switch running config on {{ inventory_hostname }}
+  ios_config:
+    save_when: always

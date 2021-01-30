@@ -1,15 +1,36 @@
 ---
 all:
   children:
-    podx:
+    pod1:
       children:
         routers:
           hosts:
-            podxr1:
-        switches:
+            pod1r1:
+              ansible_host: 192.168.4.17
+              ansible_network_os: ios
+          vars:
+            ansible_ssh_pass: Labuser!23
+            ansible_user: pod1
+            ansible_network_os: ios              
+        core_switches:
           hosts:
-            podxsw1
-            podxsw2
-            podxsw3
+            pod1sw1:
+              ansible_host: 192.168.4.18
+              ansible_network_os: ios
+            pod1sw2:
+              ansible_host: 192.168.4.19
+              ansible_network_os: ios
+          vars:
+            ansible_ssh_pass: Labuser!23
+            ansible_user: pod1
+            ansible_network_os: ios
+        access_switches:
+          hosts:
+            pod1sw3:
+              ansible_host: 192.168.4.20
+          vars:
+            ansible_ssh_pass: Labuser!23
+            ansible_user: pod1
+            ansible_network_os: ios
           
               

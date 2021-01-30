@@ -1,0 +1,16 @@
+#jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
+{#- ---------------------------------------------------------------------------------- #}
+{# configuration.interfaces                                                            #}
+{# ---------------------------------------------------------------------------------- -#}
+{% if configuration.interfaces is defined %}
+{% for interface in configuration.interfaces %}
+interface {{ interface.name }}
+    {% if interface.description is defined %}
+    description {{ interface.description }}
+    {% endif %}
+    switchport mode {{ interface.interface_mode }}
+    switchport access vlan {{ interface.vlan.members }}
+    no cdp enable
+    no shut
+{% endfor %}
+{% endif %}

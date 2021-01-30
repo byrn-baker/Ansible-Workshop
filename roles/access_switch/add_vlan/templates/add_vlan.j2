@@ -1,0 +1,14 @@
+#jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
+{#- ---------------------------------------------------------------------------------- #}
+{# configuration.vlans                                                                 #}
+{# ---------------------------------------------------------------------------------- -#}
+{% if configuration.vlans is defined %}
+{% if configuration.vlans.vlan is not mapping and configuration.vlans.vlan is not string %}
+{% for vlan in configuration.vlans.vlan %}
+vlan {{ vlan.vlan_id }}
+    {% if vlan.name is defined %}
+    name {{ vlan.name }}
+    {% endif %}
+{% endfor %}
+{% endif %}
+{% endif %}

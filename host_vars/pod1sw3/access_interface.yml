@@ -1,0 +1,20 @@
+---
+configuration:
+  interfaces:
+    - name: Gi0/3
+      description: "USERS"
+      interface_mode: access
+      vlan:
+        members: "300"
+
+    - name: Gi1/0
+      description: "SERVERS"
+      interface_mode: access
+      vlan:
+        members: "350"
+
+    - name: Gi1/1
+      description: "GUEST"
+      interface_mode: access
+      vlan:
+        members: "400"

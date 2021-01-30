@@ -37,6 +37,16 @@ Now that we have ansible installed we need to add a module that will help us con
 ansible-galaxy collection install cisco.ios
 ```
 
-## Section 2: Lets build our first playbook
-Now that we have everything installed lets start building our first playbook.
+## Section 2: Building a playbook
+Building an inventory file
 
+Playbooks to fetch node data
+
+Playbooks to configure vlans
+
+Playbooks to configure interfaces
+
+
+### Lab Pod Diagram
+
+![Lab Pod diagram](https://github.com/TwistByrn/Ansible_Workshop/blob/main/images/Ansible-WorkShop.png)

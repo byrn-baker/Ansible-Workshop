@@ -1,0 +1,15 @@
+---
+- name: Add new vlan to vlan database on {{ inventory_hostname }}
+  cisco.ios.ios_config:
+    src: add_vlan.j2
+
+- name: Get Data From Device
+  ios_command:
+    commands: 
+      - "show vlan"
+  register: ios_output
+
+- name: Print Structured Data
+  debug:
+    msg: "{{ ios_output['stdout'][0] | clay584.genie.parse_genie(command='show vlan', os='ios')  }}"
+  delegate_to: localhost

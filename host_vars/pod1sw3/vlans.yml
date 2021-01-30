@@ -1,0 +1,12 @@
+---
+configuration:
+  vlans:
+    vlan:
+      - name: "USERS"
+        vlan_id: "300"
+
+      - name: "SERVERS"
+        vlan_id: "350"
+
+      - name: "GUEST"
+        vlan_id: "400"

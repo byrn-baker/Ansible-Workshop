@@ -1,0 +1,8 @@
+- name: Adding a vlan
+  hosts: pod1sw3
+  gather_facts: false
+  connection: network_cli
+  
+  roles:
+    - { role: access_switch/add_vlan }
+    - { role: access_switch/add_access_interface }
