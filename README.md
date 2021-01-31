@@ -26,7 +26,6 @@ nano requirements.txt
 Paste in the following text. 
 ```
 ansible
-napalm-ansible
 ```
 Now run the below command in terminal to install the packages
 ```
@@ -37,16 +36,28 @@ Now that we have ansible installed we need to add a module that will help us con
 ansible-galaxy collection install cisco.ios
 ```
 
-## Section 2: Building a playbook
-Building an inventory file
-
-Playbooks to fetch node data
-
-Playbooks to configure vlans
-
-Playbooks to configure interfaces
-
-
+## Section 2: Building playbooks
+Our task is to build out a set of playbooks that will deploy a full office with following configuration:
+1. (1) Access switch
+        a. Access ports for Users, Servers, and Guests
+        b. Layer 2 trunk to the core switches
+2. (2) Core switches
+        a. Layer 2 trunk ports to the access switch
+        b. Layer 2 port channel between both core switches
+        c. SVIs for the Users, Servers, and Guest vlans
+            1. VRRP protocol for redunancy
+        d. Layer 3 P2P interfaces as UPLINKS to the router
+        e. Loopback0 interface to facilitate iBGP protocol
+        f. OSPF protocol to facilitate iBGP protocol
+        g. iBGP protocol to advertise Users, Servers, and Guest subnets to the router
+3.  (1) Router
+        a. Layer 3 P2P interfaces as DOWNLINKS to the core switches
+        b. Loopback0 interface to facilitate iBGP protocol
+        c. OSPF protocol to facilitate iBGP protocol
+        d. iBGP protocol to receive advertised Users, Servers, and Guest subnets from the core switches
+        e. eBGP protocol to advertise Users, Servers, and Guest subnets to the ISP and receive a default route from the ISP
+        f. DHCP server for Users, Servers, and Guest subnets
+The Lab diagram below consists of the IP addressing for each POD. The (x) will be replaced with the POD number you are using. 
 ### Lab Pod Diagram
 
 ![Lab Pod diagram](https://github.com/TwistByrn/Ansible_Workshop/blob/main/images/Ansible-WorkShop.png)

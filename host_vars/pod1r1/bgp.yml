@@ -9,6 +9,7 @@ configuration:
     ebgp:
       neighbors: 
         24.24.1.1: {r_asn: 400}
+    address_family_ipv4:
       agg_network: 155.1.1.0
       agg_mask: 255.255.255.0
       advertised_networks:
