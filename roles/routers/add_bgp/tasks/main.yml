@@ -1,0 +1,23 @@
+- name: configuring bgp on {{ inventory_hostname }}
+  cisco.ios.ios_config:
+    src: bgp.j2
+
+- name: Saving the running config on {{ inventory_hostname }}
+  ios_config:
+    save_when: always
+
+- name: show bgp summary
+  ios_command:
+    commands: 
+      - "show bgp summary"
+  register: ios_output
+
+- name: Print Structured Data
+  debug:
+    msg: "{{ ios_output['stdout'][0] | clay584.genie.parse_genie(command='show bgp summary', os='ios')  }}"
+  delegate_to: localhost
+
+# - name: building vlans configuration
+#   template:
+#     src: "bgp.j2"
+#     dest: "{{ inventory_hostname }}_interface_test.txt"

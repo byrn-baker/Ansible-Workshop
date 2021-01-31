@@ -1,3 +1,0 @@
-- name: configuring new sub-interface on {{ inventory_hostname }}
-  cisco.ios.ios_config:
-    src: template/l3_interface.j2

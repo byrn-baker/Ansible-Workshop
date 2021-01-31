@@ -1,4 +1,0 @@
-interface {{inside_router_port}}
- description CORE_SWITCH P2P TO PODxR1 
- ip address {{ ip_address }} {{ subnet_mask | default('255.255.255.0') }}
- encapsulation dot1q {{hostvars['localhost']['access_vlan']}}

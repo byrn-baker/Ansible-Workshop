@@ -1,0 +1,38 @@
+#jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
+{#- ---------------------------------------------------------------------------------- #}
+{# configuration.interfaces.l3_interface                                               #}
+{# ---------------------------------------------------------------------------------- -#}
+{% if configuration.interfaces.l3_interfaces is defined %}
+{% for l3_interface in configuration.interfaces.l3_interfaces %}
+{% if 'Loopback0' in l3_interface.name %}
+interface {{ l3_interface.name }}
+    {% if l3_interface.description is defined %}
+    description {{ l3_interface.description}}
+    {% endif %}
+    ip address {{ l3_interface.ipv4 }} {{ l3_interface.ipv4_mask }}
+    {% if l3_interface.ospf is defined %}
+    ip ospf network point-to-point
+    ip ospf 1 area 0
+    {% endif %}
+    no shut
+{% elif 'GigabitEthernet' in l3_interface.name and l3_interface.ospf is defined  %}
+interface {{ l3_interface.name }}
+    {% if l3_interface.description is defined %}
+    description {{ l3_interface.description}}
+    {% endif %}
+    ip address {{ l3_interface.ipv4 }} {{ l3_interface.ipv4_mask }}
+    {% if l3_interface.ospf is defined %}
+    ip ospf network point-to-point
+    ip ospf 1 area 0
+    {% endif %}
+    no shut
+{% else %}
+interface {{ l3_interface.name }}
+    {% if l3_interface.description is defined %}
+    description {{ l3_interface.description}}
+    {% endif %}
+    ip address {{ l3_interface.ipv4 }} {{ l3_interface.ipv4_mask }}
+    no shut
+{% endif %}
+{% endfor%}
+{% endif %}

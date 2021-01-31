@@ -1,0 +1,27 @@
+#jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
+{#- ---------------------------------------------------------------------------------- #}
+{# configuration.interfaces.trunk                                                      #}
+{# ---------------------------------------------------------------------------------- -#}
+{% if configuration.interfaces.trunk is defined %}
+{% for interface in configuration.interfaces.trunk %}
+interface {{ interface.name }}
+    {% if interface.description is defined %}
+    description {{ interface.description }}
+    {% endif %}
+    {% if interface.native_vlan is defined %}
+    switchport trunk native vlan {{ interface.native_vlan.members }}
+    {% endif %}
+    {% if interface.allowed_vlans.members is defined %}
+    switchport trunk allowed vlan {{ interface.allowed_vlans.members }}
+    {% endif %}
+    {% if interface.allowed_vlans.add is defined %}
+    switchport trunk allowed vlan add {{ interface.allowed_vlans.add }}
+    {% endif %}
+    switchport trunk encapsulation dot1q
+    switchport mode trunk
+    {% if interface.port_channel is defined %}
+    channel-group {{ interface.port_channel }} mode active
+    {% endif %}
+    no shut
+{% endfor %}
+{% endif %}

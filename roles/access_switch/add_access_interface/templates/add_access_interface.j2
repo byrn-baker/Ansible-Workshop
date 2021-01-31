@@ -1,9 +1,9 @@
 #jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
 {#- ---------------------------------------------------------------------------------- #}
-{# configuration.interfaces                                                            #}
+{# configuration.interfaces.access                                                     #}
 {# ---------------------------------------------------------------------------------- -#}
-{% if configuration.interfaces is defined %}
-{% for interface in configuration.interfaces %}
+{% if configuration.interfaces.access is defined %}
+{% for interface in configuration.interfaces.access %}
 interface {{ interface.name }}
     {% if interface.description is defined %}
     description {{ interface.description }}

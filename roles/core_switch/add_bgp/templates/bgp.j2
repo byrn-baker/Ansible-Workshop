@@ -1,0 +1,34 @@
+#jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
+{#- ---------------------------------------------------------------------------------- #}
+{# configuration.bgp                                                                   #}
+{# ---------------------------------------------------------------------------------- -#}
+{% if configuration.bgp is defined %}
+router bgp {{ configuration.bgp.ibgp.l_asn }}
+    bgp router-id {{ configuration.ospf.router_id }}
+    {% for ibgp_peers in configuration.bgp.ibgp.neighbors %}
+    neighbor {{ ibgp_peers }} remote-as {{ configuration.bgp.ibgp.l_asn }}
+    neighbor {{ ibgp_peers }} update-source Loopback0
+    {% endfor %}
+    {% if configuration.bgp.ebgp is defined %}
+        {% for ebgp_peers,ebgp_peers_attr in configuration.bgp.ebgp.neighbors.items() %}
+    neighbor {{ ebgp_peers }} remote-as {{ ebgp_peers_attr.r_asn }}  
+        {% endfor %}
+    {% endif %}
+    address-family ipv4
+        {% for ibgp_peers in configuration.bgp.ibgp.neighbors %}
+        neighbor {{ ibgp_peers }} activate
+        {% endfor %}
+        {% if configuration.bgp.ebgp.neighbors is defined %}
+        {% for ebgp_peers,ebgp_peers_attr in configuration.bgp.ebgp.neighbors.items() %}    
+        neighbor {{ ebgp_peers }} activate
+        {% endfor %}
+        {% endif %}
+        {% if configuration.bgp.ebgp.advertised_networks is defined %}
+        aggregate-address {{ configuration.bgp.ebgp.agg_network }} {{ configuration.bgp.ebgp.agg_mask }} summary-only
+                {% if configuration.bgp.ebgp.advertised_networks is defined %}
+                    {% for adv_nets,adv_nets_attr in configuration.bgp.ebgp.advertised_networks.items() %}
+        network {{ adv_nets }} mask {{ adv_nets_attr.net_mask }}
+                    {% endfor %}
+                {% endif %}
+        {% endif %}   
+{% endif %}

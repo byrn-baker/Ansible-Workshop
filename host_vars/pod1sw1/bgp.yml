@@ -1,0 +1,9 @@
+---
+configuration:
+  bgp:
+    ibgp:
+      l_asn: 65001
+      neighbors:
+        - 10.0.1.1
+        - 10.0.1.3
+

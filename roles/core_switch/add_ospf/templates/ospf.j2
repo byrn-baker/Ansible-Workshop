@@ -1,0 +1,9 @@
+#jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
+{#- ---------------------------------------------------------------------------------- #}
+{# configuration.ospf                                                                  #}
+{# ---------------------------------------------------------------------------------- -#}
+{% if configuration.ospf is defined %}
+router ospf {{ configuration.ospf.instance }}
+    router-id {{ configuration.ospf.router_id }}
+    passive-interface Loopback 0
+{% endif %}

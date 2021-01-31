@@ -1,0 +1,23 @@
+- name: configuring layer3 interfaces on {{ inventory_hostname }}
+  cisco.ios.ios_config:
+    src: l3_interface.j2
+
+- name: Saving the running config on {{ inventory_hostname }}
+  ios_config:
+    save_when: always
+
+- name: show ip interface brief
+  ios_command:
+    commands: 
+      - "show ip interface brief"
+  register: ios_output
+
+- name: Print Structured Data
+  debug:
+    msg: "{{ ios_output['stdout'][0] | clay584.genie.parse_genie(command='show ip interface brief', os='ios')  }}"
+  delegate_to: localhost
+
+# - name: building vlans configuration
+#   template:
+#     src: "l3_interface.j2"
+#     dest: "{{ inventory_hostname }}_interface_test.txt"

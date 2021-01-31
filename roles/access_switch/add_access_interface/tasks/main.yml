@@ -1,9 +1,13 @@
 ---
-- name: Add new vlan to vlan database on {{ inventory_hostname }}
+- name: configuring layer2 access interfaces on {{ inventory_hostname }}
   cisco.ios.ios_config:
     src: add_access_interface.j2
 
-- name: Get Data From Device
+- name: Saving the running config on {{ inventory_hostname }}
+  ios_config:
+    save_when: always    
+
+- name: show interfaces switchport
   ios_command:
     commands: 
       - "show interfaces switchport"
