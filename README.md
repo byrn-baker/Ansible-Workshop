@@ -85,7 +85,7 @@ inventory/
         podxsw2/
         podxsw3/
 ```
-inventory.yml - Our inventory file will use groupings of " and "pod1" will be a child group of the parent "all". "routers", "core_switches" and "access_switches" will all be children of the parent group "pod1". 
+inventory.yml - Our inventory file will use groupings of "all". "pod1" will be a child group of the parent "all". "routers", "core_switches" and "access_switches" will all be children of the parent group "pod1". 
 ```
 ---
 all:
