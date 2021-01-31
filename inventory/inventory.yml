@@ -1,0 +1,21 @@
+---
+all:
+  children:
+    pod1:
+      children:
+        routers:
+          hosts:
+            pod1r1:
+              # ansible_host: 192.168.4.17          
+        core_switches:
+          hosts:
+            pod1sw1:
+              # ansible_host: 192.168.4.18
+            pod1sw2:
+              # ansible_host: 192.168.4.19
+        access_switches:
+          hosts:
+            pod1sw3:
+              # ansible_host: 192.168.4.20
+          
+              
