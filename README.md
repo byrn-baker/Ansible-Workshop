@@ -39,24 +39,24 @@ ansible-galaxy collection install cisco.ios
 ## Section 2: Building playbooks
 Our task is to build out a set of playbooks that will deploy a full office with following configuration:
 1. (1) Access switch
-        1. Access ports for Users, Servers, and Guests
-        2. Layer 2 trunk to the core switches
+    * Access ports for Users, Servers, and Guests
+    * Layer 2 trunk to the core switches
 2. (2) Core switches
-        1. Layer 2 trunk ports to the access switch
-        2. Layer 2 port channel between both core switches
-        3. SVIs for the Users, Servers, and Guest vlans
-            1. VRRP protocol for redunancy
-        4. Layer 3 P2P interfaces as UPLINKS to the router
-        5. Loopback0 interface to facilitate iBGP protocol
-        6. OSPF protocol to facilitate iBGP protocol
-        7. iBGP protocol to advertise Users, Servers, and Guest subnets to the router
+    * Layer 2 trunk ports to the access switch
+    * Layer 2 port channel between both core switches
+    * SVIs for the Users, Servers, and Guest vlans
+    * VRRP protocol for redunancy
+    * Layer 3 P2P interfaces as UPLINKS to the router
+    * Loopback0 interface to facilitate iBGP protocol peering
+    * OSPF protocol to facilitate iBGP protocol Loopback0 peering
+    * iBGP protocol to advertise Users, Servers, and Guest subnets to the router
 3.  (1) Router
-        1. Layer 3 P2P interfaces as DOWNLINKS to the core switches
-        2. Loopback0 interface to facilitate iBGP protocol
-        3. OSPF protocol to facilitate iBGP protocol
-        4. iBGP protocol to receive advertised Users, Servers, and Guest subnets from the core switches
-        5. eBGP protocol to advertise Users, Servers, and Guest subnets to the ISP and receive a default route from the ISP
-        6. DHCP server for Users, Servers, and Guest subnets
+    * Layer 3 P2P interfaces as DOWNLINKS to the core switches
+    * Loopback0 interface to facilitate iBGP protocol
+    * OSPF protocol to facilitate iBGP protocol
+    * iBGP protocol to receive advertised Users, Servers, and Guest subnets from the core switches
+    * eBGP protocol to advertise Users, Servers, and Guest subnets to the ISP and receive a default route from the ISP
+    * DHCP server for Users, Servers, and Guest subnets
 The Lab diagram below consists of the IP addressing for each POD. The (x) will be replaced with the POD number you are using. 
 ### Lab Pod Diagram
 
