@@ -65,12 +65,12 @@ The Lab diagram below consists of the IP addressing for each POD. The (x) will b
 We will be constructing our inventory file with yaml format. Each pod has a bootstrap configuration that includes IP addressing to each node. Your control nodes (Jumpbox VM) has the /etc/hosts file built and each node has been assigned a hostname and an IP address.
 Here are the groupings we will be building in our inventory file.
 1. Routers
-*   podxr1
+    *   podxr1
 2. Core Switches
-*   podxsw1
-*   podxsw2
+    *   podxsw1
+    *   podxsw2
 3. Access Switches
-*   podxsw3
+    *   podxsw3
 
 The inventory file is what Ansible will use to connect to each of the managed hosts. We can assign each host to a group and each group to a parent group. Our file structure example is below along with the inventory.yml file.
 ```
