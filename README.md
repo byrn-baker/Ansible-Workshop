@@ -26,6 +26,9 @@ nano requirements.txt
 Paste in the following text. 
 ```
 ansible
+pyats
+genie
+colorama
 ```
 Now run the below command in terminal to install the packages
 ```
