@@ -104,3 +104,4 @@ all:
             pod1sw3:
 ```
 Each host will be defined under the lower groupings (routers, core_switches, and access_switches).
+ 

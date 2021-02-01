@@ -1,0 +1,15 @@
+---
+all:
+  children:
+    pod5:
+      children:
+        routers:
+          hosts:
+            pod5r1:   
+        core_switches:
+          hosts:
+            pod5sw1:
+            pod5sw2:
+        access_switches:
+          hosts:
+            pod5sw3: 

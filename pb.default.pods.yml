@@ -1,0 +1,12 @@
+---
+- name: Rolling POD Configurations back to defaults
+  hosts: all
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: reset pod to default configuration
+      cisco.ios.ios_command:
+        commands:
+        - command: configure replace flash0:/default.conf force
+  

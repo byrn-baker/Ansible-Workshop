@@ -1,0 +1,4 @@
+---
+ansible_password: Labuser!23
+ansible_user: pod6
+ansible_network_os: ios

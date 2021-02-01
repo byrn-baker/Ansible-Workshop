@@ -1,0 +1,10 @@
+- name: Configuring routers
+  hosts: routers
+  gather_facts: false
+  connection: network_cli
+
+  roles:
+    - { role: routers/add_l3_interface }
+    - { role: routers/add_ospf }
+    - { role: routers/add_bgp }
+    - { role: routers/add_dhcp_pool }
