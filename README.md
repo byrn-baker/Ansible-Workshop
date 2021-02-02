@@ -179,7 +179,8 @@ Primary Secondary Type              Ports
 ------- --------- ----------------- ------------------------------------------
 ```
 The built in parser for this command will print the result this way in our terminal window
-'''
+
+```
 msg:
     vlans:
       '1':
