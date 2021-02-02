@@ -178,7 +178,7 @@ VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
 Primary Secondary Type              Ports
 ------- --------- ----------------- ------------------------------------------
 ```
-The built in parser for this command will print the result this way in our terminal window
+![Parse_genie](https://github.com/clay584/parse_genie) parses results of the show vlan command and prints the result in our terminal window
 
 ```
 msg:
