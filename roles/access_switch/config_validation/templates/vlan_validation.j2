@@ -1,0 +1,28 @@
+#jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
+{#- ---------------------------------------------------------------------------------- #}
+{# validation of configuration.vlans                                                   #}
+{# ---------------------------------------------------------------------------------- -#}
+{% if configuration.vlans is defined %}
+Your intended Vlan database configuration for this switch is:
+{% for vlan in configuration.vlans.vlan %}
+Vlan: {{ vlan.vlan_id }}
+    Name: {{vlan.name }}
+{% endfor %}
+
+Your intended access interface configuration for this switch is:
+{% for interface in configuration.interfaces.access %}
+Vlan: {{ interface.vlan.members }}
+    Interface: {{ interface.name }}
+{% endfor %}
+
+Here is what {{ inventory_hostname }} currently has configured:
+{% for vlan,vlan_attr in vlans.vlans.items() %}
+Vlan: {{ vlan }}
+    Name: {{ vlan_attr.name }}
+{% if vlan_attr.interfaces is defined %}
+{% for interfaces in vlan_attr.interfaces %}
+    interface: {{ interfaces}}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}

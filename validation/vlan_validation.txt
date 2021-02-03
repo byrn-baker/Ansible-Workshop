@@ -1,0 +1,42 @@
+Your intended Vlan database configuration for this switch is:
+Vlan: 300
+    Name: USERS
+Vlan: 350
+    Name: SERVERS
+Vlan: 400
+    Name: GUEST
+Vlan: 666
+    Name: NATIVE_VLAN
+
+Your intended access interface configuration for this switch is:
+Vlan: 300
+    Interface: Gi0/3
+Vlan: 350
+    Interface: Gi1/0
+Vlan: 400
+    Interface: Gi1/1
+
+Here is what the pod1sw3 currently has configured:
+Vlan: 1
+    Name: default
+    interface: GigabitEthernet0/0
+    interface: GigabitEthernet1/2
+Vlan: 300
+    Name: USERS
+    interface: GigabitEthernet0/3
+Vlan: 350
+    Name: SERVERS
+    interface: GigabitEthernet1/0
+Vlan: 400
+    Name: GUEST
+    interface: GigabitEthernet1/1
+Vlan: 666
+    Name: NATIVE_VLAN
+Vlan: 1002
+    Name: fddi-default
+Vlan: 1003
+    Name: token-ring-default
+Vlan: 1004
+    Name: fddinet-default
+Vlan: 1005
+    Name: trnet-default

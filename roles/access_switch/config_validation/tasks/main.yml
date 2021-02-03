@@ -1,0 +1,13 @@
+- name: show vlan
+  ios_command:
+    commands: 
+      - "show vlan"
+  register: ios_output
+
+- set_fact:
+      vlans : "{{ ios_output['stdout'][0] | clay584.genie.parse_genie(command='show vlan', os='ios') }}"
+
+- name: Vlan validation
+  template:
+    src: vlan_validation.j2
+    dest: validation/vlan_validation.txt

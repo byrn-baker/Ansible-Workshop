@@ -1,0 +1,15 @@
+#jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
+{#- ---------------------------------------------------------------------------------- #}
+{# validation of configuration.vlans                                                   #}
+{# ---------------------------------------------------------------------------------- -#}
+{% if configuration.vlans is defined %}
+Here is the list of VLANs currently in the Vlan Database on {{ inventory_hostname }} and their assigned interfaces
+{% for vlan,vlan_attr in vlans.vlans.items() %}
+Vlan: {{ vlan }}
+{% if vlan_attr.interfaces is defined %}
+{% for interfaces in vlan_attr.interfaces %}
+    {{ interfaces}}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}

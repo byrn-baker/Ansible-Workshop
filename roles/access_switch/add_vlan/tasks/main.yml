@@ -6,14 +6,3 @@
 - name: Saving the running config on {{ inventory_hostname }}
   ios_config:
     save_when: always    
-
-- name: show vlan
-  ios_command:
-    commands: 
-      - "show vlan"
-  register: ios_output
-
-- name: Print Structured Data
-  debug:
-    msg: "{{ ios_output['stdout'][0] | clay584.genie.parse_genie(command='show vlan', os='ios')  }}"
-  delegate_to: localhost

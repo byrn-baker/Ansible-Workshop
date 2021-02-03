@@ -38,32 +38,7 @@ Now that we have ansible installed we need to add a module that will help us con
 ```
 ansible-galaxy collection install cisco.ios clay584.genie
 ```
-
-## Section 2: Building playbooks
-Our task is to build out a set of playbooks that will deploy a full office with following configuration:
-1. (1) Access switch
-    * Access ports for Users, Servers, and Guests
-    * Layer 2 trunk to the core switches
-2. (2) Core switches
-    * Layer 2 trunk ports to the access switch
-    * Layer 2 port channel between both core switches
-    * SVIs for the Users, Servers, and Guest vlans
-    * VRRP protocol for redunancy
-    * Layer 3 P2P interfaces as UPLINKS to the router
-    * Loopback0 interface to facilitate iBGP protocol peering
-    * OSPF protocol to facilitate iBGP protocol Loopback0 peering
-    * iBGP protocol to advertise Users, Servers, and Guest subnets to the router
-3.  (1) Router
-    * Layer 3 P2P interfaces as DOWNLINKS to the core switches
-    * Loopback0 interface to facilitate iBGP protocol
-    * OSPF protocol to facilitate iBGP protocol
-    * iBGP protocol to receive advertised Users, Servers, and Guest subnets from the core switches
-    * eBGP protocol to advertise Users, Servers, and Guest subnets to the ISP and receive a default route from the ISP
-    * DHCP server for Users, Servers, and Guest subnets
-The Lab diagram below consists of the IP addressing for each POD. The (x) will be replaced with the POD number you are using. 
-### Lab Pod Diagram
-![Lab Pod diagram](https://github.com/TwistByrn/Ansible_Workshop/blob/main/images/Ansible-WorkShop.png)
-## Section 2.1: Creating the inventory yaml file
+## Section 2: Creating the inventory yaml file
 ![Ansible inventory Documentation can be found here](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html#) 
 We will be constructing our inventory file with yaml format. Each pod has a bootstrap configuration that includes IP addressing to each node. Your control nodes (Jumpbox VM) has the /etc/hosts file built and each node has been assigned a hostname and an IP address.
 Here are the groupings we will be building in our inventory file.
@@ -118,10 +93,10 @@ ansible_user: pod1
 ansible_network_os: ios
 ```
 
-## Section 2.2: Creating plays
+## Section 3: Creating plays
 Documentation on creating Plays with ansible can be found ![here](https://docs.ansible.com/ansible/latest/user_guide/playbooks.html). We will be using the ![Cisco IOS Collection](https://github.com/ansible-collections/cisco.ios) and templating with ![Jinja2](https://docs.ansible.com/ansible/latest/user_guide/playbooks_templating.html) to create the configurations that will be sent to each device via an SSH session from our Ansible controll node. So with all of this information lets create a play to reach out to one of our switches and pull back the configured vlan database.
 
-In your main folder (Ansible_Workshop) create a new file pb.get.vlans.yml. Every play needs the below structure. At the top of the play we list what and how we are connecting to with hosts: we will connect to podxsw3. Gather_facts in our use case will always be false. Connection will be network_cli. Below these details we will list out the tasks to be peformed in this play. Notice the structure of the file below. indentation is key to ensure that ansible can read in this file. Our first task is using the cisco ios collection to run the command on podxsw3 (show vlan). The register will store the output of the SSH sessions command (show vlan). Our next tasks is to take that store result and display it on our terminal window. Ansible has a debug that will handle this and is a useful way to validate the results you are getting from the terminal window. We could also print it to a file if you desired. With the help of clay584s parsing collection this (show vlan) output will be displayed in a structured yaml format. 
+In your main folder (Ansible_Workshop) create a new file pb.get.vlans.yml. Every play needs the below structure. At the top of the play we list what and how we are connecting to with hosts: we will connect to podxsw3. Gather_facts in our use case will always be false. Connection will be network_cli. Below these details we will list out the tasks to be peformed in this play. Notice the structure of the file below. indentation is key to ensure that ansible can read in this file. Our first task is using the cisco ios collection to run the command on podxsw3 (show vlan). The register will store the output of the SSH sessions command (show vlan). Our next tasks is to take that store result and display it on our terminal window. Ansible has a debug that will handle this and is a useful way to validate the results you are getting from the terminal window. We could also print it to a file if you desired. With the help of ![clay584s parse_genie collection](https://github.com/clay584/parse_genie) this (show vlan) output will be displayed in a structured yaml format. 
 ```
 ---
 ############################################################
@@ -284,3 +259,51 @@ msg:
         type: enet
         vlan_id: '666'
 ```
+The results are now in a format that we can store and reuse for validation of changes. This is something that is currently out scope, but will be something added to this workshop eventually.
+
+## Section 4: Building Roles
+We have the following tasks to complete the rollout of our pod. We will be breaking each tasks down into their own play that we will refer to as a ![Role](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html). 
+
+1. (1) Access switch
+    * Access ports for Users, Servers, and Guests
+    * Layer 2 trunk to the core switches
+2. (2) Core switches
+    * Layer 2 trunk ports to the access switch
+    * Layer 2 port channel between both core switches
+    * SVIs for the Users, Servers, and Guest vlans
+    * VRRP protocol for redunancy
+    * Layer 3 P2P interfaces as UPLINKS to the router
+    * Loopback0 interface to facilitate iBGP protocol peering
+    * OSPF protocol to facilitate iBGP protocol Loopback0 peering
+    * iBGP protocol to advertise Users, Servers, and Guest subnets to the router
+3.  (1) Router
+    * Layer 3 P2P interfaces as DOWNLINKS to the core switches
+    * Loopback0 interface to facilitate iBGP protocol
+    * OSPF protocol to facilitate iBGP protocol
+    * iBGP protocol to receive advertised Users, Servers, and Guest subnets from the core switches
+    * eBGP protocol to advertise Users, Servers, and Guest subnets to the ISP and receive a default route from the ISP
+    * DHCP server for Users, Servers, and Guest subnets
+The Lab diagram below consists of the IP addressing for each POD. The (x) will be replaced with the POD number you are using. 
+### Lab Pod Diagram
+![Lab Pod diagram](https://github.com/TwistByrn/Ansible_Workshop/blob/main/images/Ansible-WorkShop.png)
+
+Create a new folder with the following structure:
+```
+roles/
+  access_switch/
+  core_switch/
+  routers/
+```
+In the roles/access_switch folder create the following structure:
+```
+add_access_interface/
+  tasks/
+  templates/
+add_trunk_interface/
+  tasks/
+  templates/
+add_vlan/
+  tasks/
+  templates/
+```
+Create a new file under 'add_vlan/tasks/' called main.yml. This file will be structure similar to the Playbook we created to pull down a list of vlans from the podxsw3 host. In this play we will simply create and name vlans for the 3 user groups (Users, Servers, Guests).

@@ -7,3 +7,4 @@
     - { role: access_switch/add_vlan }
     - { role: access_switch/add_access_interface }
     - { role: access_switch/add_trunk_interface }
+    - { role: access_switch/config_validation }
