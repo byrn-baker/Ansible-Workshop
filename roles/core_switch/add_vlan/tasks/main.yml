@@ -3,6 +3,10 @@
   cisco.ios.ios_config:
     src: add_vlan.j2
 
+- name: Making SW1 spanning tree root bridge for added vlans
+  cisco.ios.ios_config:
+    src: spanning_root_bridge.j2
+
 - name: Saving the running config on {{ inventory_hostname }}
   ios_config:
     save_when: always    

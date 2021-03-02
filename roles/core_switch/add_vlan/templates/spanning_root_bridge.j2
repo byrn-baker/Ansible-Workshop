@@ -1,0 +1,13 @@
+#jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
+{#- ---------------------------------------------------------------------------------- #}
+{# configuration.spanning_tree                                                         #}
+{# ---------------------------------------------------------------------------------- -#}
+{% if configuration.vlans is defined %}
+{% for vlan in configuration.vlans.vlan %}
+{% if configuration.spanning_tree.primary is true %}
+spanning-tree vlan {{ vlan.vlan_id }} root primary
+{% else %}
+spanning-tree vlan {{ vlan.vlan_id }} root secondary
+{% endif %}
+{% endfor %}
+{% endif %}

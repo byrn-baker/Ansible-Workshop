@@ -1,0 +1,4 @@
+---
+configuration:
+  spanning_tree:
+    primary: false
