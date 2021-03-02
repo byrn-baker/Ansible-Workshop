@@ -5,11 +5,15 @@ all:
       children:
         routers:
           hosts:
-            pod6r1:   
+            pod6r1:
+              ansible_host: 192.168.4.63
         core_switches:
           hosts:
             pod6sw1:
+              ansible_host: 192.168.4.64
             pod6sw2:
+              ansible_host: 192.168.4.65
         access_switches:
           hosts:
-            pod6sw3:    
+            pod6sw3:
+              ansible_host: 192.168.4.66
