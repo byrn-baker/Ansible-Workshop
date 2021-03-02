@@ -6,16 +6,16 @@
   ios_config:
     save_when: always
 
-- name: show bgp summary
-  ios_command:
-    commands: 
-      - "show bgp summary"
-  register: ios_output
+# - name: show bgp summary
+#   ios_command:
+#     commands: 
+#       - "show bgp summary"
+#   register: ios_output
 
-- name: Print Structured Data
-  debug:
-    msg: "{{ ios_output['stdout'][0] | clay584.genie.parse_genie(command='show bgp summary', os='ios')  }}"
-  delegate_to: localhost
+# - name: Print Structured Data
+#   debug:
+#     msg: "{{ ios_output['stdout'][0] | clay584.genie.parse_genie(command='show bgp summary', os='ios')  }}"
+#   delegate_to: localhost
 
 # - name: building vlans configuration
 #   template:

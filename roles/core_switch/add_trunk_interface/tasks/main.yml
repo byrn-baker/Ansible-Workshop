@@ -7,13 +7,13 @@
   ios_config:
     save_when: always
 
-- name: show interfaces trunk
-  ios_command:
-    commands: 
-      - "show interfaces trunk"
-  register: ios_output
+# - name: show interfaces trunk
+#   ios_command:
+#     commands: 
+#       - "show interfaces trunk"
+#   register: ios_output
 
-- name: Print Structured Data
-  debug:
-    msg: "{{ ios_output['stdout'][0] | clay584.genie.parse_genie(command='show interfaces trunk', os='ios')  }}"
-  delegate_to: localhost
+# - name: Print Structured Data
+#   debug:
+#     msg: "{{ ios_output['stdout'][0] | clay584.genie.parse_genie(command='show interfaces trunk', os='ios')  }}"
+#   delegate_to: localhost

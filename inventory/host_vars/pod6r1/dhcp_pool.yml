@@ -11,10 +11,10 @@ configuration:
       network: "155.6.1.64 /26"
       default_router: 155.1.1.65
       lease: 30
-      excluded_address: "155.1.1.65 155.1.1.67"
+      excluded_address: "155.6.1.65 155.6.1.67"
 
     - name: 400
       network: "155.6.1.128 /26"
       default_router: 155.1.1.129
       lease: 30
-      excluded_address: "155.1.1.129 155.1.1.131"
+      excluded_address: "155.6.1.129 155.6.1.131"

@@ -7,13 +7,13 @@
   ios_config:
     save_when: always    
 
-- name: show interfaces switchport
-  ios_command:
-    commands: 
-      - "show interfaces switchport"
-  register: ios_output
+# - name: show interfaces switchport
+#   ios_command:
+#     commands: 
+#       - "show interfaces switchport"
+#   register: ios_output
 
-- name: Print Structured Data
-  debug:
-    msg: "{{ ios_output['stdout'][0] | clay584.genie.parse_genie(command='show interfaces switchport', os='ios')  }}"
-  delegate_to: localhost
+# - name: Print Structured Data
+#   debug:
+#     msg: "{{ ios_output['stdout'][0] | clay584.genie.parse_genie(command='show interfaces switchport', os='ios')  }}"
+#   delegate_to: localhost

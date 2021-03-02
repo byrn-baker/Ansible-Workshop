@@ -12,7 +12,3 @@ configuration:
     address_family_ipv4:
       agg_network: 155.6.1.0
       agg_mask: 255.255.255.0
-      advertised_networks:
-        155.6.1.0: {net_mask: 255.255.255.192 }
-        155.6.1.64: {net_mask: 255.255.255.192 }
-        155.6.1.128: {net_mask: 255.255.255.192 }

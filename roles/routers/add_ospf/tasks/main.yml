@@ -6,13 +6,13 @@
   ios_config:
     save_when: always
 
-- name: show ip ospf neighbor
-  ios_command:
-    commands: 
-      - "show ip ospf neighbor"
-  register: ios_output
+# - name: show ip ospf neighbor
+#   ios_command:
+#     commands: 
+#       - "show ip ospf neighbor"
+#   register: ios_output
 
-- name: Print Structured Data
-  debug:
-    msg: "{{ ios_output['stdout'][0] | clay584.genie.parse_genie(command='show ip ospf neighbor', os='ios')  }}"
-  delegate_to: localhost
+# - name: Print Structured Data
+#   debug:
+#     msg: "{{ ios_output['stdout'][0] | clay584.genie.parse_genie(command='show ip ospf neighbor', os='ios')  }}"
+#   delegate_to: localhost
