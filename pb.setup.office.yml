@@ -16,8 +16,8 @@
   roles:
     - { role: core_switch/add_vlan }
     - { role: core_switch/add_trunk_interface }
-    - { role: core_switch/add_ospf }
     - { role: core_switch/add_l3_interface }
+    - { role: core_switch/add_ospf }
     - { role: core_switch/add_bgp }
 
 - name: Configuring routers
