@@ -3,7 +3,7 @@
 Open the terminal window. type pwd in the terminal and it should be showing you your home directory (/home/lab_user1) for example.
 In the terminal window type the below commands one at a time.
 ```
-mkdir Ansible_workshop && cd Ansible_workshop
+mkdir Ansible_Workshop && cd Ansible_Workshop
 sudo apt update
 sudo apt install software-properties-common python3-pip python3-venv
 ```
