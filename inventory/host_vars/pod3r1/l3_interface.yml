@@ -4,7 +4,7 @@ configuration:
     l3_interfaces:
       - name: GigabitEthernet0/0
         description: "UPLINK TO INTERNET PROVIDER"
-        ipv4: 24.24.2.2
+        ipv4: 24.24.3.2
         ipv4_mask: 255.255.255.0
 
       - name: GigabitEthernet0/1

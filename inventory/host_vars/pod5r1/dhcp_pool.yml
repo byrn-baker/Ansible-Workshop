@@ -3,7 +3,7 @@ configuration:
   dhcp_pool:
     - name: 300
       network: "155.5.1.0 /26"
-      default_router: .1.1
+      default_router: 155.5.1.1
       lease: 30
       excluded_address: "155.5.1.1 155.5.1.3"
 

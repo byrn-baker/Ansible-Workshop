@@ -24,12 +24,12 @@ router bgp {{ configuration.bgp.ibgp.l_asn }}
         neighbor {{ ebgp_peers }} activate
         {% endfor %}
         {% endif %}
+        {% if configuration.bgp.address_family_ipv4.agg_network is defined %}
+        aggregate-address {{ configuration.bgp.address_family_ipv4.agg_network }} {{ configuration.bgp.address_family_ipv4.agg_mask }} summary-only
+        {% endif %}
         {% if configuration.bgp.address_family_ipv4.advertised_networks is defined %}
             {% for adv_nets,adv_nets_attr in configuration.bgp.address_family_ipv4.advertised_networks.items() %}
         network {{ adv_nets }} mask {{ adv_nets_attr.net_mask }}
             {% endfor %}
-            {% if configuration.bgp.address_family_ipv4.agg_network is defined %}
-        aggregate-address {{ configuration.bgp.address_family_ipv4.agg_network }} {{ configuration.bgp.address_family_ipv4.agg_mask }} summary-only
-            {% endif %}
         {% endif %}   
 {% endif %}
