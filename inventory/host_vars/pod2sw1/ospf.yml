@@ -1,0 +1,4 @@
+configuration:
+  ospf:
+    instance: 1
+    router_id: 10.2.1.2

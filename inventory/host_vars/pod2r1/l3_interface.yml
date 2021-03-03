@@ -1,0 +1,34 @@
+---
+configuration:
+  interfaces:
+    l3_interfaces:
+      - name: GigabitEthernet0/0
+        description: "UPLINK TO INTERNET PROVIDER"
+        ipv4: 24.24.2.2
+        ipv4_mask: 255.255.255.0
+
+      - name: GigabitEthernet0/1
+        description: "DOWNLINK POD1SW1"
+        ipv4: 10.20.1.0
+        ipv4_mask: 255.255.255.254
+        ospf:
+          area: 0
+          network: "point-to-point"
+
+      - name: GigabitEthernet0/2
+        description: "DOWNLINK POD1SW2"
+        ipv4: 10.20.1.2
+        ipv4_mask: 255.255.255.254
+        ospf:
+          area: 0
+          network: "point-to-point"        
+
+      - name: Loopback0
+        description: "iBGP LOOPBACK"
+        ipv4: 10.2.1.1
+        ipv4_mask: 255.255.255.255
+        ospf:
+          area: 0
+          network: "point-to-point"
+
+

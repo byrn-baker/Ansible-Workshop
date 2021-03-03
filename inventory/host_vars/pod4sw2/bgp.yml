@@ -1,0 +1,14 @@
+---
+configuration:
+  bgp:
+    ibgp:
+      l_asn: 65004
+      neighbors:
+        - 10.4.1.1
+        - 10.4.1.2
+    address_family_ipv4:
+      advertised_networks:
+        155.4.1.0: {net_mask: 255.255.255.192 }
+        155.4.1.64: {net_mask: 255.255.255.192 }
+        155.4.1.128: {net_mask: 255.255.255.192 }    
+

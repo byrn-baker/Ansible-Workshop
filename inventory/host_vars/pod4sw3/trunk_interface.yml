@@ -1,0 +1,19 @@
+---
+configuration:
+  interfaces:
+    trunk:
+      - name: Gi0/1
+        description: "TRUNK TO POD1SW1"
+        interface_mode: trunk
+        native_vlan:
+          members: "666"
+        allowed_vlans:
+            members: "300,350,400"
+
+      - name: Gi0/2
+        description: "TRUNK TO POD1SW2"
+        interface_mode: trunk
+        native_vlan:
+          members: "666"
+        allowed_vlans:
+            members: "300,350,400"
