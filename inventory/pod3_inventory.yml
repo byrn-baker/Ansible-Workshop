@@ -16,4 +16,4 @@ all:
         access_switches:
           hosts:
             pod3sw3:
-              ansible_host: 192.168.4.4
+              ansible_host: 192.168.4.54
