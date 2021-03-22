@@ -342,7 +342,7 @@ add_vlan/
   meta/
   tasks/
   templates/
-
+```
 Create a new file under 'inventory/group_vars/' called 'pod1.yml'. In this file we will store our username and password for the assigned pod place the following text in your file:
 ```
 ---
