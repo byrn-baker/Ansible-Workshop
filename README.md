@@ -410,7 +410,7 @@ vlan {{ vlan.vlan_id }}
 {% endif %}
 ```
 Lets go over what we are doing:
-* '#jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"' - This line tells the Jinja template to remove any white space that is added before or after our IF statements or FOR statements. 
+* ```#jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"``` - This line tells the Jinja template to remove any white space that is added before or after our IF statements or FOR statements. 
 * '{# #}' - These characters tell the jinja template not to render the text between the characters. This is what we call commenting and allows you to tell someone else reading your template what you are doing and why with rendered the text in the file output.
 * '{% if configuration.vlans.vlan is not mapping and configuration.vlans.vlan is not string %}' - This is looking to make sure our VLANs are actually a string of numbers and not text or some other character as anything other than a number would not be accepted by the cisco CLI.
 * '{% if configuration.vlans is defined %}' - Any 'IF' statement will always need to be followed with an '{% endif %}'. In our case we will only render the below text 'if configuration.vlans exists or is defined' in our host_vars files otherwise move on to the next task. 
