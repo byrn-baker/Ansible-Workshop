@@ -26,7 +26,7 @@ Now that we have ansible installed we need to add a module that will help us con
 ansible-galaxy collection install cisco.ios clay584.genie
 ```
 ## Section 2: Creating the inventory yaml file
-![Ansible inventory Documentation can be found here](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html#) 
+[Ansible inventory Documentation can be found here](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html#) 
 We will be constructing our inventory file with yaml format. Each pod has a bootstrap configuration that includes IP addressing to each node. Your control nodes (Jumpbox VM) has the /etc/hosts file built and each node has been assigned a hostname and an IP address.
 Here are the groupings we will be building in our inventory file.
 1. Routers
@@ -68,7 +68,7 @@ all:
           hosts:
             pod1sw3:
 ```
-Each host will be defined under the lower groupings (routers, core_switches, and access_switches). We can store variables in our plays in these folders, including sensitive information like passwords. In this workshop, we will keep information like usernames and passwords under the group_vars/all folder in a file called "all.yml" If you were to have devices or device groups that did not use the same password, then you could create a file of the device name under the host_vars/{{ device_name }} folder. In this workshop all devices share login and OS. If you want to learn more about encrypting files with ansible use the ansible docs on ![Ansible Vault](https://docs.ansible.com/ansible/latest/user_guide/vault.html)
+Each host will be defined under the lower groupings (routers, core_switches, and access_switches). We can store variables in our plays in these folders, including sensitive information like passwords. In this workshop, we will keep information like usernames and passwords under the group_vars/all folder in a file called "all.yml" If you were to have devices or device groups that did not use the same password, then you could create a file of the device name under the host_vars/{{ device_name }} folder. In this workshop all devices share login and OS. If you want to learn more about encrypting files with ansible use the ansible docs on [Ansible Vault](https://docs.ansible.com/ansible/latest/user_guide/vault.html)
 ```
 ---
 ###########################################
@@ -81,7 +81,7 @@ ansible_network_os: ios
 ```
 
 ## Section 3: Creating plays
-Documentation on creating Plays with ansible can be found ![here](https://docs.ansible.com/ansible/latest/user_guide/playbooks.html). We will be using the ![Cisco IOS Collection](https://github.com/ansible-collections/cisco.ios) and templating with ![Jinja2](https://docs.ansible.com/ansible/latest/user_guide/playbooks_templating.html) to create the configurations that will be sent to each device via an SSH session from our Ansible controll node. So with all of this information lets create a play to reach out to one of our switches and pull back the configured vlan database.
+Documentation on creating Plays with ansible can be found [here](https://docs.ansible.com/ansible/latest/user_guide/playbooks.html). We will be using the [Cisco IOS Collection](https://github.com/ansible-collections/cisco.ios) and templating with ![Jinja2](https://docs.ansible.com/ansible/latest/user_guide/playbooks_templating.html) to create the configurations that will be sent to each device via an SSH session from our Ansible controll node. So with all of this information lets create a play to reach out to one of our switches and pull back the configured vlan database.
 
 In your main folder (Ansible_Workshop) create a new file pb.get.vlans.yml. Every play needs the below structure. At the top of the play we list what and how we are connecting to with hosts: we will connect to podxsw3. Gather_facts in our use case will always be false. Connection will be network_cli. Below these details we will list out the tasks to be peformed in this play. Notice the structure of the file below. indentation is key to ensure that ansible can read in this file. Our first task is using the cisco ios collection to run the command on podxsw3 (show vlan). The register will store the output of the SSH sessions command (show vlan). Our next tasks is to take that store result and display it on our terminal window. Ansible has a debug that will handle this and is a useful way to validate the results you are getting from the terminal window. We could also print it to a file if you desired. With the help of ![clay584s parse_genie collection](https://github.com/clay584/parse_genie) this (show vlan) output will be displayed in a structured yaml format. 
 
@@ -143,7 +143,7 @@ VLAN Type  SAID       MTU   Parent RingNo BridgeNo Stp  BrdgMode Trans1 Trans2
 Primary Secondary Type              Ports
 ------- --------- ----------------- ------------------------------------------
 ```
-![Parse_genie](https://github.com/clay584/parse_genie) parses results of the show vlan command and prints the result in our terminal window
+[Parse_genie](https://github.com/clay584/parse_genie) parses results of the show vlan command and prints the result in our terminal window
 
 ```
 msg:
@@ -252,7 +252,7 @@ msg:
 The results are now in a format that we can store and reuse for validation of changes. This is something that is currently out scope, but will be something added to this workshop eventually.
 
 ## Section 4: Building Roles
-We have the following tasks to complete the rollout of our pod. We will be breaking each tasks down into their own play that we will refer to as a ![Role](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html). Our Pods will be making use of the Cisco vIOS router and vIOS switch.
+We have the following tasks to complete the rollout of our pod. We will be breaking each tasks down into their own play that we will refer to as a [Role](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html). Our Pods will be making use of the Cisco vIOS router and vIOS switch.
 
 1. (1) Access switch
     * Configure the following vlans:
@@ -394,7 +394,7 @@ Lets go over what we are doing:
 * ```cisco.ios.ios_config:``` - This tells Ansible the module we want to use in the task. These modules use name space similar to a dns record. The cisco.ios.ios_config module has a couple different ways to push configurations to an IOS device. For our purposes we will use jinja templates method.
 *   ```src: add_vlan.j2``` - This tells Ansible what file in the templates folder to use in rendering our text that will be pushed to the cisco device.
 * ```ios_config:``` - This second task simply tells Ansible to perform a write memory after passing the rendered text via the SSH connection. 
-*  ```save_when: always``` - This does exactly what is says. The ios_config module has a few options on when to save the configuration to startup (write memory). ![Check out the ios module readme docs](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_config_module.html) The ios_config module attempts to provide some idempotency and so if no changes are actually made to the configuration you could tell the module not to perform a write memory.
+*  ```save_when: always``` - This does exactly what is says. The ios_config module has a few options on when to save the configuration to startup (write memory). [Check out the ios module readme docs](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_config_module.html) The ios_config module attempts to provide some idempotency and so if no changes are actually made to the configuration you could tell the module not to perform a write memory.
 
 Create a new file under 'add_vlan/templates/ called 'add_vlan.j2'. this will store our Jinja2 template that will utlize the host_vars we created above. Jinja templates print out the text in the file while give you the ability to insert predefined variables at any location in the text that you wish. Ansible holds this information in memory and the cisco IOS module pushes the full text to our switch similar to a copy and paste from an SSH session on the CLI.
 
