@@ -307,12 +307,23 @@ We have the following tasks to complete the rollout of our pod. We will be break
       * Configure eBGP to advertise and Aggregate subnet from the Users, Servers, and Guest subnets 
       * Accept a default route from the ISP
     * Configure DHCP server for the Users, Servers, and Guest subnets
-    
+
 The Lab diagram below consists of the IP addressing for each POD. The (x) will be replaced with the POD number you are using. 
 ### Lab Pod Diagram
 ![Lab Pod diagram](https://github.com/TwistByrn/Ansible_Workshop/blob/main/images/Ansible-WorkShop.png)
 
-Create a new folder with the following structure:
+Create new folders with the following structure:
+```
+inventory/
+  group_vars/
+    podx/
+      pod1.yml
+  host_vars/
+    podxr1/
+    podxsw1/
+    podxsw2/
+    podxsw3/
+```
 ```
 roles/
   access_switch/
@@ -328,7 +339,80 @@ add_trunk_interface/
   tasks/
   templates/
 add_vlan/
+  meta/
   tasks/
   templates/
+
+Create a new file under 'inventory/group_vars/' called 'pod1.yml'. In this file we will store our username and password for the assigned pod place the following text in your file:
 ```
-Create a new file under 'add_vlan/tasks/' called main.yml. This file will be structure similar to the Playbook we created to pull down a list of vlans from the podxsw3 host. In this play we will simply create and name vlans for the 3 user groups (Users, Servers, Guests).
+---
+ansible_password: Labuser!23
+ansible_user: podx
+ansible_network_os: ios
+```
+
+Create a new file under 'inventory/host_vars/podxsw3/' called 'vlans.yml'. In this file we will create a list of vlans that we need to create on our access switch and can reuse this same file for our core switches later on. Place the following text in your file:
+```
+---
+configuration:
+  vlans:
+    vlan:
+      - name: "USERS"
+        vlan_id: "300"
+
+      - name: "SERVERS"
+        vlan_id: "350"
+
+      - name: "GUEST"
+        vlan_id: "400"
+
+      - name: "NATIVE_VLAN"
+        vlan_id: "666"
+```
+
+Create a new file under 'add_vlan/meta/' called 'main.yml'. This file will pull the collection we are using to deploy the configurations to the IOS switches in the pod. This simply replaces the Collection section inside a standard playbook and assigns it to this task. Inside the meta.yml file place the following text:
+```
+collections:
+  - clay584.parse_genie
+```
+Create a new file under 'add_vlan/tasks/' called 'main.yml'. This file will be structure similar to the Playbook we created to pull down a list of vlans from the podxsw3 host. In this play we will use a Jinja2 template to create and name the vlans for the 3 user groups (Users, Servers, Guests).
+
+In the main.yml file we will use the playbook tasks structure. Roles simply replace tasks of a playbook.
+
+```
+---
+- name: Add new vlan to vlan database on {{ inventory_hostname }}
+  cisco.ios.ios_config:
+    src: add_vlan.j2
+
+- name: Saving the running config on {{ inventory_hostname }}
+  ios_config:
+    save_when: always
+```
+
+Create a new file under 'add_vlan/templates/ called 'add_vlan.j2'. this will store our Jinja2 template that will utlize the host_vars we created above. Jinja templates print out the text in the file while give you the ability to insert predefined variables at any location in the text that you wish. Ansible holds this information in memory and the cisco IOS module pushes the full text to our switch similar to a copy and paste from an SSH session on the CLI.
+
+In the 'add_vlan.j2' file place the following text:
+```
+#jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
+{#- ---------------------------------------------------------------------------------- #}
+{# configuration.vlans                                                                 #}
+{# ---------------------------------------------------------------------------------- -#}
+{% if configuration.vlans is defined %}
+{% if configuration.vlans.vlan is not mapping and configuration.vlans.vlan is not string %}
+{% for vlan in configuration.vlans.vlan %}
+vlan {{ vlan.vlan_id }}
+    {% if vlan.name is defined %}
+    name {{ vlan.name }}
+    {% endif %}
+{% endfor %}
+{% endif %}
+{% endif %}
+```
+Lets go over what we are doing
+'#jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"' - This line tells the Jinja template to remove any white space that is added before or after our IF statements or FOR statements. 
+'{# #}' - These characters tell the jinja template not to render the text between the characters. This is what we call commenting and allows you to tell someone else reading your template what you are doing and why with rendered the text in the file output.
+'{% if configuration.vlans.vlan is not mapping and configuration.vlans.vlan is not string %}' - This is looking to make sure our VLANs are actually a string of numbers and not text or some other character as anything other than a number would not be accepted by the cisco CLI.
+'{% if configuration.vlans is defined %}' - Any 'IF' statement will always need to be followed with an '{% endif %}'. In our case we will only render the below text 'if configuration.vlans exists or is defined' in our host_vars files otherwise move on to the next task. 
+'{% for vlan in configuration.vlans.vlan %}' - This line will always need to be followed with an '{% endfor %}'. The 'FOR LOOP' is a loop and it will continue printing the text between '{% for vlan in configuration.vlans.vlan %}' and '{% endfor %}' until the entire list has been iterated through. This allows us to create an easy to read lists of things we want to configure in our host_vars files. In this case we created a list of vlans and its names in the '/host_vars/podxsw3/vlans.yml' file.
+'{% if vlan.name is defined %}' - This line will print the name of the vlan if it has been included in our '/host_vars/podxsw3/vlans.yml' file. If it has not been defined then we just skip that portion of text in the rendering and move on to the next task.
