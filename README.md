@@ -499,3 +499,81 @@ Lets go over what we are doing:
 * ```interface {{ interface.name }}``` - This line calls for a variable from our list of interfaces. If you look at the '/host_vars/podxsw3/access_interface.yml' you will notice that under access we created 3 different lists with 4 variabels. name, description, interface_mode, and vlan. As we progress down you should see that the tests looks similar to the IOS configuration output of a 'show run interface'. As stated above anything between a double bracket is a variable. 
 * We will follow a similar format to our add_vlan jinja template and call out each variable that is neccessary to configure an interface to our required standards. 
 * ```{% endfor %} tells Jinja that it can end the looping of the lists and the ```{% endif %}``` tells Jinja that the lines between the if and the endif should only be rendered if the condition has been met. 
+
+Create a new file under 'inventory/host_vars/podxsw3/' called 'trunk_interface.yml'. In this file we will create a list of trunk interfaces that we need to configure on our access switch.
+Place the following text in your file:
+```
+---
+configuration:
+  interfaces:
+    trunk:
+      - name: Gi0/1
+        description: "TRUNK TO POD1SW1"
+        interface_mode: trunk
+        native_vlan:
+          members: "666"
+        allowed_vlans:
+            members: "300,350,400"
+
+      - name: Gi0/2
+        description: "TRUNK TO POD1SW2"
+        interface_mode: trunk
+        native_vlan:
+          members: "666"
+        allowed_vlans:
+            members: "300,350,400"
+```
+
+Create a new file under 'add_trunk_interface/meta/' called 'main.yml'. This file will pull the collection we are using to parse out from for our validation plays. This simply replaces the Collection section inside a standard playbook and assigns it to this task. Inside the meta.yml file place the following text:
+```
+collections:
+  - clay584.parse_genie
+```
+Create a new file under 'add_trunk_interface/tasks/' called 'main.yml'. In this play we will again point to a Jinja2 template to configure our interfaces for the 3 user groups (Users, Servers, Guests).
+
+In the main.yml file we will use the playbook tasks structure. Roles simply replace tasks of a playbook.
+
+```
+---
+- name: configuring layer2 trunk interfaces on {{ inventory_hostname }}
+  cisco.ios.ios_config:
+    src: add_trunk_interface.j2
+
+- name: Saving the running config on {{ inventory_hostname }}
+  ios_config:
+    save_when: always  
+```
+
+Create a new file under 'add_trunk_interface/templates/ called 'add_trunk_interface.j2'. this will store our Jinja2 template that will utlize the host_vars we created above.
+
+In the 'add_trunk_interface.j2' file place the following text:
+```
+#jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
+{#- ---------------------------------------------------------------------------------- #}
+{# configuration.interfaces.trunk                                                      #}
+{# ---------------------------------------------------------------------------------- -#}
+{% if configuration.interfaces.trunk is defined %}
+{% for interface in configuration.interfaces.trunk %}
+interface {{ interface.name }}
+    {% if interface.description is defined %}
+    description {{ interface.description }}
+    {% endif %}
+    {% if interface.native_vlan is defined %}
+    switchport trunk native vlan {{ interface.native_vlan.members }}
+    {% endif %}
+    {% if interface.allowed_vlans.members is defined %}
+    switchport trunk allowed vlan {{ interface.allowed_vlans.members }}
+    {% endif %}
+    {% if interface.allowed_vlans.add is defined %}
+    switchport trunk allowed vlan add {{ interface.allowed_vlans.add }}
+    {% endif %}
+    switchport trunk encapsulation dot1q
+    switchport mode trunk
+    {% if interface.port_channel is defined %}
+    channel-group {{ interface.port_channel }} mode active
+    {% endif %}
+    no shut
+{% endfor %}
+{% endif %}
+```
+You will notice a pattern here and that we are utlizing IF statements to perform tasks only if the variable is defined and loops to iterate through lists that we are creating in our host_vars. 
