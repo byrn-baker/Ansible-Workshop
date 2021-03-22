@@ -307,6 +307,7 @@ We have the following tasks to complete the rollout of our pod. We will be break
       * Configure eBGP to advertise and Aggregate subnet from the Users, Servers, and Guest subnets 
       * Accept a default route from the ISP
     * Configure DHCP server for the Users, Servers, and Guest subnets
+    
 The Lab diagram below consists of the IP addressing for each POD. The (x) will be replaced with the POD number you are using. 
 ### Lab Pod Diagram
 ![Lab Pod diagram](https://github.com/TwistByrn/Ansible_Workshop/blob/main/images/Ansible-WorkShop.png)
