@@ -1,4 +1,4 @@
 configuration:
   ospf:
     instance: 1
-    router_id: 10.0.1.3
+    router_id: 10.1.1.3

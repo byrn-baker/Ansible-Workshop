@@ -1,0 +1,17 @@
+Here is the list of VLANs currently in the Vlan Database on pod2sw3 and their assigned interfaces
+Vlan: 1
+    GigabitEthernet0/0
+    GigabitEthernet0/1
+    GigabitEthernet0/2
+    GigabitEthernet0/3
+    GigabitEthernet1/0
+    GigabitEthernet1/1
+    GigabitEthernet1/2
+Vlan: 300
+Vlan: 350
+Vlan: 400
+Vlan: 666
+Vlan: 1002
+Vlan: 1003
+Vlan: 1004
+Vlan: 1005

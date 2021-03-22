@@ -25,7 +25,7 @@ configuration:
 
       - name: Loopback0
         description: "iBGP LOOPBACK"
-        ipv4: 10.0.1.1
+        ipv4: 10.1.1.1
         ipv4_mask: 255.255.255.255
         ospf:
           area: 0

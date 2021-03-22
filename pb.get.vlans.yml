@@ -4,7 +4,7 @@
 ############################################################
 
 - name: Connect to access switches
-  hosts: pod1sw3
+  hosts: access_switches
   gather_facts: false
   connection: network_cli
 
