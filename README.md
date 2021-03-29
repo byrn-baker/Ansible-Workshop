@@ -21,7 +21,7 @@ Now run the below command in terminal to install the packages
 ```
 pip3 install wheel ansible pyats genie colorama 
 ```
-Now that we have ansible installed we need to add a module that will help us connect and configure our topolgy
+Now that we have ansible installed we need to add a module that will help us connect and configure our topology
 ```
 ansible-galaxy collection install cisco.ios clay584.genie
 ```
@@ -81,9 +81,9 @@ ansible_network_os: ios
 ```
 
 ## Section 3: Creating plays
-Documentation on creating Plays with ansible can be found [here](https://docs.ansible.com/ansible/latest/user_guide/playbooks.html). We will be using the [Cisco IOS Collection](https://github.com/ansible-collections/cisco.ios) and templating with ![Jinja2](https://docs.ansible.com/ansible/latest/user_guide/playbooks_templating.html) to create the configurations that will be sent to each device via an SSH session from our Ansible controll node. So with all of this information lets create a play to reach out to one of our switches and pull back the configured vlan database.
+Documentation on creating Plays with ansible can be found [here](https://docs.ansible.com/ansible/latest/user_guide/playbooks.html). We will be using the [Cisco IOS Collection](https://github.com/ansible-collections/cisco.ios) and templates with ![Jinja2](https://docs.ansible.com/ansible/latest/user_guide/playbooks_templating.html) to create the configurations that will be sent to each device via an SSH session from our Ansible control node. So with all of this information lets create a play to reach out to one of our switches and pull back the configured vlan database.
 
-In your main folder (Ansible_Workshop) create a new file pb.get.vlans.yml. Every play needs the below structure. At the top of the play we list what and how we are connecting to with hosts: we will connect to podxsw3. Gather_facts in our use case will always be false. Connection will be network_cli. Below these details we will list out the tasks to be peformed in this play. Notice the structure of the file below. indentation is key to ensure that ansible can read in this file. Our first task is using the cisco ios collection to run the command on podxsw3 (show vlan). The register will store the output of the SSH sessions command (show vlan). Our next tasks is to take that store result and display it on our terminal window. Ansible has a debug that will handle this and is a useful way to validate the results you are getting from the terminal window. We could also print it to a file if you desired. With the help of ![clay584s parse_genie collection](https://github.com/clay584/parse_genie) this (show vlan) output will be displayed in a structured yaml format. 
+In your main folder (Ansible_Workshop) create a new file pb.get.vlans.yml. Every play needs the below structure. At the top of the play we list what and how we are connecting to with hosts: we will connect to podxsw3. Gather_facts in our use case will always be false. Connection will be network_cli. Below these details we will list out the tasks to be performed in this play. Notice the structure of the file below. indentation is key to ensure that ansible can read in this file. Our first task is using the cisco ios collection to run the command on podxsw3 (show vlan). The register will store the output of the SSH sessions command (show vlan). Our next tasks is to take that store result and display it on our terminal window. Ansible has a debug that will handle this and is a useful way to validate the results you are getting from the terminal window. We could also print it to a file if you desired. With the help of ![clay584s parse_genie collection](https://github.com/clay584/parse_genie) this (show vlan) output will be displayed in a structured yaml format. 
 
 To run this play in terminal
 
@@ -266,7 +266,7 @@ We have the following tasks to complete the rollout of our pod. We will be break
       * Guests - Port Gi1/1
     *  Configure a Layer 2 trunk to core switch 1 and core switch 2 on the Ports Gi0/1 and Gi0/2
       * Trunks should only pass the configured vlans
-    * A linux VM has been connect to port Gi0/3 on the access switch and is accessable from the Guacamole front end
+    * A linux VM has been connect to port Gi0/3 on the access switch and is accessible from the Guacamole front end
 2. (2) Core switches
     * Configure the following vlans:
       * Users - Vlan 300
@@ -282,7 +282,7 @@ We have the following tasks to complete the rollout of our pod. We will be break
       * Users - IP 155.x.1.0/26
       * Servers - IP 155.x.1.64/26
       * Guest - IP 155.x.1.128/26
-    * Configure VRRP protocol for redunancy on above vlans
+    * Configure VRRP protocol for redundancy on above vlans
       * Use the first IP in the scope as your gateway
     * Configure Layer 3 interfaces as UPLINKS to the router
       * Core Switch 1 Port Gi0/0 with IP 10.x0.1.1/31
@@ -343,7 +343,7 @@ add_vlan/
   tasks/
   templates/
 ```
-Create a new file under 'inventory/group_vars/' called 'pod1.yml'. In this file we will store our username and password for the assigned pod. Place the following text in your file:
+Create a new file under 'inventory/group_vars/' called 'podx.yml'. In this file we will store our username and password for the assigned pod. Place the following text in your file:
 ```
 ---
 ansible_password: Labuser!23
@@ -390,13 +390,13 @@ In the main.yml file we will use the playbook tasks structure. Roles simply repl
     save_when: always
 ```
 Lets go over what we are doing:
-* ```name: Add new vlan to vlan database on {{ inventory_hostname }}``` - The name of the task appears in the Ansible console to let the opperator know what is being performed in the background. ```{{ }}``` with Ansible anything between a double bracket is a variable and we can fill this in with anything available to Ansible like a hostname for example.
+* ```name: Add new vlan to vlan database on {{ inventory_hostname }}``` - The name of the task appears in the Ansible console to let the operator know what is being performed in the background. ```{{ }}``` with Ansible anything between a double bracket is a variable and we can fill this in with anything available to Ansible like a hostname for example.
 * ```cisco.ios.ios_config:``` - This tells Ansible the module we want to use in the task. These modules use name space similar to a dns record. The cisco.ios.ios_config module has a couple different ways to push configurations to an IOS device. For our purposes we will use jinja templates method.
 *   ```src: add_vlan.j2``` - This tells Ansible what file in the templates folder to use in rendering our text that will be pushed to the cisco device.
 * ```ios_config:``` - This second task simply tells Ansible to perform a write memory after passing the rendered text via the SSH connection. 
 *  ```save_when: always``` - This does exactly what is says. The ios_config module has a few options on when to save the configuration to startup (write memory). [Check out the ios module readme docs](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_config_module.html) The ios_config module attempts to provide some idempotency and so if no changes are actually made to the configuration you could tell the module not to perform a write memory.
 
-Create a new file under 'add_vlan/templates/ called 'add_vlan.j2'. this will store our Jinja2 template that will utlize the host_vars we created above. Jinja templates print out the text in the file while give you the ability to insert predefined variables at any location in the text that you wish. Ansible holds this information in memory and the cisco IOS module pushes the full text to our switch similar to a copy and paste from an SSH session on the CLI. [Check out this blog post from Network to Code](https://blog.networktocode.com/post/Jinja2_assemble_strategy/)
+Create a new file under 'add_vlan/templates/ called 'add_vlan.j2'. this will store our Jinja2 template that will utilize the host_vars we created above. Jinja templates print out the text in the file while give you the ability to insert predefined variables at any location in the text that you wish. Ansible holds this information in memory and the cisco IOS module pushes the full text to our switch similar to a copy and paste from an SSH session on the CLI. [Check out this blog post from Network to Code](https://blog.networktocode.com/post/Jinja2_assemble_strategy/)
 
 In the 'add_vlan.j2' file place the following text:
 ```
@@ -470,7 +470,7 @@ In the main.yml file we will use the playbook tasks structure. Roles simply repl
 ```
 You will notice this play looks very similar to the add_vlan play. This is because we will reuse this method in each play and rely on the jinja templates to render our configuration that will be pushed each time with the cisco.ios.ios_config module.
 
-Create a new file under 'add_access_interface/templates/ called 'add_access_interface.j2'. this will store our Jinja2 template that will utlize the host_vars we created above.
+Create a new file under 'add_access_interface/templates/ called 'add_access_interface.j2'. this will store our Jinja2 template that will utilize the host_vars we created above.
 
 In the 'add_access_interface.j2' file place the following text:
 ```
@@ -495,9 +495,9 @@ Lets go over what we are doing:
 * ```#jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"``` - This line tells the Jinja template to remove any white space that is added before or after our IF statements or FOR statements. 
 * ```{# #}``` - These characters tell the jinja template not to render the text between the characters. This is what we call commenting and allows you to tell someone else reading your template what you are doing and why without rendering the text in the file output.
 * ```{% if configuration.interfaces.access is defined %}``` - If configuration.interfaces.access is defined or exists continue with the enclosed rendering otherwise just skip this task and move on to the next task.
-* ```{% for interface in configuration.interfaces.access %}``` - This line starts our looping through the list we created in '/host_vars/podxsw3/access_interface.yml' file. The YAML indentation is important,each tab indicates that access is nested under interfaces, and name is nested under access. So when we are defining our loops we can rename the lists to whatever suits our needs best. Our example ```{% for interface in configuration.interfaces.access %}``` names the nested list from configuration.interfaces.access to interfaces. This also tells Jinja that anything in a list under configuration.interfaces.access should continue to be kept as a seperate list.  The '-' is how YAML shows that this is the start of a list.
-* ```interface {{ interface.name }}``` - This line calls for a variable from our list of interfaces. If you look at the '/host_vars/podxsw3/access_interface.yml' you will notice that under access we created 3 different lists with 4 variabels. name, description, interface_mode, and vlan. As we progress down you should see that the tests looks similar to the IOS configuration output of a 'show run interface'. As stated above anything between a double bracket is a variable. 
-* We will follow a similar format to our add_vlan jinja template and call out each variable that is neccessary to configure an interface to our required standards. 
+* ```{% for interface in configuration.interfaces.access %}``` - This line starts our looping through the list we created in '/host_vars/podxsw3/access_interface.yml' file. The YAML indentation is important,each tab indicates that access is nested under interfaces, and name is nested under access. So when we are defining our loops we can rename the lists to whatever suits our needs best. Our example ```{% for interface in configuration.interfaces.access %}``` names the nested list from configuration.interfaces.access to interfaces. This also tells Jinja that anything in a list under configuration.interfaces.access should continue to be kept as a separate list.  The '-' is how YAML shows that this is the start of a list.
+* ```interface {{ interface.name }}``` - This line calls for a variable from our list of interfaces. If you look at the '/host_vars/podxsw3/access_interface.yml' you will notice that under access we created 3 different lists with 4 variables. name, description, interface_mode, and vlan. As we progress down you should see that the tests looks similar to the IOS configuration output of a 'show run interface'. As stated above anything between a double bracket is a variable. 
+* We will follow a similar format to our add_vlan jinja template and call out each variable that is necessary to configure an interface to our required standards. 
 * ```{% endfor %} tells Jinja that it can end the looping of the lists and the ```{% endif %}``` tells Jinja that the lines between the if and the endif should only be rendered if the condition has been met. 
 
 Create a new file under 'inventory/host_vars/podxsw3/' called 'trunk_interface.yml'. In this file we will create a list of trunk interfaces that we need to configure on our access switch.
@@ -576,4 +576,4 @@ interface {{ interface.name }}
 {% endfor %}
 {% endif %}
 ```
-You will notice a pattern here and that we are utlizing IF statements to perform tasks only if the variable is defined and loops to iterate through lists that we are creating in our host_vars. 
+You will notice a pattern here and that we are utilizing IF statements to perform tasks only if the variable is defined and loops to iterate through lists that we are creating in our host_vars. 
