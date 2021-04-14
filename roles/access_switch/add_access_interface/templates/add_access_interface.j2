@@ -10,6 +10,7 @@ interface {{ interface.name }}
     {% endif %}
     switchport mode {{ interface.interface_mode }}
     switchport access vlan {{ interface.vlan.members }}
+    spanning-tree portfast edge
     no cdp enable
     no shut
 {% endfor %}

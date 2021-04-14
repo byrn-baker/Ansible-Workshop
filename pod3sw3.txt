@@ -1,0 +1,21 @@
+interface Gi0/3
+    description USERS
+    switchport mode access
+    switchport access vlan 300
+    spanning-tree portfast edge
+    no cdp enable
+    no shut
+interface Gi1/0
+    description SERVERS
+    switchport mode access
+    switchport access vlan 350
+    spanning-tree portfast edge
+    no cdp enable
+    no shut
+interface Gi1/1
+    description GUEST
+    switchport mode access
+    switchport access vlan 400
+    spanning-tree portfast edge
+    no cdp enable
+    no shut

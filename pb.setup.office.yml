@@ -4,30 +4,30 @@
   connection: network_cli
   
   roles:
-    - { role: access_switch/add_vlan }
+    # - { role: access_switch/add_vlan }
     - { role: access_switch/add_access_interface }
-    - { role: access_switch/add_trunk_interface }
+#     - { role: access_switch/add_trunk_interface }
 
-- name: Configuring core switches
-  hosts: core_switches
-  gather_facts: false
-  connection: network_cli
+# - name: Configuring core switches
+#   hosts: core_switches
+#   gather_facts: false
+#   connection: network_cli
   
-  roles:
-    - { role: core_switch/add_vlan }
-    - { role: core_switch/add_trunk_interface }
-    - { role: core_switch/add_l3_interface }
-    - { role: core_switch/add_ospf }
-    - { role: core_switch/add_bgp }
+#   roles:
+#     - { role: core_switch/add_vlan }
+#     - { role: core_switch/add_trunk_interface }
+#     - { role: core_switch/add_l3_interface }
+#     - { role: core_switch/add_ospf }
+#     - { role: core_switch/add_bgp }
 
-- name: Configuring routers
-  hosts: routers
-  gather_facts: false
-  connection: network_cli
+# - name: Configuring routers
+#   hosts: routers
+#   gather_facts: false
+#   connection: network_cli
 
-  roles:
-    - { role: routers/add_dhcp_pool }
-    - { role: routers/add_l3_interface }
-    - { role: routers/add_ospf }
-    - { role: routers/add_bgp }
+#   roles:
+#     - { role: routers/add_dhcp_pool }
+#     - { role: routers/add_l3_interface }
+#     - { role: routers/add_ospf }
+#     - { role: routers/add_bgp }
 
