@@ -58,4 +58,4 @@ Using the diagram above as a reference we have several tasks that need to be com
       * Accept a default route from the ISP
     * Configure DHCP server for the Users, Servers, and Guest subnets
 
-The Lab diagram below consists of the IP addressing for each POD. The (x) will be replaced with the POD number you are using.
+The Lab diagram above consists of the IP addressing for each POD. The (x) will be replaced with the POD number you are using.
