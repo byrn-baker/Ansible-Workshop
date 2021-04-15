@@ -81,6 +81,7 @@ In the main.yml file we will use the playbook tasks structure. Roles simply repl
     save_when: always
 ```
 Lets go over what we are doing:
-* ```name: Add new vlan to vlan database on {{ inventory_hostname }}``` - The name of the task appears in the Ansible console to let the operator know what is being performed in the background. ```{{ }}``` with Ansible anything between a double bracket is a variable and we can fill this in with anything available to Ansible like a hostname for example.
+* ```name: Add new vlan to vlan database on {{ inventory_hostname }}``` - The name of the task appears in the Ansible console to let the operator know what is being performed in the background. "{{ }}" with Ansible anything between a double bracket is a variable and we can fill this in with anything available to Ansible like a hostname for example.
 * ```src: add_vlan.j2``` - This tells Ansible what file in the templates folder to use in rendering our text that will be pushed to the cisco device.
 * ```ios_config:``` - This second task simply tells Ansible to perform a write memory after passing the rendered text via the SSH connection. 
+* ```save_when: always``` - This does exactly what is says. The ios_config module has a few options on when to save the configuration to startup (write memory). [Check out the ios module readme docs](https://docs.ansible.com/ansible/latest/collections/cisco/ios/ios_config_module.html) The ios_config module attempts to provide some idempotency and so if no changes are actually made to the configuration you could tell the module not to perform a write memory.
