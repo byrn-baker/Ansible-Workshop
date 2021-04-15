@@ -111,5 +111,9 @@ vlan {{ vlan.vlan_id }}
 
 Lets go over what we are doing:
 * {% raw %}```#jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"```{% endraw %} - This line tells the Jinja template to remove any white space that is added before or after our IF statements or FOR statements. 
-
+* {% raw %}```{# #}```{% endraw %} - These characters tell the jinja template not to render the text between the characters. This is what we call commenting and allows you to tell someone else reading your template what you are doing and why without rendering the text in the file output.
+* {% raw %}```{% if configuration.vlans.vlan is not mapping and configuration.vlans.vlan is not string %}```{% endraw %} - This is looking to make sure our VLANs are actually a string of numbers and not text or some other character as anything other than a number would not be accepted by the cisco CLI.
+* {% raw %}```{% if configuration.vlans is defined %}```{% endraw %} - Any 'IF' statement will always need to be followed with an {% raw %}```{% endif %}```{% endraw %}. In our case we will only render the below text 'if configuration.vlans exists or is defined' in our host_vars files otherwise move on to the next task. 
+* {% raw %}```% for vlan in configuration.vlans.vlan %}```{% endraw %} - This line will always need to be followed with an {% raw %}```{% endfor %}```{% endraw %}. The 'FOR LOOP' is a loop and it will continue printing the text between {% raw %}```{% for vlan in configuration.vlans.vlan %}```{% endraw %} and {% raw %}```{% endfor %}```{% endraw %} until the entire list has been iterated through. This allows us to create an easy to read lists of things we want to configure in our host_vars files. In this case we created a list of vlans and its names in the '/host_vars/podxsw3/vlans.yml' file.
+* {% raw %}```{% if vlan.name is defined %}```{% endraw %} - This line will print the name of the vlan if it has been included in our '/host_vars/podxsw3/vlans.yml' file. If it has not been defined then we just skip that portion of text in the rendering and move on to the next task.
 
