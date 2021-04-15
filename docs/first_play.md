@@ -1,9 +1,13 @@
 ## Section 3: Creating plays
 Documentation on creating Plays with ansible can be found [here](https://docs.ansible.com/ansible/latest/user_guide/playbooks.html). We will be using the [Cisco IOS Collection](https://github.com/ansible-collections/cisco.ios) and templates with ![Jinja2](https://docs.ansible.com/ansible/latest/user_guide/playbooks_templating.html) to create the configurations that will be sent to each device via an SSH session from our Ansible control node. So with all of this information lets create a play to reach out to one of our switches and pull back the configured vlan database.
 
-In your main folder (Ansible_Workshop) create a new file pb.get.vlans.yml. Every play needs the below structure. At the top of the play we list what and how we are connecting to with hosts: we will connect to podxsw3. Gather_facts in our use case will always be false. Connection will be network_cli. Below these details we will list out the tasks to be performed in this play. Notice the structure of the file below. indentation is key to ensure that ansible can read in this file. Our first task is using the cisco ios collection to run the command on podxsw3 (show vlan). The register will store the output of the SSH sessions command (show vlan). Our next tasks is to take that store result and display it on our terminal window. Ansible has a debug that will handle this and is a useful way to validate the results you are getting from the terminal window. We could also print it to a file if you desired. With the help of ![clay584s parse_genie collection](https://github.com/clay584/parse_genie) this (show vlan) output will be displayed in a structured yaml format. 
+In your main folder (Ansible_Workshop) create a new file pb.get.vlans.yaml. Every play needs the below structure. At the top of the play we list what and how we are connecting to with 
+* hosts: we will connect to podxsw3. 
+* Gather_facts in our use case will always be false. 
+* Connection will be network_cli. 
+Below these details we will list out the tasks to be performed in this play. Notice the structure of the file below. indentation is key to ensure that ansible can read in this file. Our first task is using the cisco ios collection to run the command on podxsw3 "show vlan". The register will store the output of "show vlan". Our next tasks is to take that stored result and display it on our terminal window. Ansible has a debug that will handle this and is a useful way to validate the results Ansible is getting from the device. We could also print it to a file if you desired. With the help of ![clay584s parse_genie collection](https://github.com/clay584/parse_genie) this "show vlan" output will be displayed in a structured yaml format. 
 
-To run this play in terminal
+To run this type into the terminal ansible-playbook -i inventory/inventory.yaml pb.get.vlans.yaml 
 
 ```
 ---
