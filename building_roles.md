@@ -186,8 +186,8 @@ interface {{ interface.name }}
 {% endfor %}
 {% endif %}
 ```
-{% endraw %
-}
+{% endraw %}
+
 Lets go over what we are doing:
 * ```#jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"``` - This line tells the Jinja template to remove any white space that is added before or after our IF statements or FOR statements. 
 * ```{# #}``` - These characters tell the jinja template not to render the text between the characters. This is what we call commenting and allows you to tell someone else reading your template what you are doing and why without rendering the text in the file output.
@@ -241,7 +241,7 @@ In the main.yml file we will use the playbook tasks structure. Roles simply repl
     save_when: always  
 ```
 
-Create a new file under 'add_trunk_interface/templates/ called 'add_trunk_interface.j2'. this will store our Jinja2 template that will utlize the host_vars we created above.
+Create a new file under 'add_trunk_interface/templates/ called 'add_trunk_interface.j2'. this will store our Jinja2 template that will utilize the host_vars we created above.
 
 In the 'add_trunk_interface.j2' file place the following text:
 {% raw %}
