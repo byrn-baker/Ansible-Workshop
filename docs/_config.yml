@@ -4,3 +4,6 @@ defaults:
       path: "assets/images"
     values:
       images: true
+relative_links:
+  enabled:     true
+  collections: false      
