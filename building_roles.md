@@ -82,3 +82,5 @@ In the main.yml file we will use the playbook tasks structure. Roles simply repl
 ```
 Lets go over what we are doing:
 * ```name: Add new vlan to vlan database on {{ inventory_hostname }}``` - The name of the task appears in the Ansible console to let the operator know what is being performed in the background. ```{{ }}``` with Ansible anything between a double bracket is a variable and we can fill this in with anything available to Ansible like a hostname for example.
+* ```src: add_vlan.j2``` - This tells Ansible what file in the templates folder to use in rendering our text that will be pushed to the cisco device.
+* ```ios_config:``` - This second task simply tells Ansible to perform a write memory after passing the rendered text via the SSH connection. 
