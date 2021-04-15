@@ -2,7 +2,7 @@
 This workshop intention is to introduce you to Ansible and tools that can help you develop playbooks to be used with Ansible. We will walk through installing python packages including Ansible and proceed to learning how to build a playbooks to push configurations to routers and switches.
 
 What we will be working toward in this workshop is developing playbooks to help us deploy our standardized office deployment. Below is the diagram of the physical connectivity on each pod. 
-![Lab Pod diagram](https://github.com/TwistByrn/Ansible_Workshop/blob/main/images/Ansible-WorkShop.png)
+![Lab Pod diagram](https://github.com/byrn-baker/Ansible-Workshop/blob/main/docs/assets/images/Ansible-WorkShop.png)
 Using the diagram above as a reference we have several tasks that need to be completed before we can call our deployment completed.
 1. (1) Access switch
     * Configure the following vlans:
