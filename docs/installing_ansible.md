@@ -1,5 +1,5 @@
 ## Section 1: Install Python3, pip3 and Ansible
-{% include youtubeplayer.html id="p2a-_L_zNOo" %}
+{% include youtubeplayer.html id=page.p2a-_L_zNOo %}
 Open the terminal window. type pwd in the terminal and it should be showing you your home directory (/home/lab_user1) for example.
 In the terminal window type the below commands one at a time.
 ```
