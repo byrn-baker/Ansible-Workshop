@@ -6,7 +6,7 @@ In your main folder (Ansible_Workshop) create a new file pb.get.vlans.yaml. Ever
 * Gather_facts in our use case will always be false. 
 * Connection will be network_cli.
 
-Below these details we will list out the tasks to be performed in this play. Notice the structure of the file below. indentation is key to ensure that ansible can read in this file. Our first task is using the cisco ios collection to run the command on podxsw3 "show vlan". The register will store the output of "show vlan". Our next tasks is to take that stored result and display it on our terminal window. Ansible has a debug that will handle this and is a useful way to validate the results Ansible is getting from the device. We could also print it to a file if you desired. With the help of ![clay584s parse_genie collection](https://github.com/clay584/parse_genie) this "show vlan" output will be displayed in a structured yaml format. 
+Below these details we will list out the tasks to be performed in this play. Notice the structure of the file below. indentation is key to ensure that ansible can read in this file. Our first task is using the cisco ios collection to run the command on podxsw3 "show vlan". The register will store the output of "show vlan". Our next tasks is to take that stored result and display it on our terminal window. Ansible has a debug that will handle this and is a useful way to validate the results Ansible is getting from the device. We could also print it to a file if you desired. With the help of ![clay584s parse_genie](https://github.com/clay584/parse_genie) this "show vlan" output will be displayed in a structured yaml format. 
 
 To run this type into the terminal ansible-playbook -i inventory/inventory.yaml pb.get.vlans.yaml 
 
