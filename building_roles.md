@@ -90,7 +90,7 @@ Create a new file under 'add_vlan/templates/ called 'add_vlan.j2'. this will sto
 
 Lets take a look at [add_vlan.j2](https://github.com/byrn-baker/Ansible-Workshop/blob/main/roles/access_switch/add_vlan/templates/add_vlan.j2)
 
-{% highlight language %}
+{% raw %}
 #jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
 {#- ---------------------------------------------------------------------------------- #}
 {# configuration.vlans                                                                 #}
@@ -105,4 +105,5 @@ vlan {{ vlan.vlan_id }}
 {% endfor %}
 {% endif %}
 {% endif %}
-{% endhighlight %}
+
+{% endraw %}
