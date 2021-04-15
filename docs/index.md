@@ -62,3 +62,4 @@ The Lab diagram above consists of the IP addressing for each POD. The (x) will b
 
 
 [Installing Ansible - Section 1](installing_ansible.md)
+[Creating an Inventory File - Section 2](inventory_file.md)
