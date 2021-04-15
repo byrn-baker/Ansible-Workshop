@@ -88,21 +88,4 @@ Lets go over what we are doing:
 
 Create a new file under 'add_vlan/templates/ called 'add_vlan.j2'. this will store our Jinja2 template that will utilize the host_vars we created above. Jinja templates print out the text in the file while give you the ability to insert predefined variables at any location in the text that you wish. Ansible holds this information in memory and the cisco IOS module pushes the full text to our switch similar to a copy and paste from an SSH session on the CLI. [Check out this blog post from Network to Code](https://blog.networktocode.com/post/Jinja2_assemble_strategy/)
 
-In the 'add_vlan.j2' file place the following text:
-
-```#jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"```
-```
-{#- ---------------------------------------------------------------------------------- #}
-{# configuration.vlans                                                                 #}
-{# ---------------------------------------------------------------------------------- -#}
-{% if configuration.vlans is defined %}
-{% if configuration.vlans.vlan is not mapping and configuration.vlans.vlan is not string %}
-{% for vlan in configuration.vlans.vlan %}
-vlan {{ vlan.vlan_id }}
-    {% if vlan.name is defined %}
-    name {{ vlan.name }}
-    {% endif %}
-{% endfor %}
-{% endif %}
-{% endif %}
-```
+Lets take a look at [add_vlan.j2 here](https://github.com/byrn-baker/Ansible-Workshop/blob/main/roles/access_switch/add_vlan/templates/add_vlan.j2)
