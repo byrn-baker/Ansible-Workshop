@@ -1,4 +1,5 @@
 ## Section 2: Creating the inventory yaml file
+{% include section2.html %}
 [Ansible inventory Documentation can be found here](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html#) 
 We will be constructing our inventory file with yaml format. Each pod has a bootstrap configuration that includes IP addressing to each node. Your control nodes (Jumpbox VM) has the /etc/hosts file built and each node has been assigned a hostname and an IP address.
 Here are the groupings we will be building in our inventory file.
