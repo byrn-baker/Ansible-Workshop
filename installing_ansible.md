@@ -5,7 +5,7 @@ In the terminal window type the below commands one at a time.
 ```
 mkdir Ansible_Workshop && cd Ansible_Workshop
 sudo apt update
-sudo apt install software-properties-common python3-pip python3-venv
+sudo apt install python3-pip python3-venv
 ```
 Now we will create a new python virtual environment
 ```
