@@ -1,4 +1,5 @@
 ## Section 4: Building Roles
+{% include section4-part1.html %}
 We have several tasks to complete the deployment of our pod. We will be breaking each tasks down into its own play. This is called a [Role](https://docs.ansible.com/ansible/latest/user_guide/playbooks_reuse_roles.html). This workshop Pod will be making use of the Cisco vIOS router and vIOS switch.
 
 Lets create some folders to help structure where we will be placing data that will be used in our Ansible Plays.
@@ -117,6 +118,7 @@ Lets go over what we are doing:
 * {% raw %}```% for vlan in configuration.vlans.vlan %}```{% endraw %} - This line will always need to be followed with an {% raw %}```{% endfor %}```{% endraw %}. The 'FOR LOOP' is a loop and it will continue printing the text between {% raw %}```{% for vlan in configuration.vlans.vlan %}```{% endraw %} and {% raw %}```{% endfor %}```{% endraw %} until the entire list has been iterated through. This allows us to create an easy to read lists of things we want to configure in our host_vars files. In this case we created a list of vlans and its names in the '/host_vars/podxsw3/vlans.yml' file.
 * {% raw %}```{% if vlan.name is defined %}```{% endraw %} - This line will print the name of the vlan if it has been included in our '/host_vars/podxsw3/vlans.yml' file. If it has not been defined then we just skip that portion of text in the rendering and move on to the next task.
 
+{% include section4-part2.html %}
 Create a new file under 'inventory/host_vars/podxsw3/' called 'access_interface.yml'. In this file we will create a list of access interfaces that we need to configure on our access switch.
 Place the following text in your file:
 ```
