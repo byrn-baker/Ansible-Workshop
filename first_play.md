@@ -1,4 +1,5 @@
 ## Section 3: Creating plays
+{% include section3.html %}
 Documentation on creating Plays with ansible can be found [here](https://docs.ansible.com/ansible/latest/user_guide/playbooks.html). We will be using the [Cisco IOS Collection](https://github.com/ansible-collections/cisco.ios) and templates with [Jinja2](https://docs.ansible.com/ansible/latest/user_guide/playbooks_templating.html) to create the configurations that will be sent to each device via an SSH session from our Ansible control node. So with all of this information lets create a play to reach out to one of our switches and pull back the configured vlan database.
 
 In your main folder (Ansible_Workshop) create a new file pb.get.vlans.yaml. Every play needs the below structure. At the top of the play we list what and how we are connecting to with 
