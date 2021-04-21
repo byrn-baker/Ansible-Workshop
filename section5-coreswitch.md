@@ -83,6 +83,7 @@ configuration:
         155.1.1.128: {net_mask: 255.255.255.192 }
 ```
 bgp.j2 - location of this file should be under roles/core_switch/add_bgp/templates
+{% raw %}
 ```
 #jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
 {#- ---------------------------------------------------------------------------------- #}
@@ -120,7 +121,7 @@ router bgp {{ configuration.bgp.ibgp.l_asn }}
         {% endif %}   
 {% endif %}
 ```
-
+{% endraw %}
 ospf.yaml - location of this file should be under inventory/host_vars/podxsw1
 ```
 ---
@@ -130,6 +131,7 @@ configuration:
     router_id: 10.1.1.2
 ```
 ospf.j2 - location of this file should be under roles/core_switch/add_ospf/templates
+{% raw %}
 ```
 #jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
 {#- ---------------------------------------------------------------------------------- #}
@@ -141,7 +143,7 @@ router ospf {{ configuration.ospf.instance }}
     passive-interface Loopback 0
 {% endif %}
 ```
-
+{% endraw %}
 l3_interfaces.yaml - location of this file should be under inventory/host_vars/podxsw1
 ```
 ---
@@ -195,6 +197,7 @@ configuration:
           network: "point-to-point"
 ```
 l3_interfaces.j2 - location of this file should be under roles/core_switch/add_l3_interfaces/templates
+{% raw %}
 ```
 #jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
 {#- ---------------------------------------------------------------------------------- #}
@@ -246,6 +249,7 @@ interface {{ l3_interface.name }}
 {% endfor%}
 {% endif %}
 ```
+{% endraw %}
 Once you have these roles and variables completed we will need to create our playbook. 
 
 Create a new file under your main project folder Ansible_Workshop and name it pb.setup_core_switches.yaml
