@@ -199,6 +199,7 @@ Lets go over what we are doing:
 * We will follow a similar format to our add_vlan jinja template and call out each variable that is necessary to configure an interface to our required standards. 
 * {% raw %}```{% endfor %}```{% endraw %} tells Jinja that it can end the looping of the lists and the {% raw %}```{% endif %}```{% endraw %} tells Jinja that the lines between the if and the endif should only be rendered if the condition has been met. 
 
+{% include section4-part3.html %}
 Create a new file under 'inventory/host_vars/podxsw3/' called 'trunk_interface.yml'. In this file we will create a list of trunk interfaces that we need to configure on our access switch.
 Place the following text in your file:
 ```
