@@ -180,3 +180,5 @@ The results are now in a format that we can store and reuse for validation of ch
 [Creating an Inventory File - Section 2](inventory_file.md)
 
 [Building Roles - Section 4](building_roles.md)
+
+[Building the core switch Roles - Section 5](section5-coreswitch.md)

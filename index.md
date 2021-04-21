@@ -70,3 +70,6 @@ The Lab diagram above consists of the IP addressing for each POD. The (x) will b
 [Creating a playbook - Section 3](first_play.md)
 
 [Building Roles - Section 4](building_roles.md)
+
+[Building the core switch Roles - Section 5](section5-coreswitch.md)
+
