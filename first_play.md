@@ -174,3 +174,9 @@ msg:
         vlan_id: '666'
 ```
 The results are now in a format that we can store and reuse for validation of changes. This is something that is currently out scope, but will be something added to this workshop eventually.
+
+[Installing Ansible - Section 1](installing_ansible.md)
+
+[Creating an Inventory File - Section 2](inventory_file.md)
+
+[Building Roles - Section 4](building_roles.md)

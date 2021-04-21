@@ -278,3 +278,9 @@ interface {{ interface.name }}
 ```
 {% endraw %}
 You will notice a pattern here and that we are utilizing IF statements to perform tasks only if the variable is defined and loops to iterate through lists that we are creating in our host_vars. 
+
+[Installing Ansible - Section 1](installing_ansible.md)
+
+[Creating an Inventory File - Section 2](inventory_file.md)
+
+[Creating a playbook - Section 3](first_play.md)

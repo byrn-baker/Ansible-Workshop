@@ -53,3 +53,9 @@ ansible_password: Labuser!23
 ansible_user: pod1
 ansible_network_os: ios
 ```
+
+[Installing Ansible - Section 1](installing_ansible.md)
+
+[Creating a playbook - Section 3](first_play.md)
+
+[Building Roles - Section 4](building_roles.md)

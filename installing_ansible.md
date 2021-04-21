@@ -25,3 +25,9 @@ Now that we have ansible installed we need to add a module that will help us con
 ```
 ansible-galaxy collection install cisco.ios clay584.genie
 ```
+
+[Creating an Inventory File - Section 2](inventory_file.md)
+
+[Creating a playbook - Section 3](first_play.md)
+
+[Building Roles - Section 4](building_roles.md)

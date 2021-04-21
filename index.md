@@ -61,7 +61,7 @@ Using the diagram above as a reference we have several tasks that need to be com
 
 The Lab diagram above consists of the IP addressing for each POD. The (x) will be replaced with the POD number you are using. This workshop has been broken down into separate sections covering everything from installing and using VSCode to building Ansible playbooks and Jinja templates.
 
- You can access your assigned pod [Here](http://guacamole.ansible-lab.com:8080/guacamole)
+ <!-- You can access your assigned pod [Here](http://guacamole.ansible-lab.com:8080/guacamole) -->
 
 [Installing Ansible - Section 1](installing_ansible.md)
 
