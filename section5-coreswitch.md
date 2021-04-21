@@ -269,3 +269,11 @@ Create a new file under your main project folder Ansible_Workshop and name it pb
 ```
 
 The previous playbook targeted one switch to connect to; this time, we have two devices to configure. We can use the group name of the switches to target multiple devices with Ansible. So, in this case, our hosts are "core_switches" to match our grouping in the inventory file we are using. Everything else in the playbook is pretty much the same as before, except, of course, our Roles location has changed. Remember that each folder created in your roles/core_switch folder should contain two folders inside, "tasks" and "templates." Above, we showed examples of the host variables and the Jinja templates, be sure to add your tasks/main.yaml to each new role created.
+
+[Installing Ansible - Section 1](installing_ansible.md)
+
+[Creating an Inventory File - Section 2](inventory_file.md)
+
+[Creating a playbook - Section 3](first_play.md)
+
+[Building Roles - Section 4](building_roles.md)
