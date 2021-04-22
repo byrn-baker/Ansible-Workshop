@@ -1,5 +1,5 @@
 ## Section 5: Building tasks for the core switches
-
+{% include section5.html %}
 We have built out several tasks for configuring the access switches; now, it is time to move on to our core switch configuration tasks. You will remember that two of the configuration tasks for the core switches are to create VLANs and layer2 trunking interfaces. Because these tasks are the same on the access switches as the core switches, we can copy those roles from the access switch to the core switch roles folder. In part, this is a significant benefit to automation with tools like Ansible.
 
 Let us address our host_vars files for our core switches. These files are essential as they will contain all of the information required to configure our pod. We should have created folders called host_vars under our inventory directory, which contains folders for each of our devices in the pod. Copy the vlans.yaml and trunk_interfaces.yaml files from your podxsw3 host_vars folder and place those into both the podxsw1 and podxsw2 folders. We will maintain the same structure in the YAML file and update the interfaces for our core switches. 
@@ -82,43 +82,42 @@ configuration:
         155.1.1.64: {net_mask: 255.255.255.192 }
         155.1.1.128: {net_mask: 255.255.255.192 }
 ```
-bgp.j2 - location of this file should be under roles/core_switch/add_bgp/templates
+add_bgp.j2 - location of this file should be under roles/core_switch/add_bgp/templates
 {% raw %}
 ```
 #jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
-{#- ---------------------------------------------------------------------------------- #}
-{# configuration.bgp                                                                   #}
-{# ---------------------------------------------------------------------------------- -#}
+
 {% if configuration.bgp is defined %}
 router bgp {{ configuration.bgp.ibgp.l_asn }}
-    bgp router-id {{ configuration.ospf.router_id }}
-    {% for ibgp_peers in configuration.bgp.ibgp.neighbors %}
-    neighbor {{ ibgp_peers }} remote-as {{ configuration.bgp.ibgp.l_asn }}
-    neighbor {{ ibgp_peers }} update-source Loopback0
+  bgp router-id {{ configuration.ospf.router_id }}
+  {% for ibgp_peers in configuration.bgp.ibgp.neighbors %}
+  neighbor {{ ibgp_peers }} remote-as {{ configuration.bgp.ibgp.l_asn }}
+  neighbor {{ ibgp_peers }} update-source Loopback0
+  {% endfor%}
+  {% if configuration.bgp.ebgp is defined %}
+    {% for ebgp_peers,ebgp_peers_attr in configuration.bgp.ebgp.neighbors.items() %}
+  neighbors {{ ebgp_peers }} remote-as {{ ebgp_peers_attr.r_asn }}
     {% endfor %}
-    {% if configuration.bgp.ebgp is defined %}
-        {% for ebgp_peers,ebgp_peers_attr in configuration.bgp.ebgp.neighbors.items() %}
-    neighbor {{ ebgp_peers }} remote-as {{ ebgp_peers_attr.r_asn }}  
-        {% endfor %}
-    {% endif %}
-    address-family ipv4
-        {% for ibgp_peers in configuration.bgp.ibgp.neighbors %}
-        neighbor {{ ibgp_peers }} activate
-        neighbor {{ ibgp_peers }} next-hop-self
-        {% endfor %}
-        {% if configuration.bgp.ebgp.neighbors is defined %}
-        {% for ebgp_peers,ebgp_peers_attr in configuration.bgp.ebgp.neighbors.items() %}    
-        neighbor {{ ebgp_peers }} activate
-        {% endfor %}
-        {% endif %}
-        {% if configuration.bgp.address_family_ipv4.advertised_networks is defined %}
-            {% for adv_nets,adv_nets_attr in configuration.bgp.address_family_ipv4.advertised_networks.items() %}
-        network {{ adv_nets }} mask {{ adv_nets_attr.net_mask }}
-            {% endfor %}
-            {% if configuration.bgp.address_family_ipv4.agg_network is defined %}
-        aggregate-address {{ configuration.bgp.address_family_ipv4.agg_network }} {{ configuration.bgp.address_family_ipv4.agg_mask }} summary-only
-            {% endif %}
-        {% endif %}   
+  {% endif %}
+  address-family ipv4
+  {% for ibgp_peers in configuration.bgp.ibgp.neighbors %}
+   neighbor {{ ibgp_peers }} activate
+   neighbor {{ ibgp_peers }} next-hop-self
+  {% endfor %}
+  {% if configuration.bgp.ebgp.neighbors is defined %}
+    {% for ebgp_peers,ebgp_peers_attr in configuration.bgp.ebgp.neighbors.items() %}
+   neighbor {{ ebgp_peers }} activate
+    {% endfor%}
+  {% endif %}
+  {% if configuration.bgp.address_family_ipv4.advertised_networks is defined %}
+    {% for adv_nets,adv_nets_attr in configuration.bgp.address_family_ipv4.advertised_networks.items() %}
+   network {{ adv_nets }} mask {{ adv_nets_attr.net_mask }} 
+    {% endfor %}
+    {% if configuration.bgp.address_family_ipv4.agg_network is defined %}
+   aggregate-address {{ configuration.bgp.address_family_ipv4.agg_network }} {{ configuration.bgp.address_family_ipv4.agg_mask }} summary-only
+    {% endif %}  
+  {% endif %}
+  exit-address-family
 {% endif %}
 ```
 {% endraw %}
@@ -130,7 +129,7 @@ configuration:
     instance: 1
     router_id: 10.1.1.2
 ```
-ospf.j2 - location of this file should be under roles/core_switch/add_ospf/templates
+add_ospf.j2 - location of this file should be under roles/core_switch/add_ospf/templates
 {% raw %}
 ```
 #jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
@@ -196,57 +195,57 @@ configuration:
           area: 0
           network: "point-to-point"
 ```
-l3_interfaces.j2 - location of this file should be under roles/core_switch/add_l3_interfaces/templates
+add_l3_interfaces.j2 - location of this file should be under roles/core_switch/add_l3_interfaces/templates
 {% raw %}
 ```
 #jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
-{#- ---------------------------------------------------------------------------------- #}
-{# configuration.interfaces.l3_interface                                               #}
-{# ---------------------------------------------------------------------------------- -#}
+
 {% if configuration.interfaces.l3_interfaces is defined %}
-{% for l3_interface in configuration.interfaces.l3_interfaces %}
-{% if 'Loopback0' in l3_interface.name %}
+  {% for l3_interface in configuration.interfaces.l3_interfaces %}
+    {% if 'Loopback0' in l3_interface.name %}
 interface {{ l3_interface.name }}
-    {% if l3_interface.description is defined %}
-    description {{ l3_interface.description}}
-    {% endif %}
-    ip address {{ l3_interface.ipv4 }} {{ l3_interface.ipv4_mask }}
-    {% if l3_interface.ospf is defined %}
-    ip ospf network point-to-point
-    ip ospf 1 area 0
-    {% endif %}
-    no shut
-{% elif 'GigabitEthernet' in l3_interface.name and l3_interface.ospf is defined  %}
+      {% if l3_interface.description is defined %}
+ description {{ l3_interface.description}}
+      {% endif %}
+ ip address {{ l3_interface.ipv4 }} {{ l3_interface.ipv4_mask }}
+      {% if l3_interface.ospf is defined %}
+ ip ospf network {{ l3_interface.ospf.network }}
+ ip ospf {{ configuration.ospf.instance }} area {{ l3_interface.ospf.area }}
+      {% endif %}
+ no shut     
+    {% elif 'GigabitEthernet' in l3_interface.name and l3_interface.ospf is defined %}
 interface {{ l3_interface.name }}
-    no switchport
-    {% if l3_interface.description is defined %}
-    description {{ l3_interface.description}}
-    {% endif %}
-    ip address {{ l3_interface.ipv4 }} {{ l3_interface.ipv4_mask }}
-    {% if l3_interface.ospf is defined %}
-    ip ospf network point-to-point
-    ip ospf 1 area 0
-    {% endif %}
-    no shut
-{% elif 'vlan' in l3_interface.name %}    
+ no switchport
+       {% if l3_interface.description is defined %}
+ description {{ l3_interface.description }}
+       {% endif %}
+ ip address {{ l3_interface.ipv4 }} {{ l3_interface.ipv4_mask }}
+ ip ospf network {{ l3_interface.ospf.network }}
+ ip ospf {{ configuration.ospf.instance }} area {{ l3_interface.ospf.area }}
+ no shut   
+    {% elif 'vlan' in l3_interface.name and l3_interface.vrrp_group is defined %}
 interface {{ l3_interface.name }}
-    {% if l3_interface.description is defined %}
-    description {{ l3_interface.description}}
+      {% if l3_interface.description is defined %}
+ description {{ l3_interface.description}}
+      {% endif %}
+ ip address {{ l3_interface.ipv4 }} {{ l3_interface.ipv4_mask }}
+ no shut
+      {% if l3_interface.dhcp_helper is defined %}
+ ip helper-address {{ l3_interface.dhcp_helper }}
+      {% endif %}
+ vrrp {{ l3_interface.vrrp_group }} ip {{ l3_interface.vrrp_primary_ip }}
+ vrrp {{ l3_interface.vrrp_group }} description {{ l3_interface.vrrp_description }}
+ vrrp {{ l3_interface.vrrp_group }} priority {{ l3_interface.vrrp_priority }}
+ vrrp {{ l3_interface.vrrp_group }} timers learn
+    {% else %}
+interface {{ l3_interface.name }}
+      {% if l3_interface.description is defined %}
+ description {{ l3_interface.description}}
+      {% endif %}
+ ip address {{ l3_interface.ipv4 }} {{ l3_interface.ipv4_mask }}
+ no shut   
     {% endif %}
-    ip address {{ l3_interface.ipv4 }} {{ l3_interface.ipv4_mask }}
-    no shut
-    {% if l3_interface.dhcp_helper is defined %}
-    ip helper-address {{ l3_interface.dhcp_helper }}
-    {% endif %}
-    {% if l3_interface.vrrp_group is defined %}
-    vrrp {{ l3_interface.vrrp_group }} ip {{ l3_interface.vrrp_primary_ip }}
-    vrrp {{ l3_interface.vrrp_group }} description {{ l3_interface.vrrp_description }}
-    vrrp {{ l3_interface.vrrp_group }} priority {{ l3_interface.vrrp_priority }}
-    vrrp {{ l3_interface.vrrp_group }} timers learn
-    {% endif %}
-{% else %}
-{% endif %}
-{% endfor%}
+  {% endfor %}
 {% endif %}
 ```
 {% endraw %}
