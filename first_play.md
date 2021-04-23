@@ -182,3 +182,5 @@ The results are now in a format that we can store and reuse for validation of ch
 [Building Roles - Section 4](building_roles.md)
 
 [Building the core switch Roles - Section 5](section5-coreswitch.md)
+
+[Building the router Roles - Section 6](section6-router.md)

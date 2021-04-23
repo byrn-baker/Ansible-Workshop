@@ -306,3 +306,5 @@ The previous playbook targeted one switch to connect to; this time, we have two 
 [Creating a playbook - Section 3](first_play.md)
 
 [Building Roles - Section 4](building_roles.md)
+
+[Building the router Roles - Section 6](section6-router.md)

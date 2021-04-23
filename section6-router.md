@@ -166,6 +166,14 @@ Ok we should have four new folders under the roles/routers folder now. Create a 
     - { role: routers/add_dhcp_pool }
 ```
 
+[Installing Ansible - Section 1](installing_ansible.md)
 
+[Creating an Inventory File - Section 2](inventory_file.md)
+
+[Creating a playbook - Section 3](first_play.md)
+
+[Building Roles - Section 4](building_roles.md)
+
+[Building the core switch Roles - Section 5](section5-coreswitch.md)
 
 

@@ -33,3 +33,5 @@ ansible-galaxy collection install cisco.ios clay584.genie
 [Building Roles - Section 4](building_roles.md)
 
 [Building the core switch Roles - Section 5](section5-coreswitch.md)
+
+[Building the router Roles - Section 6](section6-router.md)

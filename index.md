@@ -73,3 +73,5 @@ The Lab diagram above consists of the IP addressing for each POD. The (x) will b
 
 [Building the core switch Roles - Section 5](section5-coreswitch.md)
 
+[Building the router Roles - Section 6](section6-router.md)
+
