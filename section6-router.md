@@ -123,19 +123,49 @@ dhcp_pool.j2 - location of this file should be under roles/routers.add_dhcp_pool
 {% raw %}
 ```
 #jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
-{#- ---------------------------------------------------------------------------------- #}
-{# configuration.dhcp_pool                                                             #}
-{# ---------------------------------------------------------------------------------- -#}
+
 {% if configuration.dhcp_pool is defined %}
-{% for each in configuration.dhcp_pool %}
-ip dhcp excluded-address {{ each.excluded_address }}
+{% for address in configuration.dhcp_pool %}
+ip dhcp excluded-address {{ address.excluded_address }}
 {% endfor %}
-{% for each in configuration.dhcp_pool %}
-ip dhcp pool {{ each.name }}
-    network {{ each.network }}
-    default-router {{ each.default_router }}
-    lease {{ each.lease }}
+{% for pool in configuration.dhcp_pool %}
+ip dhcp pool {{ pool.name }}
+    network {{ pool.network | replace("/"," /") }}
+    default-router {{ pool.default_router }}
+    lease {{ pool.lease }}
 {% endfor %}
 {% endif %}
 ```
 {% endraw %}
+
+All of this looks pretty familiar from the previous Jinja templates we have created so far. Notice that under the ip dhcp pool section, we have a network statement that lists a variable to use, but a "|" has been added with the word replace. You can target specific text with Jinja to replace in the variable that you use. Why is this important? In our case, when configuring the DHCP pool on a Cisco router, you can not just place the network and its mask length with "1.1.1.0/24" it will reject this because it expects you to format it this way "1.1.1.0 /24". So we will create this space as we format it through our template. We won't have to remember that a space is even required when creating these variable files. 
+
+main.yaml - location of this file should be under roles/routers.add_dhcp_pool/main
+```
+- name: configuring dhcp server on {{ inventory_hostname }}
+  cisco.ios.ios_config:
+    src: dhcp_pool.j2
+
+- name: Saving the running config on {{ inventory_hostname }}
+  ios_config:
+    save_when: always
+```
+
+Ok we should have four new folders under the roles/routers folder now. Create a new playbook to validate everything we have just created works called pb.setup_routers.yaml.
+
+```
+- name: Configuring routers
+  hosts: routers
+  gather_facts: false
+  connection: network_cli
+
+  roles:
+    - { role: routers/add_l3_interface }
+    - { role: routers/add_ospf }
+    - { role: routers/add_bgp }
+    - { role: routers/add_dhcp_pool }
+```
+
+
+
+
