@@ -1,5 +1,35 @@
 ## Section 5: Building tasks for the core switches
 {% include section5.html %}
+
+### Tasks
+(2) Core switches
+    * Configure the following vlans:
+      * Users - Vlan 300
+      * Servers - Vlan 350
+      * Guests - Vlan 400
+      * Native Vlan - Vlan 666
+    * Configure Layer 2 trunk ports to the access switch on ports Gi0/3
+      * Trunks should only pass the configured vlans
+    * Configure a Layer 2 port channel between both core switches on Ports Gi0/1 and Gi0/2
+      * Trunks should only pass the configured vlans
+      * Use Port-Channel 12
+    * Configure SVIs for the following: 
+      * Users - IP 155.x.1.0/26
+      * Servers - IP 155.x.1.64/26
+      * Guest - IP 155.x.1.128/26
+    * Configure VRRP protocol for redundancy on above vlans
+      * Use the first IP in the scope as your gateway
+    * Configure Layer 3 interfaces as UPLINKS to the router
+      * Core Switch 1 Port Gi0/0 with IP 10.x0.1.1/31
+      * Core Switch 2 Port Gi0/0 with IP 10.x0.1.3/31
+    * Configure Loopback0 interface to facilitate iBGP protocol peering
+      * Core Switch 1 Loopback0 IP 10.x.1.2/32
+      * Core Switch 2 Loopback0 IP 10.x.1.3/32
+    * Configure OSPF to facilitate iBGP Loopback0 peering
+    * Use iBGP to advertise Users, Servers, and Guest subnets to the router
+      * Use AS 6500x
+
+      
 We have built out several tasks for configuring the access switches; now, it is time to move on to our core switch configuration tasks. You will remember that two of the configuration tasks for the core switches are to create VLANs and layer2 trunking interfaces. Because these tasks are the same on the access switches as the core switches, we can copy those roles from the access switch to the core switch roles folder. In part, this is a significant benefit to automation with tools like Ansible.
 
 Let us address our host_vars files for our core switches. These files are essential as they will contain all of the information required to configure our pod. We should have created folders called host_vars under our inventory directory, which contains folders for each of our devices in the pod. Copy the vlans.yaml and trunk_interfaces.yaml files from your podxsw3 host_vars folder and place those into both the podxsw1 and podxsw2 folders. We will maintain the same structure in the YAML file and update the interfaces for our core switches. 
