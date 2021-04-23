@@ -93,6 +93,7 @@ configuration:
           network: "point-to-point"
 ```
 
+### Adding DHCP
 The last variables file that we will need is the dhcp.yaml file. This will store the information needed to configure the DHCP server on the router.
 
 dhcp.yaml - location of this file should be under inventory/host_vars/podxr1
