@@ -2,7 +2,7 @@
 {% include section5.html %}
 
 ### Tasks
-(2) Core switches
+2. (2) Core switches
     * Configure the following vlans:
       * Users - Vlan 300
       * Servers - Vlan 350

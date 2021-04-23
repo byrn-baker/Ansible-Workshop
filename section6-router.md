@@ -3,7 +3,7 @@
 
 We have our access switch and our core switches configured; now, we need to complete the tasks for the router. 
 ### Tasks
-(1) Router
+3.  (1) Router
     * Configure Layer 3 interfaces as DOWNLINKS to both core switches
       * Port Gi0/1 to Core Switch 1 with IP 10.x0.1.0/31
       * Port Gi0/2 to Core Switch 2 with IP 10.x0.1.2/31
