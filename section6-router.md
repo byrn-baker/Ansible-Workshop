@@ -138,7 +138,7 @@ ip dhcp pool {{ pool.name }}
 ```
 {% endraw %}
 
-All of this looks pretty familiar from the previous Jinja templates we have created so far. Notice that under the ip dhcp pool section, we have a network statement that lists a variable to use, but a {% raw %} "|" {% endraw %} has been added with the word replace. You can target specific text with Jinja to replace in the variable that you use. Why is this important? In our case, when configuring the DHCP pool on a Cisco router, you can not just place the network and its mask length with "1.1.1.0/24" it will reject this because it expects you to format it this way "1.1.1.0 /24". So we will create this space as we format it through our template. We won't have to remember that a space is even required when creating these variable files. 
+All of this looks pretty familiar from the previous Jinja templates we have created so far. Notice that under the ip dhcp pool section, we have a network statement that lists a variable to use, but a ```"|"``` has been added with the word replace. You can target specific text with Jinja to replace in the variable that you use. Why is this important? In our case, when configuring the DHCP pool on a Cisco router, you can not just place the network and its mask length with "1.1.1.0/24" it will reject this because it expects you to format it this way "1.1.1.0 /24". So we will create this space as we format it through our template. We won't have to remember that a space is even required when creating these variable files. 
 
 main.yaml - location of this file should be under roles/routers.add_dhcp_pool/main
 ```
