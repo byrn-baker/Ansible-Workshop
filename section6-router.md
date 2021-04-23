@@ -20,7 +20,7 @@ We have our access switch and our core switches configured; now, we need to comp
 
 We can break down the above list of tasks into four roles in Ansible; BGP, DHCP server, layer3 interfaces, and OSPF. Let's knock out the three tasks that look familiar from our core switch section because there is an excellent chance we can reuse all or most of what we have already created in the BGP, layer3 interfaces, and OSPF roles. 
 
-### Adding BGP
+### Adding BGP, OSPF, l3_interfaces
 Recall our work on the BGP role for the core switches we built into the Jinja template language that covered eBGP and aggregate addressing. We did that specifically to reuse the template outside of the specific core switch use case and broadened it to be used for the router's use case. So copy that core switch roles folder into a new folder under roles called routers.
 
 Now we want to create a new variables file under our inventory/host_vars/podxr1 folder. Again we can copy over from the podxsw1 folder the bgp.yaml, l3_interface.yaml, and the ospf.yaml files to our podxr1 folder.
