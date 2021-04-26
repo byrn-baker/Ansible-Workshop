@@ -152,7 +152,7 @@ main.yaml - location of this file should be under roles/routers/add_dhcp_pool/ma
     save_when: always
 ```
 
-Ok we should have four new folders under the roles/routers folder now. Create a new playbook to validate everything we have just created works called pb.setup_routers.yaml.
+Ok we should have four new folders under the roles/routers folder now. Create a new playbook to validate everything we have just created works called pb.deploy_router.yaml.
 
 ```
 - name: Configuring routers
