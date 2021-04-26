@@ -126,7 +126,7 @@ router bgp {{ configuration.bgp.ibgp.l_asn }}
   {% endfor%}
   {% if configuration.bgp.ebgp is defined %}
     {% for ebgp_peers,ebgp_peers_attr in configuration.bgp.ebgp.neighbors.items() %}
-  neighbors {{ ebgp_peers }} remote-as {{ ebgp_peers_attr.r_asn }}
+  neighbor {{ ebgp_peers }} remote-as {{ ebgp_peers_attr.r_asn }}
     {% endfor %}
   {% endif %}
   address-family ipv4
