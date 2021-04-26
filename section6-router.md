@@ -102,25 +102,25 @@ dhcp.yaml - location of this file should be under inventory/host_vars/podxr1
 configuration:
   dhcp_pool:
     - name: 300
-      network: "155.1.1.0 /26"
+      network: "155.1.1.0/26"
       default_router: 155.1.1.1
       lease: 30
       excluded_address: "155.1.1.1 155.1.1.3"
 
     - name: 350
-      network: "155.1.1.64 /26"
+      network: "155.1.1.64/26"
       default_router: 155.1.1.65
       lease: 30
       excluded_address: "155.1.1.65 155.1.1.67"
 
     - name: 400
-      network: "155.1.1.128 /26"
+      network: "155.1.1.128/26"
       default_router: 155.1.1.129
       lease: 30
       excluded_address: "155.1.1.129 155.1.1.131"
 ```
 
-dhcp_pool.j2 - location of this file should be under roles/routers.add_dhcp_pool/templates
+dhcp_pool.j2 - location of this file should be under roles/routers/add_dhcp_pool/templates
 {% raw %}
 ```
 #jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
@@ -141,7 +141,7 @@ ip dhcp pool {{ pool.name }}
 
 All of this looks pretty familiar from the previous Jinja templates we have created so far. Notice that under the ip dhcp pool section, we have a network statement that lists a variable to use, but a ```"|"``` has been added with the word replace. You can target specific text with Jinja to replace in the variable that you use. Why is this important? In our case, when configuring the DHCP pool on a Cisco router, you can not just place the network and its mask length with "1.1.1.0/24" it will reject this because it expects you to format it this way "1.1.1.0 /24". So we will create this space as we format it through our template. We won't have to remember that a space is even required when creating these variable files. 
 
-main.yaml - location of this file should be under roles/routers.add_dhcp_pool/main
+main.yaml - location of this file should be under roles/routers/add_dhcp_pool/main
 ```
 - name: configuring dhcp server on {{ inventory_hostname }}
   cisco.ios.ios_config:
