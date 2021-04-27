@@ -1,5 +1,5 @@
 ## Section 6: Building tasks for the Router
-<!-- {% include section5.html %} -->
+{% include section6.html %}
 
 We have our access switch and our core switches configured; now, we need to complete the tasks for the router. 
 ### Tasks
