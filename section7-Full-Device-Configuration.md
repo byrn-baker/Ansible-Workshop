@@ -1,12 +1,19 @@
-## Section 7: Building a full device configuration
+## Section 7: Introducing a source of truth to our Ansible workflow 
 <!-- {% include section5.html %} -->
 
-We have built out our roles to deploy our pod. Now lets take a look at how we could develop a playbook and Jinja templates to build out all of our device configurations. What if we would like to store our "golden configuration" and validate that the existing device configuration matches our "golden configuration"? There are lots of tools our there that help an organization track what is called "configuration drift". This is the difference of a device configurations from its intended configuration. One of the many things automation helps us do is keep devices contained to the intended configuration so that our network is performing as expected. This keeps our unexpected type outages at a minimum which it a lot of cases is due to a bad configuration, or a mistake or old configuration that was never removed.  
+We have built out our roles to deploy our pod. Now lets take a look at how we can replace all of the group_vars, host_vars, and inventory folders and files with a database. To do this we will take a look at a tool called [Nautobot](https://www.networktocode.com/nautobot/)
 
-### Building a full device Jinja template
-The first thing we will want to tackle is how do we building a full device configuration template in Jinja. There are a few different approaches. We could take all of the components we created for our POD deployment and just stick those into a single template. This will work, but could create issues if we wanted to also have a way to perform separate tasks like interface description changes or updating a network to be advertised in OSPF or BGP. We would not want to have two versions or 3 versions of a very similar tasks floating around out there.
+### What is Nautobot?
+*At its core, Nautobot is a Source of Truth that defines the intended state of the network. Throw away those spreadsheets and deploy a trusted source of data that enables good data hygiene. Nautobot enables strict adherence to data standards allowing users to define business rules on the network data that is stored within Nautobot. Nautobot also allows organizations to define custom fields and their own unique relationships between data stored in Nautobot showcasing its flexibility.*
 
-We will take a modular approach to assembling a full configuration template with in Jinja. We will keep our Jinja templates separated and use an include statement to use the modular templates as needed. Lets break it down.
+I hope that helps, the basics are its a web app on top of a database that allows us to visualize the placement and locations of our hardware along with the ability to trace out and document the connections between them. The reason we will be working with it:
+1. It's open source
+2. Network to code (NTC) actively develops this project
+3. There is robust support for Ansible and Python to query for data stored in Nautobot
+
+NTC provides a couple of  ways for us to set this tool up. We can use a docker container, or follow the [docs](https://nautobot.readthedocs.io/en/latest/) and install it on a Linux VM. 
+
+
 
 
 
