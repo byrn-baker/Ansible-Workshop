@@ -27,11 +27,13 @@ Let's talk about the data requirements are in Nautobot:
 5. Device Type of the equipment associated to the manufacturer
 6. Platform (OS) that the device type will be using (ios, iosxr, junos, etc)
 7. Device roles that will group the devices together (router, l3 switch, l2 switch, etc)
+
+
 After all of this has been created we can start adding the specific devices to our site and installed into our rack. You will need to generate a token, to do that you will want to navigate to https://localhost:8000 and login with your super user account created when you setup the container. On the top right you will see your super user name. When you click the name you are presented with a dropdown menu that contains profile, admin, and log out.
-<img src="/assets/images/nautobot_admin_panel.png" alt="">
-<img src="/assets/images/nautobot_admin_panel2.png" alt="">
+<img src="/assets/images/nautobot_admin_panel.PNG" alt="">
+<img src="/assets/images/nautobot_admin_panel_2.PNG" alt="">
 Click the admin button. This will take you to a new admin page and you will see under USERS there is a button to add Tokens.
-<img src="/assets/images/nautobot_admin_panel3.png" alt=""> 
+<img src="/assets/images/nautobot_admin_panel_3.PNG" alt=""> 
 This token will be used in our Ansible playbooks to interact with the Nautobot API.
 
 
