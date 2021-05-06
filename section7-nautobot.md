@@ -97,6 +97,7 @@ sites:
 
 Create a playbook, I called mine nb.create.sites.yaml. We will be using this single playbook to perform all of the tasks above. We will make use of the looping function inside of Ansible to digest all of the data for each of the 6 pods. The sites file above is an example and the full file can be found in the github repo. 
 
+{% raw %}
 ```
 ---
 - name: Load Nautobot
@@ -136,6 +137,7 @@ Create a playbook, I called mine nb.create.sites.yaml. We will be using this sin
         state: present
       loop: "{{ sites }}"
 ```
+{% endraw %}
 When using the loop function you will prepend with "item". Check out the Ansible documentation [here](https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html). With this first task we will only focus on the specific items that are stored with the site. Give this play a run. You should now see that changes have been made on Nautobot. You should know have 6 new sites created POD1 through POD6.
 
 Moving on we will now create the Relay Racks in each of the 6 pod sites. Notice that at the bottom of the example of sites.yaml we have a grouping called Racks. We will use that data to generate our racks inside of Nautobot.
@@ -145,6 +147,7 @@ racks:
     status: active  
 ```
 Add a new task to our nb.create.sites.yaml playbook. and place it below the creating site task. Take care and ensure the indentation is correct.
+{% raw %}
 ```
 #############################################################
 # Create Rack in Nautobot
@@ -161,6 +164,7 @@ Add a new task to our nb.create.sites.yaml playbook. and place it below the crea
         state: present
       loop: "{{ sites | subelements('racks', 'skip_missing=True') }}"  
 ```
+{% endraw %}
 Here we are introducing something new. To enable Ansible to reach into the correct grouping we need to tell it where to look in our sites.yaml file. The looping inside Ansible is a little different than what we used in our Jinja templates previously. I found this [site](https://www.buildahomelab.com/2018/11/03/subelements-ansible-loop-nested-lists/) very helpful in explaining how this works. In our loop statement we use the filter subelements. This allows us to chose the list we want to iterate through, we are still prepending with "item", but now we need to tell Ansible the level in the list to look at. '1' indicates the level of the lists of lists to iterate over and 0 will reference the top list of lists (1 = racks and 0 = sites). Our task here is creating the rack, naming it, and then assigning it to a site. This is why we must reference item.0.slug, Nautobot will use the slug of each item to ensure that it assigns what you are creating to the correct element(site). Run this play again and you should now see that new racks have been created in each site.
 
 Add a two new tasks to our play. We want to generate vlans and prefixes for each site. These are the same vlans and prefixes we assigned to each pod at the beginning of the workshop. In your sites.yaml file create two new lists on each site int_prefixes and vlans
@@ -189,6 +193,7 @@ int_prefixes:
 ```
 In our new tasks we will start with creating the vlans first
 
+{% raw %}
 ```
 #############################################################
 # Create vlans for each site in Nautobot
@@ -206,7 +211,9 @@ In our new tasks we will start with creating the vlans first
         state: present
       loop: "{{ sites | subelements('vlans', 'skip_missing=True') }}"
 ```
+{% endraw %}
 Then we will create the prefixes
+{% raw %}
 ```
 #############################################################
 # Create prefixes for each site in Nautobot
@@ -225,6 +232,7 @@ Then we will create the prefixes
         state: present  
       loop: "{{ sites | subelements('int_prefixes', 'skip_missing=True') }}"
 ```
+{% endraw %}
 
 The next piece of the puzzle is generating the device specific items (manufacturer, device types, device roles, and platform). Create a new file in nb_vars named devices.yaml. In this file we will list out everything associated with the cisco devices being used in our pods. We will indent everything under manufacturer as it is all ultimately associated with cisco. 
 
@@ -256,6 +264,7 @@ manufacturer:
 ```
 We will also be adding four new tasks that will create of of the above elements inside of Nautobot.
 
+{% raw %}
 ```
 #############################################################
 # Create Manufacturer in Nautobot
@@ -318,7 +327,7 @@ We will also be adding four new tasks that will create of of the above elements 
         state: present
       loop: "{{ manufacturer | subelements('device_roles', 'skip_missing=True') }}"  
 ```
-
+{% endraw %}
 
 
 
