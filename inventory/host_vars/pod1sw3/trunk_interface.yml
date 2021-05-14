@@ -2,7 +2,7 @@
 configuration:
   interfaces:
     trunk:
-      - name: Gi0/1
+      - name: GigabitEthernet0/1
         description: "TRUNK TO POD1SW1"
         interface_mode: trunk
         native_vlan:
@@ -10,7 +10,7 @@ configuration:
         allowed_vlans:
             members: "300,350,400"
 
-      - name: Gi0/2
+      - name: GigabitEthernet0/2
         description: "TRUNK TO POD1SW2"
         interface_mode: trunk
         native_vlan:
