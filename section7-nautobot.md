@@ -82,8 +82,7 @@ We will dump this data under ```inventory/nautobot_vars/```
 ```roles/create_load_file/site/templates/site_load.j2```:
 
 {% raw %}
-```
-#jinja2: lstrip_blocks: "True", trim_blocks: "True"
+```#jinja2: lstrip_blocks: "True", trim_blocks: "True"
 sites:
 - name: {{ ansible_user | upper }}
   status: Active
@@ -120,8 +119,7 @@ sites:
   - prefix: 10.10.1.2/31
     description: "R1-GI0/2 - SW2-GI0/0"
   - prefix: 24.24.1.0/24
-    description: "R1-GI0/0 - INTERNET" 
-```
+    description: "R1-GI0/0 - INTERNET"``` 
 {% endraw %}
 
 We should end up with a file like this:
