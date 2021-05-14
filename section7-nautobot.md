@@ -48,18 +48,38 @@ pb.build_nautobot_load_files.yaml:
 
 {% raw %}
 ```
+# requires ansible-galaxy collection install networktocode.nautobot & pip3 install pynautobot
 ---
-- name: Generate the site file
+- name: "Setup Nautobot"
   hosts: localhost
   connection: local
-  gather_facts: false
-
+  gather_facts: False
+  
   vars_files:
-    - inventory/host_vars/pod1sw1/bgp.yaml
-    - inventory/host_vars/pod1sw1/l3_interfaces.yaml
-    - inventory/host_vars/pod1sw1/vlans.yaml
+   - inventory/nautobot_vars/site.yaml
+   - inventory/nautobot_vars/tags.yaml
+   - inventory/nautobot_vars/vrfs.yaml
+   - inventory/nautobot_vars/devices.yaml
+   - inventory/nautobot_vars/node_design.yaml
+
   roles:
-  - { role: create_load_file/site }
+  - { role: load_nautobot/create_site }
+  - { role: load_nautobot/create_rack }
+  - { role: load_nautobot/create_vlans }
+  - { role: load_nautobot/create_vrfs }
+  - { role: load_nautobot/create_prefixes }
+  - { role: load_nautobot/create_manufacturer }
+  - { role: load_nautobot/create_platform }
+  - { role: load_nautobot/create_device_types }
+  - { role: load_nautobot/create_device_roles }
+  - { role: load_nautobot/create_devices }
+  - { role: load_nautobot/create_access_interfaces }
+  - { role: load_nautobot/create_trunk_interfaces }
+  - { role: load_nautobot/create_lag_interfaces }
+  - { role: load_nautobot/create_l3_interfaces }
+  - { role: load_nautobot/create_disabled_interfaces }
+  - { role: load_nautobot/assign_ipv4_to_interfaces }
+  - { role: load_nautobot/create_tags }
 ```
 {% endraw %}
 
@@ -350,6 +370,42 @@ device_list:
         mode: Access
         untag_vlan: {{ interface.description }}
     {% endfor %}
+    {% endif %}
+    {% if configuration.interfaces.trunk is defined %}
+    lag_interfaces:
+    {% for interface in configuration.interfaces.trunk %}
+    {% if interface.port_channel is defined %}
+      - name: {{ interface.name }}
+        lag: Port-Channel{{ interface.port_channel }}
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% if inventory_hostname == 'pod1r1' %}
+    disabled_interfaces:
+    - name: GigabitEthernet0/3
+      type: 1000base-t
+      enabled: false
+    - name: GigabitEthernet0/4
+      type: 1000base-t
+      enabled: false
+    - name: GigabitEthernet0/5
+      type: 1000base-t
+      enabled: false
+    - name: GigabitEthernet0/6
+      type: 1000base-t
+      enabled: false
+    {% endif %}
+    {% if 'sw' in inventory_hostname %}
+    disabled_interfaces:
+    - name: GigabitEthernet1/0
+      type: 1000base-t
+      enabled: false
+    - name: GigabitEthernet1/1
+      type: 1000base-t
+      enabled: false
+    - name: GigabitEthernet1/2
+      type: 1000base-t
+      enabled: false
     {% endif %}
 ```
 {% endraw %}
@@ -865,6 +921,26 @@ Lets make a couple more files
 
 {% raw %}
 ```
+# roles/load_nautobot/assign_ipv4_to_interfaces/tasks/main.yaml
+#############################################################
+# Assigning IP addresses to VRFs in Nautobot
+#############################################################    
+- name: Add IP addresses to Layer3 interfaces
+  networktocode.nautobot.ip_address:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      address: "{{ item.1.ipv4_address }}"
+      vrf: "{{ item.1.vrf }}"
+      status: "{{ item.1.status }}"
+      assigned_object:
+        name: "{{ item.1.name }}"
+        device: "{{ item.0.name }}"
+    state: present
+  loop: "{{ device_list | subelements('l3_interfaces', 'skip_missing=True') }}"
+  when: item.1.mgmt_only == true
+
 #############################################################
 # Assigning IP addresses to interfaces inherited in Nautobot
 #############################################################    
@@ -881,7 +957,9 @@ Lets make a couple more files
         device: "{{ item.0.name }}"
     state: present
   loop: "{{ device_list | subelements('l3_interfaces', 'skip_missing=True') }}"
+  when: item.1.mgmt_only == false
 
+# roles/load_nautobot/create_tags/tasks/main.yaml
 - name: Create tags within Nautobot
   networktocode.nautobot.tag:
     url: "{{ nb_url }}"
@@ -912,7 +990,7 @@ Lets make a couple more files
 ```
 {% endraw %}
 
-
+This covers as much of the data entry that we can do through the Ansible Module. The Python module "pynatuobot" has the ability to import pretty much ever field possible into Nautobot and I will be covering that as well in the next section. The upside with the python module is the ability to going into a nested dictionary very similarly to how we have been with our Jinja templates. Also we can import everything inside of a single script which runs much faster then the sequential nature of Ansible. 
 
 [Installing Ansible - Section 1](installing_ansible.md)
 
