@@ -44,7 +44,7 @@ Our first playbook will focus on generating the site within Nautobot. With Nauto
 
 Lets make a folder under inventory called nautobot_vars. We will store the variable called in our nautobot playbooks. Let us also make a new folder under roles called ```roles/create_load_file/site``` and inside of this folder create your tasks and templates folders. Inside of the tasks folder we will again create main.yaml, and inside of templates lets call our jinja template site_load.j2. We will also want a playbook to run the two tasks we will be making, let us name it pb.build_nautobot_load_files.yaml.
 
-```pb.build_nautobot_load_files.yaml```:
+pb.build_nautobot_load_files.yaml:
 
 {% raw %}
 ```
@@ -66,7 +66,7 @@ Lets make a folder under inventory called nautobot_vars. We will store the varia
 
 We will import a few host_vars that can be used to generate the site.yaml file
 
-```roles/create_load_file/site/tasks/main.yaml```:
+roles/create_load_file/site/tasks/main.yaml:
 
 ```
 ---
@@ -76,13 +76,13 @@ We will import a few host_vars that can be used to generate the site.yaml file
     dest: "inventory/nautobot_vars/site.yaml"
 ```
 
-We will dump this data under ```inventory/nautobot_vars/```
+We will dump this data under inventory/nautobot_vars/
 
 
-```roles/create_load_file/site/templates/site_load.j2```:
+roles/create_load_file/site/templates/site_load.j2:
 
 {% raw %}
-```#jinja2: lstrip_blocks: "True", trim_blocks: "True"
+#jinja2: lstrip_blocks: "True", trim_blocks: "True"
 sites:
 - name: {{ ansible_user | upper }}
   status: Active
@@ -119,10 +119,12 @@ sites:
   - prefix: 10.10.1.2/31
     description: "R1-GI0/2 - SW2-GI0/0"
   - prefix: 24.24.1.0/24
-    description: "R1-GI0/0 - INTERNET"``` 
+    description: "R1-GI0/0 - INTERNET"
 {% endraw %}
 
+
 We should end up with a file like this:
+
 ```
 sites:
 - name: POD1
@@ -167,9 +169,6 @@ sites:
   - prefix: 24.24.1.0/24
     description: "R1-GI0/0 - INTERNET"
 ```
-
-N
-
 
 Create a playbook, I called mine nb.create.sites.yaml. We will be using this single playbook to perform all of the tasks above. We will make use of the looping function inside of Ansible to digest all of the data for each of the 6 pods. The sites file above is an example and the full file can be found in the github repo. 
 
