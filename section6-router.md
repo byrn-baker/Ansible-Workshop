@@ -176,3 +176,7 @@ Ok we should have four new folders under the roles/routers folder now. Create a 
 [Building Roles - Section 4](building_roles.md)
 
 [Building the core switch Roles - Section 5](section5-coreswitch.md)
+
+[Introducing Nautobot - Section 7](section7-nautobot.md)
+
+[Introducing PyNautobot - Section 8](section8-pynautobot.md)

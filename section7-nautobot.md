@@ -425,7 +425,7 @@ device_list:
     l3_interfaces:
       - name: GigabitEthernet0/0
         description: UPLINK TO INTERNET PROVIDER
-        type: virtual
+        type: 1000base-t
         enabled: True
         mtu: 1500
         mgmt_only: False
@@ -434,7 +434,7 @@ device_list:
         status: active
       - name: GigabitEthernet0/1
         description: DOWNLINK POD1SW1
-        type: virtual
+        type: 1000base-t
         enabled: True
         mtu: 1500
         mgmt_only: False
@@ -448,7 +448,7 @@ device_list:
         - p2p
       - name: GigabitEthernet0/2
         description: DOWNLINK POD1SW2
-        type: virtual
+        type: 1000base-t
         enabled: True
         mtu: 1500
         mgmt_only: False
@@ -479,16 +479,28 @@ device_list:
         enabled: True
         mtu: 1500
         mgmt_only: True
-        ip_addresses:
-          - address: 192.168.4.17/24
-            vrf: MGMT
-            status: active
-            primary: true
+        ipv4_address: 192.168.4.17/24
+        vrf: MGMT
+        status: active
+        primary: true
+    disabled_interfaces:
+    - name: GigabitEthernet0/3
+      type: 1000base-t
+      enabled: false
+    - name: GigabitEthernet0/4
+      type: 1000base-t
+      enabled: false
+    - name: GigabitEthernet0/5
+      type: 1000base-t
+      enabled: false
+    - name: GigabitEthernet0/6
+      type: 1000base-t
+      enabled: false
 ```
 
-Ok well what the heck is all of this stuff? What we are attempting to do above? We are describing the intended structure of each device. This YAML file will be ingested into Nautobot and will show the same intended configuration in a Web Application style format. We are essentially rewriting our host_vars in a way that is useful for Nautotbot. Look at interface GigabitEthernet0/1 for example, We have all of the items you would typically configure on the device details (interface name, description, mtu, ip address) along with a few other items like tags. I will explain what the tags will be used for a little later.
+Ok well what the heck is all of this stuff? What we are attempting to do above? We are describing the intended structure of each device. This YAML file will be ingested into Nautobot and will show the same intended configuration in NAutobot. Look at interface GigabitEthernet0/1 for example, We have all of the items you would typically configure on the device (interface name, description, mtu, ip address) along with a few other items like tags. I will explain what the tags will be used for a little later.
 
-I was unable to come up with a elegant way to combine these three files into a single file called invnetory/nautobot_vars/node_designs.yaml. So I just did it manually... I know right? Combine the 4 node_design files into the invnetory/nautobot_vars/node_designs.yaml file ensure that the the 4 devices are indented properly because we will use this file to loop through a playbook that will add all of this data to Nautobot.
+I was unable to come up with an elegant way to combine these three files into a single file called invnetory/nautobot_vars/node_designs.yaml. So I just did it manually... I know right? Combine the 4 node_design files into the invnetory/nautobot_vars/node_designs.yaml file ensure that the the 4 devices are indented properly because we will use this file to loop through a playbook that will add all of this data to Nautobot.
 
 We just need a couple more files that will contain device information, vrf, and tags. Here are the yaml files that I used.
 
@@ -961,6 +973,9 @@ Lets make a couple more files
   when: item.1.mgmt_only == false
 
 # roles/load_nautobot/create_tags/tasks/main.yaml
+#############################################################
+#Creating the tags in Nautobot
+############################################################# 
 - name: Create tags within Nautobot
   networktocode.nautobot.tag:
     url: "{{ nb_url }}"
@@ -972,7 +987,9 @@ Lets make a couple more files
     state: present  
   loop: "{{ tags }}"
 
+#############################################################
 # Associating tags to the IP addresses
+#############################################################
 - name: Add tags to IP addresses
   networktocode.nautobot.ip_address:
     url: "{{ nb_url }}"
@@ -991,7 +1008,7 @@ Lets make a couple more files
 ```
 {% endraw %}
 
-This covers as much of the data entry that we can do through the Ansible Module. The Python module "pynatuobot" has the ability to import pretty much ever field possible into Nautobot and I will be covering that as well in the next section. The upside with the python module is the ability to going into a nested dictionary very similarly to how we have been with our Jinja templates. Also we can import everything inside of a single script which runs much faster then the sequential nature of Ansible. 
+This covers as much of the data entry that we can do through the Ansible Module. In the next section we will cover making a python script that will do the same thing we just accomplished. 
 
 [Installing Ansible - Section 1](installing_ansible.md)
 
@@ -1005,5 +1022,4 @@ This covers as much of the data entry that we can do through the Ansible Module.
 
 [Building the router Roles - Section 6](section6-router.md)
 
-
-
+[Introducing PyNautobot - Section 8](section8-pynautobot.md)

@@ -287,3 +287,7 @@ You will notice a pattern here and that we are utilizing IF statements to perfor
 [Creating a playbook - Section 3](first_play.md)
 
 [Building the core switch Roles - Section 5](section5-coreswitch.md)
+
+[Introducing Nautobot - Section 7](section7-nautobot.md)
+
+[Introducing PyNautobot - Section 8](section8-pynautobot.md)

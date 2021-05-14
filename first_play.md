@@ -184,3 +184,7 @@ The results are now in a format that we can store and reuse for validation of ch
 [Building the core switch Roles - Section 5](section5-coreswitch.md)
 
 [Building the router Roles - Section 6](section6-router.md)
+
+[Introducing Nautobot - Section 7](section7-nautobot.md)
+
+[Introducing PyNautobot - Section 8](section8-pynautobot.md)
