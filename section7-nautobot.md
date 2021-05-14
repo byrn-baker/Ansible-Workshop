@@ -171,6 +171,180 @@ sites:
     description: "R1-GI0/0 - INTERNET"
 ```
 
+Next create another folder under ```roles/create_load_file/node_design``` with your tasks and template folders. Inside the main.yaml file we will template out 3 files that use our host_vars to generate a device_list.
+
+```
+---
+- name: Building File to load nautobot
+  template: 
+    src: "node_design_load.j2"
+    dest: "inventory/nautobot_vars/{{inventory_hostname}}_node_design.yaml"
+```
+
+In the templates folder put a jinja file called node_design_load.j2
+
+{% raw %}
+```
+#jinja2: lstrip_blocks: "True", trim_blocks: "True"
+device_list:
+  - name: {{ inventory_hostname }}
+  {% if inventory_hostname == 'pod1r1'%}
+    device_type: vios_router
+    device_role: pod_router
+  {% elif inventory_hostname == 'pod1sw1' or 'pod1sw2' %}
+    device_type: vios_switch
+    device_role: pod_core_switch
+  {% elif inventory_hostname == 'pod1sw3' %}
+    device_type: vios_switch
+    device_role: pod_access_switch
+  {% endif %}
+    site: pod1
+    rack: "pod1_rr_1"
+    {% if inventory_hostname == 'pod1r1' %}
+    position: 42
+    {% elif inventory_hostname == 'pod1sw1' %}
+    position: 40
+    {% elif inventory_hostname == 'pod1sw2' %}
+    position: 38
+    {% elif inventory_hostname == 'pod1sw3' %}
+    position: 36
+    {% endif %}
+    face: front
+    status: active
+    {% if configuration.interfaces.l3_interfaces is defined %}
+    l3_interfaces:
+    {% for interface in configuration.interfaces.l3_interfaces %}
+      - name: {{ interface.name }}
+        description: {{ interface.description }}
+        {% if 'Loop' or 'vlan' in interface.name %}
+        type: virtual
+        {% elif 'Gigabit' in interface.name %}
+        type: 1000base-t
+        {% endif %}
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        {% set prfx = interface.ipv4+'/'+interface.ipv4_mask %}
+        ipv4_address: {{ prfx | ipaddr('host/prefix')}}
+        vrf: global
+        status: active
+        {% if interface.ospf is defined %}
+        tags: 
+            {% if interface.ospf.area is defined %}
+        - ospf_area_{{ interface.ospf.area }}
+            {% endif %}
+            {% if interface.ospf.network is defined %}
+        - p2p
+            {% endif %}
+        {% endif %}
+        {% if interface.dhcp_helper is defined %}
+        dhcp_helper: {{ interface.dhcp_helper }}
+        {% endif %}
+        {% if interface.vrrp_group is defined %}
+        vrrp_group: {{ interface.vrrp_group }}
+        vrrp_description: {{ interface.vrrp_description }}
+        vrrp_priority: {{ interface.vrrp_priority }}
+        vrrp_primary_ip: {{ interface.vrrp_primary_ip }}
+        {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% if configuration.interfaces.trunk is defined %}
+    trunk_interfaces:
+      {% for interface in configuration.interfaces.trunk %}
+      - name: {{ interface.name}}
+        description: {{ interface.description }}
+        type: lag
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: Tagged
+        untag_vlan: NATIVE_VLAN
+        tagged_vlan_1: USERS
+        tagged_vlan_2: SERVERS
+        tagged_vlan_3: GUEST
+    {% endfor %}
+    {% endif %}
+    {% if configuration.interfaces.access is defined %}
+    access_interfaces:
+      {% for interface in configuration.interfaces.access %}
+      - name: {{ interface.name }}
+        description: {{ interface.description }}
+        type: 1000base-t
+        label: access
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: Access
+        untag_vlan: {{ interface.description }}
+    {% endfor %}
+    {% endif %}
+```
+{% endraw %}
+
+We should end up with three new files with the hostname appended with _node_design.yaml and it should look like this
+
+```
+device_list:
+  - name: pod1r1
+    device_type: vios_router
+    device_role: pod_router
+    site: pod1
+    rack: "pod1_rr_1"
+    position: 42
+    face: front
+    status: active
+    l3_interfaces:
+      - name: GigabitEthernet0/0
+        description: UPLINK TO INTERNET PROVIDER
+        type: virtual
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ipv4_address: 24.24.1.2/24
+        vrf: global
+        status: active
+      - name: GigabitEthernet0/1
+        description: DOWNLINK POD1SW1
+        type: virtual
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ipv4_address: 10.10.1.0/31
+        vrf: global
+        status: active
+        tags: 
+        - ospf_area_0
+        - p2p
+      - name: GigabitEthernet0/2
+        description: DOWNLINK POD1SW2
+        type: virtual
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ipv4_address: 10.10.1.2/31
+        vrf: global
+        status: active
+        tags: 
+        - ospf_area_0
+        - p2p
+      - name: Loopback0
+        description: iBGP LOOPBACK
+        type: virtual
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ipv4_address: 10.1.1.1/32
+        vrf: global
+        status: active
+        tags: 
+        - ospf_area_0
+        - p2p
+```
+  
+
+
+
 Create a playbook, I called mine nb.create.sites.yaml. We will be using this single playbook to perform all of the tasks above. We will make use of the looping function inside of Ansible to digest all of the data for each of the 6 pods. The sites file above is an example and the full file can be found in the github repo. 
 
 {% raw %}
