@@ -34,24 +34,90 @@ After all of this has been created we can start adding the specific devices to o
 <img src="/assets/images/nautobot_admin_panel_2.PNG" alt="">
 Click the admin button. This will take you to a new admin page and you will see under USERS there is a button to add Tokens.
 <img src="/assets/images/nautobot_admin_panel_3.PNG" alt=""> 
-This token will be used in our Ansible playbooks to interact with the Nautobot API.
-
-
+This token will be used in our Ansible playbooks to interact with the Nautobot API. Because we went through the trouble of creating all of these variables, it seems a waste to not come up with a way to automate the data entry of Nautobot. 
 
 #### Creating the Ansible playbooks for data creation in Nautobot
 The Ansible module for Nautobot is detailed [here](https://nautobot-ansible.readthedocs.io/en/latest/index.html) and provides installation instruction and examples for how to construct the playbooks that will interact with Nautobot.
 
-Our first playbook will focus on generating the site. We will be building six different sites to represent 6 different PODs. This will illustrate how easy it is to setup playbooks and do large batch imports in the future.
-
-With Nautobot, there is the idea of a "slug". This normalizes the data you are entering to ensure there is no camel casing and ensure when we request the data it will not be incorrectly called back based on the letter not capitalized. Take care in your naming strategy because when ingesting data back into Ansible from any source, there are specific characters that Ansible does not like. For example, pod-router as a grouping will cause Ansible to complain that the '-' is unacceptable, instead use pod_router and avoid '-' in your naming convention if possible. 
+Our first playbook will focus on generating the site within Nautobot. With Nautobot, there is term "slug". This normalizes the data you are entering to ensure there is no camel casing and ensure when we request the data it will not be incorrectly called back because of a capitalized character. Take care to not use dashes because Ansible interprets it as a subtraction. For example, pod-router as a grouping will cause Ansible to complain that the '-' is unacceptable, instead use pod_router and avoid '-' in your variables. 
 
 
-Create a folder called nb_vars, it will store the data we will be entering into Nautobot. Below is an example of the data I chose to include.
+Lets make a folder under inventory called nautobot_vars. We will store the variable called in our nautobot playbooks. Let us also make a new folder under roles called ```roles/create_load_file/site``` and inside of this folder create your tasks and templates folders. Inside of the tasks folder we will again create main.yaml, and inside of templates lets call our jinja template site_load.j2. We will also want a playbook to run the two tasks we will be making, let us name it pb.build_nautobot_load_files.yaml.
 
-Below comments you will see several other lists with data. These are prefixes and vlans that we assigned to our pods in previous sections. One of the many things that Nautbot tracks, vlans and prefixes are just two. These are included here because Prefixes and vlans typically follow the site and not the equipment in the site. 
-
+```pb.build_nautobot_load_files.yaml```:
 ```
---
+---
+- name: Generate the site file
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - inventory/host_vars/pod1sw1/bgp.yaml
+    - inventory/host_vars/pod1sw1/l3_interfaces.yaml
+    - inventory/host_vars/pod1sw1/vlans.yaml
+  roles:
+  - { role: create_load_file/site }
+```
+We will import a few host_vars that can be used to generate the site.yaml file
+
+```roles/create_load_file/site/tasks/main.yaml```:
+```
+---
+- name: Building File to load nautobot
+  template: 
+    src: "site_load.j2"
+    dest: "inventory/nautobot_vars/site.yaml"
+```
+We will dump this data under ```inventory/nautobot_vars/```
+
+```roles/create_load_file/site/templates/site_load.j2```:
+{% raw %}
+```
+#jinja2: lstrip_blocks: "True", trim_blocks: "True"
+sites:
+- name: {{ ansible_user | upper }}
+  status: Active
+  asn: {{ configuration.bgp.ibgp.l_asn }}
+  time_zone: "America/Denver"
+  description: "Ansible Workshop for POD1"
+  physical_address: "Denver, CO, 80209"
+  shipping_address: "Denver, CO, 80209"
+  latitude: "39.764518"
+  longitude: "-104.995535"
+  contact_name: Joe
+  contact_phone: "867-5309"
+  contact_email: "joe@pod1.com"
+  slug: {{ ansible_user }}
+  comments: "### Placeholder"
+  racks:
+  - name: "pod1_rr_1"
+    status: active
+  vlans:
+{% for vlan in configuration.vlans.vlan %}
+  - name: {{ vlan.name }}
+    vid: {{ vlan.vlan_id }}
+    status: active
+    {% for interface in configuration.interfaces.l3_interfaces %}
+        {% if interface.name | replace('vlan','') == vlan.vlan_id %}
+        {% set prfx = interface.vrrp_primary_ip+'/'+interface.ipv4_mask %}
+    prefix: {{ prfx | ipaddr('network/prefix')}}
+        {% endif %}
+    {% endfor %}
+{% endfor %}      
+  int_prefixes:
+  - prefix: 10.10.1.0/31
+    description: "R1-GI0/1 - SW1-GI0/0"
+  - prefix: 10.10.1.2/31
+    description: "R1-GI0/2 - SW2-GI0/0"
+  - prefix: 24.24.1.0/24
+    description: "R1-GI0/0 - INTERNET" 
+```
+{% endraw %}
+```
+
+
+---
 ###################################################################
 # Data that will be specifically related to the site being created
 ###################################################################
