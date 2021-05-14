@@ -310,6 +310,8 @@ device_list:
         enabled: True
         mtu: 1500
         mgmt_only: False
+        bside_device: pod1sw1
+        bside_interface: GigabitEthernet0/0
         ipv4_address: 10.10.1.0/31
         vrf: global
         status: active
@@ -322,6 +324,8 @@ device_list:
         enabled: True
         mtu: 1500
         mgmt_only: False
+        bside_device: pod1sw2
+        bside_interface: GigabitEthernet0/0
         ipv4_address: 10.10.1.2/31
         vrf: global
         status: active
@@ -340,153 +344,28 @@ device_list:
         tags: 
         - ospf_area_0
         - p2p
+      - name: GigabitEthernet0/7
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.17/24
+            vrf: MGMT
+            status: active
+            primary: true
 ```
-  
 
+Ok well what the heck is all of this stuff? What we are attempting to do above? We are describing the intended structure of each device. This YAML file will be ingested into Nautobot and will show the same intended configuration in a Web Application style format. We are essentially rewriting our host_vars in a way that is useful for Nautotbot. Look at interface GigabitEthernet0/1 for example, We have all of the items you would typically configure on the device details (interface name, description, mtu, ip address) along with a few other items like tags. I will explain what the tags will be used for a little later.
 
+I was unable to come up with a elegant way to combine these three files into a single file called invnetory/nautobot_vars/node_designs.yaml. So I just did it manually... I know right? Combine the 4 node_design files into the invnetory/nautobot_vars/node_designs.yaml file ensure that the the 4 devices are indented properly because we will use this file to loop through a playbook that will add all of this data to Nautobot.
 
-Create a playbook, I called mine nb.create.sites.yaml. We will be using this single playbook to perform all of the tasks above. We will make use of the looping function inside of Ansible to digest all of the data for each of the 6 pods. The sites file above is an example and the full file can be found in the github repo. 
-
-{% raw %}
-```
----
-- name: Load Nautobot
-  connection: local
-  hosts: localhost
-  gather_facts: False
-
-  vars:
-    nb_url: "https://localhost:8000"
-    nb_token: "YOUR GENERATED TOKEN HERE"
-
-  tasks:
-#############################################################
-# Create Site in Nautobot
-#############################################################
-    - include_vars: "nb_vars/sites.yaml"
-    - name: Create site with all parameters
-      networktocode.nautobot.site:
-        url: "{{ nb_url }}"
-        token: "{{ nb_token }}"
-        validate_certs: no
-        data:
-          name: "{{ item.name }}"
-          status: "{{ item.status }}"
-          asn: "{{ item.asn }}"
-          time_zone: "{{ item.time_zone }}"
-          description: "{{ item.description }}"
-          physical_address: "{{ item.physical_address }}"
-          shipping_address: "{{ item.shipping_address }}"
-          latitude: "{{ item.latitude }}"
-          longitude: "{{ item.longitude }}"
-          contact_name: "{{ item.contact_name }}"
-          contact_phone: "{{ item.contact_phone }}"
-          contact_email: "{{ item.contact_email }}"
-          slug: "{{ item.slug }}"
-          comments: "{{ item.comments }}"
-        state: present
-      loop: "{{ sites }}"
-```
-{% endraw %}
-When using the loop function you will prepend with "item". Check out the Ansible documentation [here](https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html). With this first task we will only focus on the specific items that are stored with the site. Give this play a run. You should now see that changes have been made on Nautobot. You should know have 6 new sites created POD1 through POD6.
-
-Moving on we will now create the Relay Racks in each of the 6 pod sites. Notice that at the bottom of the example of sites.yaml we have a grouping called Racks. We will use that data to generate our racks inside of Nautobot.
-```
-racks:
-  - name: "Pod1 Rack 1"
-    status: active  
-```
-Add a new task to our nb.create.sites.yaml playbook. and place it below the creating site task. Take care and ensure the indentation is correct.
-{% raw %}
-```
-#############################################################
-# Create Rack in Nautobot
-#############################################################
-    - name: "Create new rack"
-      networktocode.nautobot.rack:
-        url: "{{ nb_url }}"
-        token: "{{ nb_token }}"
-        validate_certs: no
-        data:
-          name: "{{ item.1.name }}"
-          site: "{{ item.0.slug }}"
-          status: "{{ item.1.status }}"
-        state: present
-      loop: "{{ sites | subelements('racks', 'skip_missing=True') }}"  
-```
-{% endraw %}
-Here we are introducing something new. To enable Ansible to reach into the correct grouping we need to tell it where to look in our sites.yaml file. The looping inside Ansible is a little different than what we used in our Jinja templates previously. I found this [site](https://www.buildahomelab.com/2018/11/03/subelements-ansible-loop-nested-lists/) very helpful in explaining how this works. In our loop statement we use the filter subelements. This allows us to chose the list we want to iterate through, we are still prepending with "item", but now we need to tell Ansible the level in the list to look at. '1' indicates the level of the lists of lists to iterate over and 0 will reference the top list of lists (1 = racks and 0 = sites). Our task here is creating the rack, naming it, and then assigning it to a site. This is why we must reference item.0.slug, Nautobot will use the slug of each item to ensure that it assigns what you are creating to the correct element(site). Run this play again and you should now see that new racks have been created in each site.
-
-Add a two new tasks to our play. We want to generate vlans and prefixes for each site. These are the same vlans and prefixes we assigned to each pod at the beginning of the workshop. In your sites.yaml file create two new lists on each site int_prefixes and vlans
+We just need a couple more files that will contain device information, vrf, and tags. Here are the yaml files that I used.
 
 ```
-int_prefixes:
-  - prefix: 10.10.1.0/31
-    description: "R1-GI0/1 - SW1-GI0/0"
-  - prefix: 10.10.1.2/31
-    description: "R1-GI0/2 - SW2-GI0/0"
-  - prefix: 24.24.1.0/24
-    description: "R1-GI0/0 - INTERNET"  
-  vlans:
-  - name: USERS
-    vid: 300
-    status: active
-    prefix: 155.1.1.0/26
-  - name: SERVERS
-    vid: 350
-    status: active
-    prefix: 155.1.1.64/26
-  - name: GUESTS
-    vid: 400
-    status: active
-    prefix: 155.1.1.128/26
-```
-In our new tasks we will start with creating the vlans first
-
-{% raw %}
-```
-#############################################################
-# Create vlans for each site in Nautobot
-#############################################################
-    - name: Create vlan within Nautobot with only required information
-      networktocode.nautobot.vlan:
-        url: "{{ nb_url }}"
-        token: "{{ nb_token }}"
-        validate_certs: no
-        data:
-          name: "{{ item.1.name }}"
-          vid: "{{ item.1.vid }}"
-          site: "{{ item.0.slug }}"
-          status: "{{ item.1.status }}"
-        state: present
-      loop: "{{ sites | subelements('vlans', 'skip_missing=True') }}"
-```
-{% endraw %}
-Then we will create the prefixes
-{% raw %}
-```
-#############################################################
-# Create prefixes for each site in Nautobot
-#############################################################
-    - name: Create interface prefixes within Nautobot
-      networktocode.nautobot.prefix:
-        url: "{{ nb_url }}"
-        token: "{{ nb_token }}"
-        validate_certs: no
-        data:
-          family: 4
-          prefix: "{{ item.1.prefix }}"
-          site: "{{ item.0.slug }}"
-          description: "{{ item.1.description }}"
-          status: active
-        state: present  
-      loop: "{{ sites | subelements('int_prefixes', 'skip_missing=True') }}"
-```
-{% endraw %}
-
-The next piece of the puzzle is generating the device specific items (manufacturer, device types, device roles, and platform). Create a new file in nb_vars named devices.yaml. In this file we will list out everything associated with the cisco devices being used in our pods. We will indent everything under manufacturer as it is all ultimately associated with cisco. 
-
-```
+# inventory/nautobot_vars/devices.yaml
 manufacturer:
 - name: cisco
   platform:
@@ -512,73 +391,399 @@ manufacturer:
   - name: pod_l2_switch
     color: FFFFFB
 ```
-We will also be adding four new tasks that will create of of the above elements inside of Nautobot.
+
+```
+# inventory/nautobot_vars/vrfs.yaml
+vrf:
+- name: MGMT
+  description: "INBAND MGMT"
+  prefix: 192.168.4.0/24
+```
+
+```
+# inventory/nautobot_vars/tags.yaml
+tags:
+- name: ospf_area_0
+  description: "Interface OSPF Area 0"
+- name: p2p
+  description: "Interface network type for OSPF Protocol"
+```
+
+Ok I think we have everything we need to start building the playbooks to import all of this stuff into Nautobot. We will approach the import in the order you would generate it via the GUI. I typically start with a site and relay rack. Since we are in there we might as well import all of the things associated with the site, like devices, device roles, vlans and prefixes associated with the vlans.  
+
+Create a playbook, I called mine pb.load_nautobot.yaml. We will use this playbook to stack of all the tasks needed to load everything needed into Nautobot.
+
+{% raw %}
+```
+# requires ansible-galaxy collection install networktocode.nautobot & pip3 install pynautobot
+---
+- name: "Setup Nautobot"
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  
+  vars_files:
+   - inventory/nautobot_vars/site.yaml
+   - inventory/nautobot_vars/tags.yaml
+   - inventory/nautobot_vars/vrfs.yaml
+   - inventory/nautobot_vars/devices.yaml
+   - inventory/nautobot_vars/node_design.yaml
+
+  roles:
+  - { role: load_nautobot/create_site }
+  - { role: load_nautobot/create_rack }
+  - { role: load_nautobot/create_vlans }
+  - { role: load_nautobot/create_vrfs }
+  - { role: load_nautobot/create_prefixes }
+  - { role: load_nautobot/create_manufacturer }
+  - { role: load_nautobot/create_platform }
+  - { role: load_nautobot/create_device_types }
+  - { role: load_nautobot/create_device_roles }
+  - { role: load_nautobot/create_devices }
+  - { role: load_nautobot/create_access_interfaces }
+  - { role: load_nautobot/create_trunk_interfaces }
+  - { role: load_nautobot/create_lag_interfaces }
+  - { role: load_nautobot/create_l3_interfaces }
+  - { role: load_nautobot/create_disabled_interfaces }
+  - { role: load_nautobot/assign_ipv4_to_interfaces }
+  - { role: load_nautobot/create_tags }
+```
+{% endraw %}
+
+Create a new file roles/load_nautobot/create_site/tasks/main.yaml
+
+```
+# vars pulled from inventory/nautobot_vars/site
+#############################################################
+# Create Site in Nautobot
+#############################################################
+- name: Create site with all parameters
+  networktocode.nautobot.site:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      name: "{{ item.name }}"
+      status: "{{ item.status }}"
+      asn: "{{ item.asn }}"
+      time_zone: "{{ item.time_zone }}"
+      description: "{{ item.description }}"
+      physical_address: "{{ item.physical_address }}"
+      shipping_address: "{{ item.shipping_address }}"
+      latitude: "{{ item.latitude }}"
+      longitude: "{{ item.longitude }}"
+      contact_name: "{{ item.contact_name }}"
+      contact_phone: "{{ item.contact_phone }}"
+      contact_email: "{{ item.contact_email }}"
+      slug: "{{ item.slug }}"
+      comments: "{{ item.comments }}"
+    state: present
+  loop: "{{ sites }}"
+```
+{% endraw %}
+
+When using the loop function you will pre-pend with "item". Check out the Ansible documentation [here](https://docs.ansible.com/ansible/latest/user_guide/playbooks_loops.html). With this first task we will only focus on the specific items that are stored with the site. Give this play a run. You should now see that changes have been made on Nautobot. You should know have 1 new site created POD1.
+
+Next up is the relay rack.
+Add a new file roles/load_nautobot/create_rack/tasks.main.yaml 
+
+{% raw %}
+```
+# vars pulled from inventory/nautobot_vars/site
+#############################################################
+# Create Rack in Nautobot
+#############################################################
+- name: "Create new rack"
+  networktocode.nautobot.rack:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      name: "{{ item.1.name }}"
+      site: "{{ item.0.slug }}"
+      status: "{{ item.1.status }}"
+    state: present
+  loop: "{{ sites | subelements('racks', 'skip_missing=True') }}"  
+```
+{% endraw %}
+
+Here we are introducing something new. To enable Ansible to reach into the correct grouping we need to tell it where to look in our sites.yaml file. The looping inside Ansible is a little different than what we used in our Jinja templates previously. I found this [site](https://www.buildahomelab.com/2018/11/03/subelements-ansible-loop-nested-lists/) very helpful in explaining how this works. In our loop statement we use the filter subelements. This allows us to chose the list we want to iterate through, we are still pre-pending with "item", but now we need to tell Ansible the level in the list to look at. '1' indicates the level of the lists of lists to iterate over and 0 will reference the top list of lists (1 = racks and 0 = sites). Our task here is creating the rack, naming it, and then assigning it to a site. This is why we must reference item.0.slug, Nautobot will use the slug of each item to ensure that it assigns what you are creating to the correct element(site). Run this play again and you should now see that new racks have been created in each site.
+
+In our next task we will start creating the vlans. Make a new file roles/load_nautobot/create_vlans/tasks/main.yaml.
+
+{% raw %}
+```
+# vars pulled from inventory/nautobot_vars/site
+#############################################################
+# Create vlans for each site in Nautobot
+#############################################################
+- name: Create vlan within Nautobot with only required information
+  networktocode.nautobot.vlan:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      name: "{{ item.1.name }}"
+      vid: "{{ item.1.vid }}"
+      site: "{{ item.0.slug }}"
+      status: "{{ item.1.status }}"
+    state: present
+  loop: "{{ sites | subelements('vlans', 'skip_missing=True') }}"
+```
+{% endraw %}
+
+In our next task we will start creating the vrfs. Make a new file load_nautobot/create_vrfs/tasks/main.yaml.
+
+{% raw %}
+```
+---
+#############################################################
+# Create VRFs in Nautobot
+#############################################################    
+- name: Create VRFs within Nautobot
+  networktocode.nautobot.vrf:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      name: "{{ item.name }}"
+      description: "{{ item.description }}"
+    state: present
+  loop: "{{ vrf }}"
+
+#############################################################
+# Create prefixes for each VRF in Nautobot
+#############################################################
+- name: Create prefixes and assign to VRFs within Nautobot
+  networktocode.nautobot.prefix:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      family: 4
+      prefix: "{{ item.prefix }}"
+      description: "{{ item.description }}"
+      vrf: "{{ item.name }}"
+      status: active
+    state: present  
+  loop: "{{ vrf }}"
+```
+{% endraw %}
+
+
+Then we will create the prefixes. Make a new file roles/load_nautobot/create_prefixes/tasks/main.yaml.
+
+{% raw %}
+```
+# vars pulled from inventory/nautobot_vars/site
+#############################################################
+# Create prefixes for each site in Nautobot
+#############################################################
+- name: Create interface prefixes within Nautobot
+  networktocode.nautobot.prefix:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      family: 4
+      prefix: "{{ item.1.prefix }}"
+      site: "{{ item.0.slug }}"
+      description: "{{ item.1.description }}"
+      status: active
+    state: present  
+  loop: "{{ sites | subelements('int_prefixes', 'skip_missing=True') }}"
+```
+{% endraw %}
+
+Now that we have all of the site specific items completed we can move on to all of the things our devices will require.
+
+First up is adding the manufacturer, platform, device types and device roles.
+
+Create more new files
+- roles/load_nautobot/create_manufacturer/tasks/main.yaml
+- roles/load_nautobot/create_platforms/tasks/main.yaml
+- roles/load_nautobot/create_device_types/tasks/main.yaml
+- roles/load_nautobot/create_device_roles/tasks/main.yaml
 
 {% raw %}
 ```
 #############################################################
 # Create Manufacturer in Nautobot
 #############################################################    
-    - include_vars: "nb_vars/devices.yaml"
-    - name: Create manufacturer within Nautobot 
-      networktocode.nautobot.manufacturer:
-        url: "{{ nb_url }}"
-        token: "{{ nb_token }}"
-        validate_certs: no
-        data:
-          name: "{{ item.name }}"
-        state: present
-      loop: "{{ manufacturer }}"  
+- name: Create manufacturer within Nautobot 
+  networktocode.nautobot.manufacturer:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      name: "{{ item.name }}"
+    state: present
+  loop: "{{ manufacturer }}"
 
 #############################################################
 # Create Platform in Nautobot
 #############################################################   
-    - name: Create platform within Nautobot with only required information
-      networktocode.nautobot.platform:
-        url: "{{ nb_url }}"
-        token: "{{ nb_token }}"
-        validate_certs: no
-        data:
-          name: "{{ item.1.name }}"
-          manufacturer: "{{ item.0.name }}"
-          napalm_driver: "{{ item.1.napalm_driver }}"
-        state: present
-      loop: "{{ manufacturer | subelements('platform', 'skip_missing=True') }}"     
+- name: Create platform within Nautobot with only required information
+  networktocode.nautobot.platform:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      name: "{{ item.1.name }}"
+      manufacturer: "{{ item.0.name }}"
+      napalm_driver: "{{ item.1.napalm_driver }}"
+    state: present
+  loop: "{{ manufacturer | subelements('platform', 'skip_missing=True') }}"    
 
 #############################################################
 # Create Device Types in Nautobot
 #############################################################     
-    - name: Create device type within Nautobot
-      networktocode.nautobot.device_type:
-        url: "{{ nb_url }}"
-        token: "{{ nb_token }}"
-        validate_certs: no
-        data:
-          slug: "{{ item.1.slug }}"
-          model: "{{ item.1.name }}"
-          manufacturer: "{{ item.0.name }}"
-          part_number: "{{ item.1.part_number }}"
-          u_height: "{{ item.1.u_height }}"
-          is_full_depth: "{{ item.1.is_full_depth }}"
-        state: present
-      loop: "{{ manufacturer | subelements('device_types', 'skip_missing=True') }}"
+- name: Create device type within Nautobot
+  networktocode.nautobot.device_type:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      slug: "{{ item.1.slug }}"
+      model: "{{ item.1.name }}"
+      manufacturer: "{{ item.0.name }}"
+      part_number: "{{ item.1.part_number }}"
+      u_height: "{{ item.1.u_height }}"
+      is_full_depth: "{{ item.1.is_full_depth }}"
+    state: present
+  loop: "{{ manufacturer | subelements('device_types', 'skip_missing=True') }}"
 
 #############################################################
 # Create Device Roles in Nautobot
 ############################################################# 
-    - name: Create device role within Nautobot
-      networktocode.nautobot.device_role:
-        url: "{{ nb_url }}"
-        token: "{{ nb_token }}"
-        validate_certs: no
-        data:
-          name: "{{ item.1.name }}"
-          color: "{{ item.1.color }}"
-        state: present
-      loop: "{{ manufacturer | subelements('device_roles', 'skip_missing=True') }}"  
+- name: Create device role within Nautobot
+  networktocode.nautobot.device_role:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      name: "{{ item.1.name }}"
+      color: "{{ item.1.color }}"
+    state: present
+  loop: "{{ manufacturer | subelements('device_roles', 'skip_missing=True') }}"  
 ```
 {% endraw %}
 
+Next we can start creating the devices and related items. We will need to make several more folders under roles. All of the variables will be pulled from the inventory/nautobot_vars/node_design.yaml file.
+- roles/load_nautobot/create_devices/tasks/main.yaml
+- roles/load_nautobot/create_access_interfaces/tasks/main.yaml
+- roles/load_nautobot/create_trunk_interfaces/tasks/main.yaml
+- roles/load_nautobot/create_lag_interfaces/tasks/main.yaml
+- roles/load_nautobot/create_l3_interfaces/tasks/main.yaml
+- roles/load_nautobot/create_disabled_interfaces/tasks/main.yaml
+
+{% raw %}
+```
+#############################################################
+# Create access interfaces in Nautobot
+#############################################################
+- name: Add access interfaces
+  networktocode.nautobot.device_interface:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      device: "{{ item.0.name }}"
+      name: "{{ item.1.name }}"
+      description: "{{ item.1.description }}"
+      type: "{{ item.1.type }}"
+      enabled: "{{ item.1.enabled }}"
+      mode: "{{ item.1.mode }}"
+      untagged_vlan:
+        name: "{{ item.1.untag_vlan }}"
+        site: "{{ item.0.site }}"
+      mtu: "{{ item.1.mtu }}"
+      mgmt_only: "{{ item.1.mgmt_only }}"  
+    state: present
+  loop: "{{ device_list | subelements('access_interfaces', 'skip_missing=True') }}"
+
+#############################################################
+# Update Device Trunk interfaces inherited in Nautobot
+#############################################################
+- name: Add Trunk interfaces
+  networktocode.nautobot.device_interface:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      device: "{{ item.0.name }}"
+      name: "{{ item.1.name }}"
+      description: "{{ item.1.description }}"
+      type: "{{ item.1.type }}"
+      enabled: "{{ item.1.enabled }}"
+      mode: "{{ item.1.mode }}"
+      untagged_vlan:
+        name: "{{ item.1.untag_vlan }}"
+        site: "{{ item.0.site }}"
+      tagged_vlans:
+        - name: "{{ item.1.tagged_vlan_1 }}"
+          site: "{{ item.0.site }}"
+        - name: "{{ item.1.tagged_vlan_2 }}"
+          site: "{{ item.0.site }}"
+        - name: "{{ item.1.tagged_vlan_3 }}"
+          site: "{{ item.0.site }}"    
+      mtu: "{{ item.1.mtu }}"
+      mgmt_only: "{{ item.1.mgmt_only }}"  
+    state: present
+  loop: "{{ device_list | subelements('trunk_interfaces', 'skip_missing=True') }}"
+
+#############################################################
+# Update Device Lag interfaces inherited in Nautobot
+#############################################################
+- name: Add LAG interfaces
+  networktocode.nautobot.device_interface:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      device: "{{ item.0.name }}"
+      name: "{{ item.1.name }}"
+      lag:
+        name: "{{ item.1.lag }}" 
+    state: present
+  loop: "{{ device_list | subelements('lag_interfaces', 'skip_missing=True') }}"
+
+#############################################################
+# Update Device Layer3 interfaces inherited in Nautobot
+#############################################################
+- name: Add Layer3 interfaces
+  networktocode.nautobot.device_interface:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      device: "{{ item.0.name }}"
+      name: "{{ item.1.name }}"
+      description: "{{ item.1.description }}"
+      type: "{{ item.1.type }}"
+      enabled: "{{ item.1.enabled }}"
+      mtu: "{{ item.1.mtu }}"
+      mgmt_only: "{{ item.1.mgmt_only }}"  
+    state: present
+  loop: "{{ device_list | subelements('l3_interfaces', 'skip_missing=True') }}"
+
+#############################################################
+# Update Device Disabled interfaces inherited in Nautobot
+#############################################################
+- name: Add disabled interfaces
+  networktocode.nautobot.device_interface:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      device: "{{ item.0.name }}"
+      name: "{{ item.1.name }}"
+      type: "{{ item.1.type }}"
+      enabled: "{{ item.1.enabled }}" 
+    state: present
+  loop: "{{ device_list | subelements('disabled_interfaces', 'skip_missing=True') }}"
+```
+{% endraw %}
 
 
 [Installing Ansible - Section 1](installing_ansible.md)
