@@ -1,0 +1,38 @@
+#jinja2: lstrip_blocks: "True", trim_blocks: "True"
+sites:
+- name: {{ ansible_user | upper }}
+  status: Active
+  asn: {{ configuration.bgp.ibgp.l_asn }}
+  time_zone: "America/Denver"
+  description: "Ansible Workshop for POD1"
+  physical_address: "Denver, CO, 80209"
+  shipping_address: "Denver, CO, 80209"
+  latitude: "39.764518"
+  longitude: "-104.995535"
+  contact_name: Joe
+  contact_phone: "867-5309"
+  contact_email: "joe@pod1.com"
+  slug: {{ ansible_user }}
+  comments: "### Placeholder"
+  racks:
+  - name: "pod1_rr_1"
+    status: active
+  vlans:
+{% for vlan in configuration.vlans.vlan %}
+  - name: {{ vlan.name }}
+    vid: {{ vlan.vlan_id }}
+    status: active
+    {% for interface in configuration.interfaces.l3_interfaces %}
+        {% if interface.name | replace('vlan','') == vlan.vlan_id %}
+        {% set prfx = interface.vrrp_primary_ip+'/'+interface.ipv4_mask %}
+    prefix: {{ prfx | ipaddr('network/prefix')}}
+        {% endif %}
+    {% endfor %}
+{% endfor %}      
+  int_prefixes:
+  - prefix: 10.10.1.0/31
+    description: "R1-GI0/1 - SW1-GI0/0"
+  - prefix: 10.10.1.2/31
+    description: "R1-GI0/2 - SW2-GI0/0"
+  - prefix: 24.24.1.0/24
+    description: "R1-GI0/0 - INTERNET" 

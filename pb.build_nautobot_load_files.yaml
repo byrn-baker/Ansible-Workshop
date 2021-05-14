@@ -1,0 +1,20 @@
+---
+- name: Generate the site file
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars_files:
+    - inventory/host_vars/pod1sw1/bgp.yaml
+    - inventory/host_vars/pod1sw1/l3_interfaces.yaml
+    - inventory/host_vars/pod1sw1/vlans.yaml
+  roles:
+  - { role: create_load_file/site }
+
+- name: Generate the node design file
+  hosts: all
+  connection: local
+  gather_facts: False
+
+  roles:
+  - { role: create_load_file/node_design }

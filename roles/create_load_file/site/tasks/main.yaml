@@ -1,0 +1,5 @@
+---
+- name: Building File to load nautobot
+  template: 
+    src: "site_load.j2"
+    dest: "inventory/nautobot_vars/site.yaml"

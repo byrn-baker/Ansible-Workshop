@@ -1,0 +1,202 @@
+#jinja2: lstrip_blocks: "True", trim_blocks: "True"
+device_list:
+  - name: {{ inventory_hostname }}
+  {% if inventory_hostname == 'pod1r1'%}
+    device_type: vios_router
+    device_role: pod_router
+  {% elif inventory_hostname == 'pod1sw1' or 'pod1sw2' %}
+    device_type: vios_switch
+    device_role: pod_core_switch
+  {% elif inventory_hostname == 'pod1sw3' %}
+    device_type: vios_switch
+    device_role: pod_access_switch
+  {% endif %}
+    site: pod1
+    rack: "pod1_rr_1"
+    {% if inventory_hostname == 'pod1r1' %}
+    position: 42
+    {% elif inventory_hostname == 'pod1sw1' %}
+    position: 40
+    {% elif inventory_hostname == 'pod1sw2' %}
+    position: 38
+    {% elif inventory_hostname == 'pod1sw3' %}
+    position: 36
+    {% endif %}
+    face: front
+    status: active
+    {% if configuration.interfaces.l3_interfaces is defined %}
+    l3_interfaces:
+    {% for interface in configuration.interfaces.l3_interfaces %}
+      - name: {{ interface.name }}
+        description: {{ interface.description }}
+        {% if 'Loop' in interface.name %}
+        type: virtual
+        {% elif 'vlan' in interface.name %}
+        type: virtual
+        {% elif 'Gig' in interface.name %}
+        type: 1000base-t
+        {% endif %}
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        {% if inventory_hostname == 'pod1r1' and interface.name == 'GigabitEthernet0/1' %}
+        bside_device: pod1sw1
+        bside_interface: GigabitEthernet0/0
+        {% endif %}
+        {% if inventory_hostname == 'pod1r1' and interface.name == 'GigabitEthernet0/2' %}
+        bside_device: pod1sw2
+        bside_interface: GigabitEthernet0/0
+        {% endif %}
+        {% set prfx = interface.ipv4+'/'+interface.ipv4_mask %}
+        ipv4_address: {{ prfx | ipaddr('host/prefix')}}
+        vrf: global
+        status: active
+        {% if interface.ospf is defined %}
+        tags: 
+            {% if interface.ospf.area is defined %}
+        - ospf_area_{{ interface.ospf.area }}
+            {% endif %}
+            {% if interface.ospf.network is defined %}
+        - p2p
+            {% endif %}
+        {% endif %}
+        {% if interface.dhcp_helper is defined %}
+        dhcp_helper: {{ interface.dhcp_helper }}
+        {% endif %}
+        {% if interface.vrrp_group is defined %}
+        vrrp_group: {{ interface.vrrp_group }}
+        vrrp_description: {{ interface.vrrp_description }}
+        vrrp_priority: {{ interface.vrrp_priority }}
+        vrrp_primary_ip: {{ interface.vrrp_primary_ip }}
+        {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% if inventory_hostname == 'pod1r1' %}
+      - name: GigabitEthernet0/7
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ipv4_address: {{ ansible_host }}/24
+        vrf: MGMT
+        status: active
+        primary: true
+    {% elif inventory_hostname == 'pod1sw1' or inventory_hostname == 'pod1sw2' %}
+      - name: GigabitEthernet1/3
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ipv4_address: {{ ansible_host }}/24
+        vrf: MGMT
+        status: active
+        primary: true
+    {% elif inventory_hostname == 'pod1sw3' %}
+    l3_interfaces:
+      - name: GigabitEthernet1/3
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ipv4_address: {{ ansible_host }}/24
+        vrf: MGMT
+        status: active
+        primary: true
+      {% endif %}
+    {% if configuration.interfaces.trunk is defined %}
+    trunk_interfaces:
+      {% for interface in configuration.interfaces.trunk %}
+      - name: {{ interface.name}}
+        description: {{ interface.description }}
+        {% if 'Loop' in interface.name %}
+        type: virtual
+        {% elif 'vlan' in interface.name %}
+        type: virtual
+        {% elif 'Gig' in interface.name %}
+        type: 1000base-t
+        {% elif 'Port' in interface.name %}
+        type: lag
+        {% endif %}
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        {% if inventory_hostname == 'pod1sw1' and interface.name == 'GigabitEthernet0/1' %}
+        bside_device: pod1sw2
+        bside_interface: GigabitEthernet0/1
+        {% endif %}
+        {% if inventory_hostname == 'pod1sw1' and interface.name == 'GigabitEthernet0/2' %}
+        bside_device: pod1sw2
+        bside_interface: GigabitEthernet0/2
+        {% endif %}
+        {% if inventory_hostname == 'pod1sw1' and interface.name == 'GigabitEthernet0/3' %}
+        bside_device: pod1sw3
+        bside_interface: GigabitEthernet0/1
+        {% endif %}
+        {% if inventory_hostname == 'pod1sw2' and interface.name == 'GigabitEthernet0/3' %}
+        bside_device: pod1sw3
+        bside_interface: GigabitEthernet0/2
+        {% endif %}
+        mode: Tagged
+        untag_vlan: NATIVE_VLAN
+        tagged_vlan_1: USERS
+        tagged_vlan_2: SERVERS
+        tagged_vlan_3: GUEST
+    {% endfor %}
+    {% endif %}
+    {% if configuration.interfaces.access is defined %}
+    access_interfaces:
+      {% for interface in configuration.interfaces.access %}
+      - name: {{ interface.name }}
+        description: {{ interface.description }}
+        type: 1000base-t
+        label: access
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: Access
+        untag_vlan: {{ interface.description }}
+    {% endfor %}
+    {% endif %}
+    {% if configuration.interfaces.trunk is defined %}
+    lag_interfaces:
+    {% for interface in configuration.interfaces.trunk %}
+    {% if interface.port_channel is defined %}
+      - name: {{ interface.name }}
+        lag: Port-Channel{{ interface.port_channel }}
+    {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% if inventory_hostname == 'pod1r1' %}
+    disabled_interfaces:
+    - name: GigabitEthernet0/3
+      type: 1000base-t
+      enabled: false
+    - name: GigabitEthernet0/4
+      type: 1000base-t
+      enabled: false
+    - name: GigabitEthernet0/5
+      type: 1000base-t
+      enabled: false
+    - name: GigabitEthernet0/6
+      type: 1000base-t
+      enabled: false
+    {% endif %}
+    {% if 'sw' in inventory_hostname %}
+    disabled_interfaces:
+    - name: GigabitEthernet1/0
+      type: 1000base-t
+      enabled: false
+    - name: GigabitEthernet1/1
+      type: 1000base-t
+      enabled: false
+    - name: GigabitEthernet1/2
+      type: 1000base-t
+      enabled: false
+    {% endif %}

@@ -1,0 +1,33 @@
+# requires ansible-galaxy collection install networktocode.nautobot & pip3 install pynautobot
+---
+- name: "Setup Nautobot"
+  hosts: localhost
+  connection: local
+  gather_facts: False
+  
+  vars_files:
+   - inventory/nautobot_vars/site.yaml
+   - inventory/nautobot_vars/tags.yaml
+   - inventory/nautobot_vars/vrfs.yaml
+   - inventory/nautobot_vars/devices.yaml
+   - inventory/nautobot_vars/node_design.yaml
+
+  roles:
+  - { role: load_nautobot/create_site }
+  - { role: load_nautobot/create_rack }
+  - { role: load_nautobot/create_vlans }
+  - { role: load_nautobot/create_vrfs }
+  - { role: load_nautobot/create_prefixes }
+  - { role: load_nautobot/create_manufacturer }
+  - { role: load_nautobot/create_platform }
+  - { role: load_nautobot/create_device_types }
+  - { role: load_nautobot/create_device_roles }
+  - { role: load_nautobot/create_devices }
+  - { role: load_nautobot/create_access_interfaces }
+  - { role: load_nautobot/create_trunk_interfaces }
+  - { role: load_nautobot/create_lag_interfaces }
+  - { role: load_nautobot/create_l3_interfaces }
+  - { role: load_nautobot/create_disabled_interfaces }
+  - { role: load_nautobot/assign_ipv4_to_interfaces }
+  - { role: load_nautobot/create_tags }
+  # - { role: load_nautobot/create_cables }
