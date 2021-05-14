@@ -216,14 +216,24 @@ device_list:
     {% for interface in configuration.interfaces.l3_interfaces %}
       - name: {{ interface.name }}
         description: {{ interface.description }}
-        {% if 'Loop' or 'vlan' in interface.name %}
+        {% if 'Loop' in interface.name %}
         type: virtual
-        {% elif 'Gigabit' in interface.name %}
+        {% elif 'vlan' in interface.name %}
+        type: virtual
+        {% elif 'Gig' in interface.name %}
         type: 1000base-t
         {% endif %}
         enabled: True
         mtu: 1500
         mgmt_only: False
+        {% if inventory_hostname == 'pod1r1' and interface.name == 'GigabitEthernet0/1' %}
+        bside_device: pod1sw1
+        bside_interface: GigabitEthernet0/0
+        {% endif %}
+        {% if inventory_hostname == 'pod1r1' and interface.name == 'GigabitEthernet0/2' %}
+        bside_device: pod1sw2
+        bside_interface: GigabitEthernet0/0
+        {% endif %}
         {% set prfx = interface.ipv4+'/'+interface.ipv4_mask %}
         ipv4_address: {{ prfx | ipaddr('host/prefix')}}
         vrf: global
@@ -248,16 +258,78 @@ device_list:
         {% endif %}
     {% endfor %}
     {% endif %}
+    {% if inventory_hostname == 'pod1r1' %}
+      - name: GigabitEthernet0/7
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ipv4_address: {{ ansible_host }}/24
+        vrf: MGMT
+        status: active
+        primary: true
+    {% elif inventory_hostname == 'pod1sw1' or inventory_hostname == 'pod1sw2' %}
+      - name: GigabitEthernet1/3
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ipv4_address: {{ ansible_host }}/24
+        vrf: MGMT
+        status: active
+        primary: true
+    {% elif inventory_hostname == 'pod1sw3' %}
+    l3_interfaces:
+      - name: GigabitEthernet1/3
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ipv4_address: {{ ansible_host }}/24
+        vrf: MGMT
+        status: active
+        primary: true
+      {% endif %}
     {% if configuration.interfaces.trunk is defined %}
     trunk_interfaces:
       {% for interface in configuration.interfaces.trunk %}
       - name: {{ interface.name}}
         description: {{ interface.description }}
+        {% if 'Loop' in interface.name %}
+        type: virtual
+        {% elif 'vlan' in interface.name %}
+        type: virtual
+        {% elif 'Gig' in interface.name %}
+        type: 1000base-t
+        {% elif 'Port' in interface.name %}
         type: lag
+        {% endif %}
         label: trunk
         enabled: True
         mtu: 1500
         mgmt_only: False
+        {% if inventory_hostname == 'pod1sw1' and interface.name == 'GigabitEthernet0/1' %}
+        bside_device: pod1sw2
+        bside_interface: GigabitEthernet0/1
+        {% endif %}
+        {% if inventory_hostname == 'pod1sw1' and interface.name == 'GigabitEthernet0/2' %}
+        bside_device: pod1sw2
+        bside_interface: GigabitEthernet0/2
+        {% endif %}
+        {% if inventory_hostname == 'pod1sw1' and interface.name == 'GigabitEthernet0/3' %}
+        bside_device: pod1sw3
+        bside_interface: GigabitEthernet0/1
+        {% endif %}
+        {% if inventory_hostname == 'pod1sw2' and interface.name == 'GigabitEthernet0/3' %}
+        bside_device: pod1sw3
+        bside_interface: GigabitEthernet0/2
+        {% endif %}
         mode: Tagged
         untag_vlan: NATIVE_VLAN
         tagged_vlan_1: USERS
@@ -784,6 +856,62 @@ Next we can start creating the devices and related items. We will need to make s
   loop: "{{ device_list | subelements('disabled_interfaces', 'skip_missing=True') }}"
 ```
 {% endraw %}
+
+Now that we have all of the devices created and the interfaces added to each device we can add IP addressing and the tags we talked about earlier. We will be tagging the IP address that will be associated to the device interfaces. The reason for the tags will be to tell our Jinja2 Templates building the configurations that specific interfaces are in an OSPF area and that it should be a specific network type. Why not just tag the interfaces? You could, how you building your logic is really up to how you associate things, for me it made more sense to associate to the IP address because in the cisco configurations it goes below the IP addressing on the interface and the logic worked better for me this way.
+
+Lets make a couple more files 
+- roles/load_nautobot/assign_ipv4_to_interfaces/tasks/main.yaml
+- roles/load_nautobot/create_tags/tasks/main.yaml
+
+{% raw %}
+```
+#############################################################
+# Assigning IP addresses to interfaces inherited in Nautobot
+#############################################################    
+- name: Add IP addresses to Layer3 interfaces
+  networktocode.nautobot.ip_address:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      address: "{{ item.1.ipv4_address }}"
+      status: "{{ item.1.status }}"
+      assigned_object:
+        name: "{{ item.1.name }}"
+        device: "{{ item.0.name }}"
+    state: present
+  loop: "{{ device_list | subelements('l3_interfaces', 'skip_missing=True') }}"
+
+- name: Create tags within Nautobot
+  networktocode.nautobot.tag:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      name: "{{ item.name }}"
+      description: "{{ item.description }}"
+    state: present  
+  loop: "{{ tags }}"
+
+# Associating tags to the IP addresses
+- name: Add tags to IP addresses
+  networktocode.nautobot.ip_address:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      address: "{{ item.1.ipv4_address }}"
+      status: "{{ item.1.status }}"
+      tags: "{{ item.1.tags }}"
+      assigned_object:
+        name: "{{ item.1.name }}"
+        device: "{{ item.0.name }}"
+    state: present
+  loop: "{{ device_list | subelements('l3_interfaces', 'skip_missing=True') }}"
+  when: item.1.tags is defined
+```
+{% endraw %}
+
 
 
 [Installing Ansible - Section 1](installing_ansible.md)
