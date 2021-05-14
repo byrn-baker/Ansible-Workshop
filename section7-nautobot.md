@@ -45,6 +45,8 @@ Our first playbook will focus on generating the site within Nautobot. With Nauto
 Lets make a folder under inventory called nautobot_vars. We will store the variable called in our nautobot playbooks. Let us also make a new folder under roles called ```roles/create_load_file/site``` and inside of this folder create your tasks and templates folders. Inside of the tasks folder we will again create main.yaml, and inside of templates lets call our jinja template site_load.j2. We will also want a playbook to run the two tasks we will be making, let us name it pb.build_nautobot_load_files.yaml.
 
 ```pb.build_nautobot_load_files.yaml```:
+
+{% raw %}
 ```
 ---
 - name: Generate the site file
@@ -59,9 +61,13 @@ Lets make a folder under inventory called nautobot_vars. We will store the varia
   roles:
   - { role: create_load_file/site }
 ```
+{% endraw %}
+
+
 We will import a few host_vars that can be used to generate the site.yaml file
 
 ```roles/create_load_file/site/tasks/main.yaml```:
+
 ```
 ---
 - name: Building File to load nautobot
@@ -69,9 +75,12 @@ We will import a few host_vars that can be used to generate the site.yaml file
     src: "site_load.j2"
     dest: "inventory/nautobot_vars/site.yaml"
 ```
+
 We will dump this data under ```inventory/nautobot_vars/```
 
+
 ```roles/create_load_file/site/templates/site_load.j2```:
+
 {% raw %}
 ```
 #jinja2: lstrip_blocks: "True", trim_blocks: "True"
@@ -114,13 +123,9 @@ sites:
     description: "R1-GI0/0 - INTERNET" 
 ```
 {% endraw %}
+
+We should end up with a file like this:
 ```
-
-
----
-###################################################################
-# Data that will be specifically related to the site being created
-###################################################################
 sites:
 - name: POD1
   status: Active
@@ -136,13 +141,9 @@ sites:
   contact_email: "joe@pod1.com"
   slug: pod1
   comments: "### Placeholder"
-  int_prefixes:
-  - prefix: 10.10.1.0/31
-    description: "R1-GI0/1 - SW1-GI0/0"
-  - prefix: 10.10.1.2/31
-    description: "R1-GI0/2 - SW2-GI0/0"
-  - prefix: 24.24.1.0/24
-    description: "R1-GI0/0 - INTERNET"  
+  racks:
+  - name: "pod1_rr_1"
+    status: active
   vlans:
   - name: USERS
     vid: 300
@@ -152,14 +153,25 @@ sites:
     vid: 350
     status: active
     prefix: 155.1.1.64/26
-  - name: GUESTS
+  - name: GUEST
     vid: 400
     status: active
     prefix: 155.1.1.128/26
-  racks:
-  - name: "Pod1 Rack 1"
-    status: active  
+  - name: NATIVE_VLAN
+    vid: 666
+    status: active
+      
+  int_prefixes:
+  - prefix: 10.10.1.0/31
+    description: "R1-GI0/1 - SW1-GI0/0"
+  - prefix: 10.10.1.2/31
+    description: "R1-GI0/2 - SW2-GI0/0"
+  - prefix: 24.24.1.0/24
+    description: "R1-GI0/0 - INTERNET"
 ```
+
+N
+
 
 Create a playbook, I called mine nb.create.sites.yaml. We will be using this single playbook to perform all of the tasks above. We will make use of the looping function inside of Ansible to digest all of the data for each of the 6 pods. The sites file above is an example and the full file can be found in the github repo. 
 
