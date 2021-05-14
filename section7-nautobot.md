@@ -580,6 +580,7 @@ Create a playbook, I called mine pb.load_nautobot.yaml. We will use this playboo
 
 Create a new file roles/load_nautobot/create_site/tasks/main.yaml
 
+{% raw %}
 ```
 # vars pulled from inventory/nautobot_vars/site
 #############################################################
