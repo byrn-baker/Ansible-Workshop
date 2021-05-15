@@ -1,0 +1,26 @@
+custom_fields:
+  - name: dhcp_helper
+    description: "Used to assign helper address to an interface"
+    type: text
+    content_types: 
+      - dcim.interface
+  - name: vrrp_group
+    description: " Used to assign vrrp items to an interface"
+    type: integer 
+    content_types:
+      - dcim.interface
+  - name: vrrp_description
+    description: " Used to assign vrrp items to an interface"
+    type: text 
+    content_types:
+      - dcim.interface
+  - name: vrrp_primary_ip
+    description: " Used to assign vrrp items to an interface"
+    type: text
+    content_types:
+      - dcim.interface
+  - name: vrrp_priority
+    description: " Used to assign vrrp items to an interface"
+    type: integer 
+    content_types:
+      - dcim.interface

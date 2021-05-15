@@ -1,0 +1,214 @@
+#jinja2: lstrip_blocks: "True", trim_blocks: "True"
+sites:
+{% for sites in sites %}
+  - name: {{ sites.name }}
+    status: {{ sites.status }}
+    asn: {{ sites.asn }}
+    time_zone: {{ sites.time_zone }}
+    description: {{ sites.description }}
+    physical_address: {{ sites.physical_address }}
+    shipping_address: {{ sites.shipping_address }}
+    latitude: {{ sites.latitude }}
+    longitude: {{ sites.longitude }}
+    contact_name: {{ sites.contact_name }}
+    contact_phone: {{ sites.contact_phone }}
+    contact_email: {{ sites.contact_email }}
+    slug: {{ sites.slug }}
+    comments: {{ sites.comments }}
+    racks:
+    {% for rack in sites["racks"] %}
+      - name: {{ rack.name }}
+        status: {{ rack.status }}
+    {% endfor %}
+{% endfor %}
+manufacturers:
+{% for man in manufacturer %}
+  - name: {{ man.name }}
+    slug: {{ man.name | lower }}
+device_types:
+    {% for dt in man["device_types"] %}
+  - model: {{ dt.name }}
+    slug: {{ dt.slug }}
+    manufacturer_slug: {{ man.name | lower }}
+    height: {{ dt.u_height }}
+    {% endfor %}
+    {% for role in man["device_roles"] %}
+device_roles:
+  - name: {{ role.name }}
+    slug: {{ role.name | lower }}
+    color: {{ role.color }}
+    {% endfor %}
+    {% for plat in man["platform"] %}
+platforms:
+  - name: {{ plat.name }}
+    slug: {{ plat.slug }}
+    manufacturer_slug: {{ man.name | lower }}
+    napalm_driver: {{ plat.napalm_driver }}
+    {% endfor %}
+{% endfor %}
+vrfs:
+{% for vrf in vrf %}
+  - name: {{ vrf.name }}
+    description: {{ vrf.description }}
+    prefix: {{ vrf.prefix }}
+{% endfor %}
+tags: 
+{% for tag in tags %}
+  - name: {{ tag.name }}
+    slug: {{ tag.name | lower }}
+    description: {{ tag.description }}
+{% endfor %}
+custom_fields:
+{% for cf in custom_fields %}
+  - name: {{ cf.name }}
+    description: {{ cf.description }}
+    type: {{ cf.type }}
+    content_types:
+    {% for ct in cf["content_types"] %}
+      - {{ ct }}
+    {% endfor %}
+{% endfor %}
+vlans:
+{% for site in sites %}
+    {% for vlan in site["vlans"] %}
+  - name: {{ vlan.name }}
+    vid: {{ vlan.vid }}
+    {% if vlan.prefix is defined %}
+    prefix: {{ vlan.prefix }}
+    {% endif %}
+    status: {{ vlan.status }}
+    site: {{ site.slug }}
+    {% endfor %}
+{% endfor %}
+prefixes:
+{% for site in sites %}
+    {% for pfx in site["int_prefixes"] %}
+  - prefix: {{ pfx.prefix }}
+    description: {{ pfx.description }}
+    site: {{ site.slug }}
+    status: active
+    {% endfor %}
+{% endfor %}
+devices:
+{% for dv in device_list %}
+  - name: {{ dv.name }}
+    device_role_slug: {{ dv.device_role }}
+    manufacturer_slug: cisco
+    device_types_slug: {{ dv.device_type }}
+    site_slug: {{ dv.site }}
+    interfaces:
+    {% if dv["l3_interfaces"] is defined  %}
+    {% for int in dv["l3_interfaces"] %}
+      - name: {{ int.name }}
+        description: {{ int.description }}
+        type: {{ int.type }}
+        {% if int["label"] is defined %}
+        label: {{ int.label }}
+        {% endif %}
+        enabled: {{ int.enabled }}
+        mtu: {{ int.mtu }}
+        mgmt_only: {{ int.mgmt_only }}
+        {% for device in connections %}
+          {% for interface in device["interface"] %}
+            {% if device["name"] == dv["name"] %}
+              {% if interface["name"] == int["name"] %}
+        bside_device: {{ interface["bside_device"] }}
+        bside_interface: {{ interface["bside_port"] }}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+        {% if int.dhcp_helper is defined %}
+        dhcp_helper: {{ int.dhcp_helper }}
+        {% endif %}
+        {% if int.vrrp_group is defined %}
+        vrrp_group: {{ int.vrrp_group }}
+        vrrp_description: "{{ int.vrrp_description }}"
+        vrrp_priority: {{ int.vrrp_priority }}
+        vrrp_primary_ip: {{ int.vrrp_primary_ip }}
+        {% endif %}
+        {% if int.ipv4_address is defined %}
+        ip_addresses:
+          - address: {{ int.ipv4_address }}
+            {% if '192.168.4.' in int.ipv4_address %}
+            vrf: {{ int.vrf }}
+            {% endif %}
+            status: {{ int.status }}
+            {% if 'MGMT' in int["vrf"] %}
+            primary: true
+            {% endif %}
+            {% if int.tags is defined %}
+            tags:
+            {% for tag in int.tags %}
+              - {{ tag }}
+            {% endfor %}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    {% endif %}
+    {% if dv["trunk_interfaces"] is defined %}
+    {% for int in dv["trunk_interfaces"] %}
+      - name: {{ int.name }}
+        description: {{ int.description }}
+        type: {{ int.type }}
+        {% if int["label"] is defined %}
+        label: {{ int.label }}
+        {% endif %}
+        enabled: {{ int.enabled }}
+        mtu: {{ int.mtu }}
+        mgmt_only: {{ int.mgmt_only }}
+        mode: {{ int.mode | lower }}
+        untagged_vlan: {{ int.untag_vlan }}
+        tagged_vlans:
+          - {{ int.tagged_vlan_1 }}
+          - {{ int.tagged_vlan_2 }}
+          - {{ int.tagged_vlan_3 }}
+        {% if int.lag is defined %}
+        lag: {{ int.lag }}
+        {% endif %}
+        {% for device in connections %}
+          {% for interface in device["interface"] %}
+            {% if device["name"] == dv["name"] %}
+              {% if interface["name"] == int["name"] %}
+        bside_device: {{ interface["bside_device"] }}
+        bside_interface: {{ interface["bside_port"] }}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+    {% endfor %}
+    {% endif %}
+    {% if dv["access_interfaces"] is defined %}
+    {% for int in dv["access_interfaces"] %}
+      - name: {{ int.name }}
+        description: {{ int.description }}
+        type: {{ int.type }}
+        {% if int["label"] is defined %}
+        label: {{ int.label }}
+        {% endif %}
+        enabled: {{ int.enabled }}
+        mtu: {{ int.mtu }}
+        mgmt_only: {{ int.mgmt_only }}
+        mode: {{ int.mode | lower }}
+        untagged_vlan: {{ int.untag_vlan }}
+        {% for device in connections %}
+          {% for interface in device["interface"] %}
+            {% if device["name"] == dv["name"] %}
+              {% if interface["name"] == int["name"] %}
+        bside_device: {{ interface["bside_device"] }}
+        bside_interface: {{ interface["bside_port"] }}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+    {% endfor %}
+    {% endif %}
+    {% if dv["disabled_interfaces"] is defined %}
+    {% for int in dv["disabled_interfaces"] %}
+      - name: {{ int.name }}
+        type: {{ int.type }}
+        enabled: {{ int.enabled }} 
+    {% endfor %}
+    {% else %}
+    {% endif %}
+{% endfor %}

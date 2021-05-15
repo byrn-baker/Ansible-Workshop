@@ -1,0 +1,24 @@
+manufacturer:
+- name: cisco
+  platform:
+  - name: ios
+    slug: ios
+    napalm_driver: ios 
+  device_types:
+  - name: vios_router
+    slug: vios_router
+    part_number: vios-router
+    u_height: 1
+    is_full_depth: False
+  - name: vios_switch
+    slug: vios_switch
+    part_number: vios-switch
+    u_height: 1
+    is_full_depth: False
+  device_roles:
+  - name: pod_router
+    color: FFFFFF
+  - name: pod_l3_switch
+    color: FFFFFA
+  - name: pod_l2_switch
+    color: FFFFFB

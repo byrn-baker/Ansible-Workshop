@@ -1,0 +1,250 @@
+---
+###################################################################
+# General Data and Site Specific Data for all pods
+###################################################################
+sites:
+- name: POD1
+  status: Active
+  asn: 65001
+  time_zone: "America/Denver"
+  description: "Ansible Workshop for POD1"
+  physical_address: "Denver, CO, 80209"
+  shipping_address: "Denver, CO, 80209"
+  latitude: "39.764518"
+  longitude: "-104.995535"
+  contact_name: Joe
+  contact_phone: "867-5309"
+  contact_email: "joe@pod1.com"
+  slug: pod1
+  comments: "### Placeholder"
+  int_prefixes:
+  - prefix: 10.10.1.0/31
+    description: "R1-GI0/1 - SW1-GI0/0"
+  - prefix: 10.10.1.2/31
+    description: "R1-GI0/2 - SW2-GI0/0"
+  - prefix: 24.24.1.0/24
+    description: "R1-GI0/0 - INTERNET"  
+  vlans:
+  - name: USERS
+    vid: 300
+    status: active
+    prefix: 155.1.1.0/26
+  - name: SERVERS
+    vid: 350
+    status: active
+    prefix: 155.1.1.64/26
+  - name: GUESTS
+    vid: 400
+    status: active
+    prefix: 155.1.1.128/26
+  - name: NATIVE_VLAN
+    vid: 666
+    status: active  
+  racks:
+  - name: "pod1_rr_1"
+    status: active  
+# Site 2
+- name: POD2
+  status: Active
+  asn: 65002
+  time_zone: "America/Denver"
+  description: "Ansible Workshop for POD2"
+  physical_address: "Albuquerque, NM"
+  shipping_address: "Albuquerque, NM"
+  latitude: "35.082530"
+  longitude: "-106.746690"
+  contact_name: Joe
+  contact_phone: "867-5309"
+  contact_email: "joe@pod2.com"
+  slug: pod2
+  comments: "### Placeholder"
+  int_prefixes:
+  - prefix: 10.10.2.0/31
+    description: "R1-GI0/1 - SW1-GI0/0"
+  - prefix: 10.10.2.2/31
+    description: "R1-GI0/2 - SW2-GI0/0"
+  - prefix: 24.24.2.0/24
+    description: "R1-GI0/0 - INTERNET"  
+  vlans:
+  - name: USERS
+    vid: 300
+    status: active
+    prefix: 155.2.2.0/26
+  - name: SERVERS
+    vid: 350
+    status: active
+    prefix: 155.2.2.64/26
+  - name: GUESTS
+    vid: 400
+    status: active
+    prefix: 155.2.2.128/26
+  - name: NATIVE_VLAN
+    vid: 666
+    status: active   
+  racks:
+  - name: "pod2_rr_1"
+    status: active 
+# Site 3
+- name: POD3
+  status: Active
+  asn: 65003
+  time_zone: "America/Phoenix"
+  description: "Ansible Workshop for POD3"
+  physical_address: "Phoenix, AZ"
+  shipping_address: "Phoenix, AZ"
+  latitude: "33.605621"
+  longitude: "-112.26547"
+  contact_name: Joe
+  contact_phone: "867-5309"
+  contact_email: "joe@pod3.com"
+  slug: pod3
+  comments: "### Placeholder" 
+  int_prefixes:
+  - prefix: 10.10.3.0/31
+    description: "R1-GI0/1 - SW1-GI0/0"
+  - prefix: 10.10.3.2/31
+    description: "R1-GI0/2 - SW2-GI0/0"
+  - prefix: 24.24.3.0/24
+    description: "R1-GI0/0 - INTERNET"     
+  vlans:
+  - name: USERS
+    vid: 300
+    status: active
+    prefix: 155.3.3.0/26
+  - name: SERVERS
+    vid: 350
+    status: active
+    prefix: 155.3.3.64/26
+  - name: GUESTS
+    vid: 400
+    status: active
+    prefix: 155.3.3.128/26
+  - name: NATIVE_VLAN
+    vid: 666
+    status: active   
+  racks:
+  - name: "pod3_rr_1"
+    status: active
+# Site 4
+- name: POD4
+  status: Active
+  asn: 65004
+  time_zone: "America/Phoenix"
+  description: "Ansible Workshop for POD4"
+  physical_address: "Las Vegas, NV"
+  shipping_address: "Las Vegas, NV"
+  latitude: "36.125195"
+  longitude: "-115.315424"
+  contact_name: Joe
+  contact_phone: "867-5309"
+  contact_email: "joe@pod4.com"
+  slug: pod4
+  comments: "### Placeholder" 
+  int_prefixes:
+  - prefix: 10.10.4.0/31
+    description: "R1-GI0/1 - SW1-GI0/0"
+  - prefix: 10.10.4.2/31
+    description: "R1-GI0/2 - SW2-GI0/0"
+  - prefix: 24.24.4.0/24
+    description: "R1-GI0/0 - INTERNET"   
+  vlans:
+  - name: USERS
+    vid: 300
+    status: active
+    prefix: 155.4.4.0/26
+  - name: SERVERS
+    vid: 350
+    status: active
+    prefix: 155.4.4.64/26
+  - name: GUESTS
+    vid: 400
+    status: active
+    prefix: 155.4.4.128/26
+  - name: NATIVE_VLAN
+    vid: 666
+    status: active   
+  racks:
+  - name: "pod4_rr_1"
+    status: active     
+# Site 5
+- name: POD5
+  status: Active
+  asn: 65005
+  time_zone: "America/Los Angeles"
+  description: "Ansible Workshop for POD5"
+  physical_address: "Los Angeles, CA"
+  shipping_address: "Los Angeles, CA"
+  latitude: "34.020683"
+  longitude: "-118.552157"
+  contact_name: Joe
+  contact_phone: "867-5309"
+  contact_email: "joe@pod5.com"
+  slug: pod5
+  comments: "### Placeholder"
+  int_prefixes:
+  - prefix: 10.10.5.0/31
+    description: "R1-GI0/1 - SW1-GI0/0"
+  - prefix: 10.10.5.2/31
+    description: "R1-GI0/2 - SW2-GI0/0"
+  - prefix: 24.24.5.0/24
+    description: "R1-GI0/0 - INTERNET"   
+  vlans:
+  - name: USERS
+    vid: 300
+    status: active
+    prefix: 155.5.5.0/26
+  - name: SERVERS
+    vid: 350
+    status: active
+    prefix: 155.5.5.64/26
+  - name: GUESTS
+    vid: 400
+    status: active
+    prefix: 155.5.5.128/26
+  - name: NATIVE_VLAN
+    vid: 666
+    status: active   
+  racks:
+  - name: "pod5_rr_1"
+    status: active    
+# site 6
+- name: POD6
+  status: Active
+  asn: 65006
+  time_zone: "America/Los Angeles"
+  description: "Ansible Workshop for POD6"
+  physical_address: "San Jose, CA"
+  shipping_address: "San Jose, CA"
+  latitude: "39.764518"
+  longitude: "-104.995535"
+  contact_name: Joe
+  contact_phone: "867-5309"
+  contact_email: "joe@pod6.com"
+  slug: pod6
+  comments: "### Placeholder" 
+  int_prefixes:
+  - prefix: 10.10.6.0/31
+    description: "R1-GI0/1 - SW1-GI0/0"
+  - prefix: 10.10.6.2/31
+    description: "R1-GI0/2 - SW2-GI0/0"
+  - prefix: 24.24.6.0/24
+    description: "R1-GI0/0 - INTERNET"   
+  vlans:
+  - name: USERS
+    vid: 300
+    status: active
+    prefix: 155.6.6.0/26
+  - name: SERVERS
+    vid: 350
+    status: active
+    prefix: 155.6.6.64/26
+  - name: GUESTS
+    vid: 400
+    status: active
+    prefix: 155.6.6.128/26
+  - name: NATIVE_VLAN
+    vid: 666
+    status: active   
+  racks:
+  - name: "pod6_rr_1"
+    status: active  

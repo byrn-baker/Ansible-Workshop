@@ -1,0 +1,20 @@
+---
+- name: Load Nautobot
+  connection: local
+  hosts: localhost
+  gather_facts: False
+
+  vars_files:
+   - vars/sites.yaml
+   - vars/tags.yaml
+   - vars/vrfs.yaml
+   - vars/devices.yaml
+   - vars/nodes_design.yaml
+   - vars/custom_fields.yaml
+   - vars/device_connections.yaml
+
+  tasks:
+  - name: transform into a single file
+    template: 
+      src: "transform.j2"
+      dest: "nb_initial_load.yaml"

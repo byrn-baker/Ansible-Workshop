@@ -1,0 +1,3154 @@
+sites:
+  - name: POD1
+    status: Active
+    asn: 65001
+    time_zone: America/Denver
+    description: Ansible Workshop for POD1
+    physical_address: Denver, CO, 80209
+    shipping_address: Denver, CO, 80209
+    latitude: 39.764518
+    longitude: -104.995535
+    contact_name: Joe
+    contact_phone: 867-5309
+    contact_email: joe@pod1.com
+    slug: pod1
+    comments: ### Placeholder
+    racks:
+      - name: pod1_rr_1
+        status: active
+  - name: POD2
+    status: Active
+    asn: 65002
+    time_zone: America/Denver
+    description: Ansible Workshop for POD2
+    physical_address: Albuquerque, NM
+    shipping_address: Albuquerque, NM
+    latitude: 35.082530
+    longitude: -106.746690
+    contact_name: Joe
+    contact_phone: 867-5309
+    contact_email: joe@pod2.com
+    slug: pod2
+    comments: ### Placeholder
+    racks:
+      - name: pod2_rr_1
+        status: active
+  - name: POD3
+    status: Active
+    asn: 65003
+    time_zone: America/Phoenix
+    description: Ansible Workshop for POD3
+    physical_address: Phoenix, AZ
+    shipping_address: Phoenix, AZ
+    latitude: 33.605621
+    longitude: -112.26547
+    contact_name: Joe
+    contact_phone: 867-5309
+    contact_email: joe@pod3.com
+    slug: pod3
+    comments: ### Placeholder
+    racks:
+      - name: pod3_rr_1
+        status: active
+  - name: POD4
+    status: Active
+    asn: 65004
+    time_zone: America/Phoenix
+    description: Ansible Workshop for POD4
+    physical_address: Las Vegas, NV
+    shipping_address: Las Vegas, NV
+    latitude: 36.125195
+    longitude: -115.315424
+    contact_name: Joe
+    contact_phone: 867-5309
+    contact_email: joe@pod4.com
+    slug: pod4
+    comments: ### Placeholder
+    racks:
+      - name: pod4_rr_1
+        status: active
+  - name: POD5
+    status: Active
+    asn: 65005
+    time_zone: America/Los Angeles
+    description: Ansible Workshop for POD5
+    physical_address: Los Angeles, CA
+    shipping_address: Los Angeles, CA
+    latitude: 34.020683
+    longitude: -118.552157
+    contact_name: Joe
+    contact_phone: 867-5309
+    contact_email: joe@pod5.com
+    slug: pod5
+    comments: ### Placeholder
+    racks:
+      - name: pod5_rr_1
+        status: active
+  - name: POD6
+    status: Active
+    asn: 65006
+    time_zone: America/Los Angeles
+    description: Ansible Workshop for POD6
+    physical_address: San Jose, CA
+    shipping_address: San Jose, CA
+    latitude: 39.764518
+    longitude: -104.995535
+    contact_name: Joe
+    contact_phone: 867-5309
+    contact_email: joe@pod6.com
+    slug: pod6
+    comments: ### Placeholder
+    racks:
+      - name: pod6_rr_1
+        status: active
+manufacturers:
+  - name: cisco
+    slug: cisco
+device_types:
+  - model: vios_router
+    slug: vios_router
+    manufacturer_slug: cisco
+    height: 1
+  - model: vios_switch
+    slug: vios_switch
+    manufacturer_slug: cisco
+    height: 1
+device_roles:
+  - name: pod_router
+    slug: pod_router
+    color: FFFFFF
+device_roles:
+  - name: pod_l3_switch
+    slug: pod_l3_switch
+    color: FFFFFA
+device_roles:
+  - name: pod_l2_switch
+    slug: pod_l2_switch
+    color: FFFFFB
+platforms:
+  - name: ios
+    slug: ios
+    manufacturer_slug: cisco
+    napalm_driver: ios
+vrfs:
+  - name: MGMT
+    description: INBAND MGMT
+    prefix: 192.168.4.0/24
+tags: 
+  - name: ospf_area_0
+    slug: ospf_area_0
+    description: Interface OSPF Area 0
+  - name: p2p
+    slug: p2p
+    description: Interface network type for OSPF Protocol
+custom_fields:
+  - name: dhcp_helper
+    description: Used to assign helper address to an interface
+    type: text
+    content_types:
+      - dcim.interface
+  - name: vrrp_group
+    description:  Used to assign vrrp items to an interface
+    type: integer
+    content_types:
+      - dcim.interface
+  - name: vrrp_description
+    description:  Used to assign vrrp items to an interface
+    type: text
+    content_types:
+      - dcim.interface
+  - name: vrrp_primary_ip
+    description:  Used to assign vrrp items to an interface
+    type: text
+    content_types:
+      - dcim.interface
+  - name: vrrp_priority
+    description:  Used to assign vrrp items to an interface
+    type: integer
+    content_types:
+      - dcim.interface
+vlans:
+  - name: USERS
+    vid: 300
+    prefix: 155.1.1.0/26
+    status: active
+    site: pod1
+  - name: SERVERS
+    vid: 350
+    prefix: 155.1.1.64/26
+    status: active
+    site: pod1
+  - name: GUESTS
+    vid: 400
+    prefix: 155.1.1.128/26
+    status: active
+    site: pod1
+  - name: NATIVE_VLAN
+    vid: 666
+    status: active
+    site: pod1
+  - name: USERS
+    vid: 300
+    prefix: 155.2.2.0/26
+    status: active
+    site: pod2
+  - name: SERVERS
+    vid: 350
+    prefix: 155.2.2.64/26
+    status: active
+    site: pod2
+  - name: GUESTS
+    vid: 400
+    prefix: 155.2.2.128/26
+    status: active
+    site: pod2
+  - name: NATIVE_VLAN
+    vid: 666
+    status: active
+    site: pod2
+  - name: USERS
+    vid: 300
+    prefix: 155.3.3.0/26
+    status: active
+    site: pod3
+  - name: SERVERS
+    vid: 350
+    prefix: 155.3.3.64/26
+    status: active
+    site: pod3
+  - name: GUESTS
+    vid: 400
+    prefix: 155.3.3.128/26
+    status: active
+    site: pod3
+  - name: NATIVE_VLAN
+    vid: 666
+    status: active
+    site: pod3
+  - name: USERS
+    vid: 300
+    prefix: 155.4.4.0/26
+    status: active
+    site: pod4
+  - name: SERVERS
+    vid: 350
+    prefix: 155.4.4.64/26
+    status: active
+    site: pod4
+  - name: GUESTS
+    vid: 400
+    prefix: 155.4.4.128/26
+    status: active
+    site: pod4
+  - name: NATIVE_VLAN
+    vid: 666
+    status: active
+    site: pod4
+  - name: USERS
+    vid: 300
+    prefix: 155.5.5.0/26
+    status: active
+    site: pod5
+  - name: SERVERS
+    vid: 350
+    prefix: 155.5.5.64/26
+    status: active
+    site: pod5
+  - name: GUESTS
+    vid: 400
+    prefix: 155.5.5.128/26
+    status: active
+    site: pod5
+  - name: NATIVE_VLAN
+    vid: 666
+    status: active
+    site: pod5
+  - name: USERS
+    vid: 300
+    prefix: 155.6.6.0/26
+    status: active
+    site: pod6
+  - name: SERVERS
+    vid: 350
+    prefix: 155.6.6.64/26
+    status: active
+    site: pod6
+  - name: GUESTS
+    vid: 400
+    prefix: 155.6.6.128/26
+    status: active
+    site: pod6
+  - name: NATIVE_VLAN
+    vid: 666
+    status: active
+    site: pod6
+prefixes:
+  - prefix: 10.10.1.0/31
+    description: R1-GI0/1 - SW1-GI0/0
+    site: pod1
+    status: active
+  - prefix: 10.10.1.2/31
+    description: R1-GI0/2 - SW2-GI0/0
+    site: pod1
+    status: active
+  - prefix: 24.24.1.0/24
+    description: R1-GI0/0 - INTERNET
+    site: pod1
+    status: active
+  - prefix: 10.10.2.0/31
+    description: R1-GI0/1 - SW1-GI0/0
+    site: pod2
+    status: active
+  - prefix: 10.10.2.2/31
+    description: R1-GI0/2 - SW2-GI0/0
+    site: pod2
+    status: active
+  - prefix: 24.24.2.0/24
+    description: R1-GI0/0 - INTERNET
+    site: pod2
+    status: active
+  - prefix: 10.10.3.0/31
+    description: R1-GI0/1 - SW1-GI0/0
+    site: pod3
+    status: active
+  - prefix: 10.10.3.2/31
+    description: R1-GI0/2 - SW2-GI0/0
+    site: pod3
+    status: active
+  - prefix: 24.24.3.0/24
+    description: R1-GI0/0 - INTERNET
+    site: pod3
+    status: active
+  - prefix: 10.10.4.0/31
+    description: R1-GI0/1 - SW1-GI0/0
+    site: pod4
+    status: active
+  - prefix: 10.10.4.2/31
+    description: R1-GI0/2 - SW2-GI0/0
+    site: pod4
+    status: active
+  - prefix: 24.24.4.0/24
+    description: R1-GI0/0 - INTERNET
+    site: pod4
+    status: active
+  - prefix: 10.10.5.0/31
+    description: R1-GI0/1 - SW1-GI0/0
+    site: pod5
+    status: active
+  - prefix: 10.10.5.2/31
+    description: R1-GI0/2 - SW2-GI0/0
+    site: pod5
+    status: active
+  - prefix: 24.24.5.0/24
+    description: R1-GI0/0 - INTERNET
+    site: pod5
+    status: active
+  - prefix: 10.10.6.0/31
+    description: R1-GI0/1 - SW1-GI0/0
+    site: pod6
+    status: active
+  - prefix: 10.10.6.2/31
+    description: R1-GI0/2 - SW2-GI0/0
+    site: pod6
+    status: active
+  - prefix: 24.24.6.0/24
+    description: R1-GI0/0 - INTERNET
+    site: pod6
+    status: active
+devices:
+  - name: pod1r1
+    device_role_slug: pod_router
+    manufacturer_slug: cisco
+    device_types_slug: vios_router
+    site_slug: pod1
+    interfaces:
+      - name: Loopback0
+        description: iBGP LOOPBACK
+        type: virtual
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.0.1.1/32
+            status: active
+            tags:
+              - ospf_area_0
+      - name: GigabitEthernet0/0
+        description: UPLINK TO INTERNET PROVIDER
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 24.24.1.2/24
+            status: active
+      - name: GigabitEthernet0/1
+        description: DOWNLINK POD1SW1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        bside_device: pod1sw1
+        bside_interface: GigabitEthernet0/0
+        ip_addresses:
+          - address: 10.10.1.0/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet0/2
+        description: DOWNLINK POD1SW2
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        bside_device: pod1sw2
+        bside_interface: GigabitEthernet0/0
+        ip_addresses:
+          - address: 10.10.1.2/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet0/7
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.17/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: GigabitEthernet0/3
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/4
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/5
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/6
+        type: 1000base-t
+        enabled: False 
+  - name: pod1sw1
+    device_role_slug: pod_l3_switch
+    manufacturer_slug: cisco
+    device_types_slug: vios_switch
+    site_slug: pod1
+    interfaces:
+      - name: Loopback0
+        description: iBGP LOOPBACK
+        type: virtual
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.0.1.2/32
+            status: active
+            tags:
+              - ospf_area_0
+      - name: vlan300
+        description: USER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.1.1
+        vrrp_group: 1
+        vrrp_description: "USER_VLAN"
+        vrrp_priority: 200
+        vrrp_primary_ip: 155.1.1.1
+        ip_addresses:
+          - address: 155.1.1.2/26
+            status: active
+      - name: vlan350
+        description: SERVER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.1.1
+        vrrp_group: 2
+        vrrp_description: "SERVER_VLAN"
+        vrrp_priority: 200
+        vrrp_primary_ip: 155.1.1.65
+        ip_addresses:
+          - address: 155.1.1.66/26
+            status: active
+      - name: vlan400
+        description: GUEST_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.1.1
+        vrrp_group: 3
+        vrrp_description: "GUEST_VLAN"
+        vrrp_priority: 200
+        vrrp_primary_ip: 155.1.1.129
+        ip_addresses:
+          - address: 155.1.1.130/26
+            status: active
+      - name: GigabitEthernet0/0
+        description: UPLINK POD1R1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.10.0.1/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet1/3
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.18/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: Port-Channel12
+        description: TRUNK TO POD1SW2
+        type: lag
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/1
+        description: TRUNK TO POD1SW2
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+        bside_device: pod1sw2
+        bside_interface: GigabitEthernet0/1
+      - name: GigabitEthernet0/2
+        description: TRUNK TO POD1SW2
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+        bside_device: pod1sw2
+        bside_interface: GigabitEthernet0/2
+      - name: GigabitEthernet0/3
+        description: TRUNK TO POD1SW3
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        bside_device: pod1sw3
+        bside_interface: GigabitEthernet0/1
+      - name: GigabitEthernet1/0
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/1
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/2
+        type: 1000base-t
+        enabled: False 
+  - name: pod1sw2
+    device_role_slug: pod_l3_switch
+    manufacturer_slug: cisco
+    device_types_slug: vios_switch
+    site_slug: pod1
+    interfaces:
+      - name: Loopback0
+        description: iBGP LOOPBACK
+        type: virtual
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.0.1.3/32
+            status: active
+            tags:
+              - ospf_area_0
+      - name: vlan300
+        description: USER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.1.1
+        vrrp_group: 1
+        vrrp_description: "USER_VLAN"
+        vrrp_priority: 100
+        vrrp_primary_ip: 155.1.1.1
+        ip_addresses:
+          - address: 155.1.1.3/26
+            status: active
+      - name: vlan350
+        description: SERVER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.1.1
+        vrrp_group: 2
+        vrrp_description: "SERVER_VLAN"
+        vrrp_priority: 100
+        vrrp_primary_ip: 155.1.1.65
+        ip_addresses:
+          - address: 155.1.1.67/26
+            status: active
+      - name: vlan400
+        description: GUEST_SVI
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.1.1
+        vrrp_group: 3
+        vrrp_description: "GUEST_VLAN"
+        vrrp_priority: 100
+        vrrp_primary_ip: 155.1.1.129
+        ip_addresses:
+          - address: 155.1.1.131/26
+            status: active
+      - name: GigabitEthernet0/0
+        description: UPLINK POD1R1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.10.1.3/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet1/3
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.19/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: Port-Channel12
+        description: TRUNK TO POD1SW1
+        type: lag
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/1
+        description: TRUNK TO POD1SW1
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+      - name: GigabitEthernet0/2
+        description: TRUNK TO POD1SW1
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+      - name: GigabitEthernet0/3
+        description: TRUNK TO POD1SW3
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        bside_device: pod1sw3
+        bside_interface: GigabitEthernet0/2
+      - name: GigabitEthernet1/0
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/1
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/2
+        type: 1000base-t
+        enabled: False 
+  - name: pod1sw3
+    device_role_slug: pod_l2_switch
+    manufacturer_slug: cisco
+    device_types_slug: vios_switch
+    site_slug: pod1
+    interfaces:
+      - name: GigabitEthernet1/3
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.20/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: GigabitEthernet0/1
+        description: TRUNK TO POD1SW1
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/2
+        description: TRUNK TO POD1SW2
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/3
+        description: USERS
+        type: 1000base-t
+        label: access
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: access
+        untagged_vlan: USERS
+      - name: GigabitEthernet1/0
+        description: SERVERS
+        type: 1000base-t
+        label: access
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: access
+        untagged_vlan: SERVERS
+      - name: GigabitEthernet1/1
+        description: GUESTS
+        type: 1000base-t
+        label: access
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: access
+        untagged_vlan: GUESTS
+      - name: GigabitEthernet1/2
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/0
+        type: 1000base-t
+        enabled: False 
+  - name: pod2r1
+    device_role_slug: pod_router
+    manufacturer_slug: cisco
+    device_types_slug: vios_router
+    site_slug: pod2
+    interfaces:
+      - name: Loopback0
+        description: iBGP LOOPBACK
+        type: virtual
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.0.2.1/32
+            status: active
+            tags:
+              - ospf_area_0
+      - name: GigabitEthernet0/0
+        description: UPLINK TO INTERNET PROVIDER
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 24.24.2.2/24
+            status: active
+      - name: GigabitEthernet0/1
+        description: DOWNLINK pod2SW1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        bside_device: pod2sw1
+        bside_interface: GigabitEthernet0/0
+        ip_addresses:
+          - address: 10.10.2.0/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet0/2
+        description: DOWNLINK pod2SW2
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        bside_device: pod2sw2
+        bside_interface: GigabitEthernet0/0
+        ip_addresses:
+          - address: 10.10.2.2/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet0/7
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.21/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: GigabitEthernet0/3
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/4
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/5
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/6
+        type: 1000base-t
+        enabled: False 
+  - name: pod2sw1
+    device_role_slug: pod_l3_switch
+    manufacturer_slug: cisco
+    device_types_slug: vios_switch
+    site_slug: pod2
+    interfaces:
+      - name: Loopback0
+        description: iBGP LOOPBACK
+        type: virtual
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.0.2.2/32
+            status: active
+            tags:
+              - ospf_area_0
+      - name: vlan300
+        description: USER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.2.1
+        vrrp_group: 1
+        vrrp_description: "USER_VLAN"
+        vrrp_priority: 100
+        vrrp_primary_ip: 155.2.2.2
+        ip_addresses:
+          - address: 155.2.2.2/26
+            status: active
+      - name: vlan350
+        description: SERVER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.2.1
+        vrrp_group: 2
+        vrrp_description: "SERVER_VLAN"
+        vrrp_priority: 100
+        vrrp_primary_ip: 155.2.2.65
+        ip_addresses:
+          - address: 155.2.2.66/26
+            status: active
+      - name: vlan400
+        description: GUEST_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.2.1
+        vrrp_group: 3
+        vrrp_description: "GUEST_VLAN"
+        vrrp_priority: 100
+        vrrp_primary_ip: 155.2.2.129
+        ip_addresses:
+          - address: 155.2.2.130/26
+            status: active
+      - name: GigabitEthernet0/0
+        description: UPLINK pod2R1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.10.2.1/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet1/3
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.22/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: Port-Channel12
+        description: TRUNK TO pod2SW2
+        type: lag
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/1
+        description: TRUNK TO pod2SW2
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+        bside_device: pod2sw2
+        bside_interface: GigabitEthernet0/1
+      - name: GigabitEthernet0/2
+        description: TRUNK TO pod2SW2
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+        bside_device: pod2sw2
+        bside_interface: GigabitEthernet0/2
+      - name: GigabitEthernet0/3
+        description: TRUNK TO pod2SW3
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        bside_device: pod2sw3
+        bside_interface: GigabitEthernet0/1
+      - name: GigabitEthernet1/0
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/1
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/2
+        type: 1000base-t
+        enabled: False 
+  - name: pod2sw2
+    device_role_slug: pod_l3_switch
+    manufacturer_slug: cisco
+    device_types_slug: vios_switch
+    site_slug: pod2
+    interfaces:
+      - name: Loopback0
+        description: iBGP LOOPBACK
+        type: virtual
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.0.2.3/32
+            status: active
+            tags:
+              - ospf_area_0
+      - name: vlan300
+        description: USER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.2.1
+        vrrp_group: 1
+        vrrp_description: "USER_VLAN"
+        vrrp_priority: 200
+        vrrp_primary_ip: 155.2.2.1
+        ip_addresses:
+          - address: 155.2.2.3/26
+            status: active
+      - name: vlan350
+        description: SERVER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.2.1
+        vrrp_group: 2
+        vrrp_description: "SERVER_VLAN"
+        vrrp_priority: 200
+        vrrp_primary_ip: 155.2.2.65
+        ip_addresses:
+          - address: 155.2.2.67/26
+            status: active
+      - name: vlan400
+        description: GUEST_SVI
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.2.1
+        vrrp_group: 3
+        vrrp_description: "GUEST_VLAN"
+        vrrp_priority: 200
+        vrrp_primary_ip: 155.2.2.129
+        ip_addresses:
+          - address: 155.2.2.131/26
+            status: active
+      - name: GigabitEthernet0/0
+        description: UPLINK pod2R1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.10.2.3/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet1/3
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.23/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: Port-Channel12
+        description: TRUNK TO pod2SW1
+        type: lag
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/1
+        description: TRUNK TO pod2SW1
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+      - name: GigabitEthernet0/2
+        description: TRUNK TO pod2SW1
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+      - name: GigabitEthernet0/3
+        description: TRUNK TO pod2SW3
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        bside_device: pod2sw3
+        bside_interface: GigabitEthernet0/2
+      - name: GigabitEthernet1/0
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/1
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/2
+        type: 1000base-t
+        enabled: False 
+  - name: pod2sw3
+    device_role_slug: pod_l2_switch
+    manufacturer_slug: cisco
+    device_types_slug: vios_switch
+    site_slug: pod2
+    interfaces:
+      - name: GigabitEthernet1/3
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.24/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: GigabitEthernet0/1
+        description: TRUNK TO pod2SW1
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/2
+        description: TRUNK TO pod2SW2
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/3
+        description: USERS
+        type: 1000base-t
+        label: access
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: access
+        untagged_vlan: USERS
+      - name: GigabitEthernet1/0
+        description: SERVERS
+        type: 1000base-t
+        label: access
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: access
+        untagged_vlan: SERVERS
+      - name: GigabitEthernet1/1
+        description: GUESTS
+        type: 1000base-t
+        label: access
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: access
+        untagged_vlan: GUESTS
+      - name: GigabitEthernet1/2
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/0
+        type: 1000base-t
+        enabled: False 
+  - name: pod3r1
+    device_role_slug: pod_router
+    manufacturer_slug: cisco
+    device_types_slug: vios_router
+    site_slug: pod3
+    interfaces:
+      - name: Loopback0
+        description: iBGP LOOPBACK
+        type: virtual
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.0.3.1/32
+            status: active
+            tags:
+              - ospf_area_0
+      - name: GigabitEthernet0/0
+        description: UPLINK TO INTERNET PROVIDER
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 24.24.3.2/24
+            status: active
+      - name: GigabitEthernet0/1
+        description: DOWNLINK pod3SW1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        bside_device: pod3sw1
+        bside_interface: GigabitEthernet0/0
+        ip_addresses:
+          - address: 10.10.3.0/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet0/2
+        description: DOWNLINK pod3SW2
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        bside_device: pod3sw2
+        bside_interface: GigabitEthernet0/0
+        ip_addresses:
+          - address: 10.10.3.2/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet0/7
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.51/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: GigabitEthernet0/3
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/4
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/5
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/6
+        type: 1000base-t
+        enabled: False 
+  - name: pod3sw1
+    device_role_slug: pod_l3_switch
+    manufacturer_slug: cisco
+    device_types_slug: vios_switch
+    site_slug: pod3
+    interfaces:
+      - name: Loopback0
+        description: iBGP LOOPBACK
+        type: virtual
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.0.3.2/32
+            status: active
+            tags:
+              - ospf_area_0
+      - name: vlan300
+        description: USER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.2.1
+        vrrp_group: 1
+        vrrp_description: "USER_VLAN"
+        vrrp_priority: 100
+        vrrp_primary_ip: 155.2.2.1
+        ip_addresses:
+          - address: 155.3.3.2/26
+            status: active
+      - name: vlan350
+        description: SERVER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.2.1
+        vrrp_group: 2
+        vrrp_description: "SERVER_VLAN"
+        vrrp_priority: 100
+        vrrp_primary_ip: 155.2.2.65
+        ip_addresses:
+          - address: 155.3.3.66/26
+            status: active
+      - name: vlan400
+        description: GUEST_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.2.1
+        vrrp_group: 3
+        vrrp_description: "GUEST_VLAN"
+        vrrp_priority: 100
+        vrrp_primary_ip: 155.2.2.129
+        ip_addresses:
+          - address: 155.3.3.130/26
+            status: active
+      - name: GigabitEthernet0/0
+        description: UPLINK pod3R1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.10.3.3/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet1/3
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.52/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: Port-Channel12
+        description: TRUNK TO pod3SW2
+        type: lag
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/1
+        description: TRUNK TO pod3SW2
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+        bside_device: pod3sw2
+        bside_interface: GigabitEthernet0/1
+      - name: GigabitEthernet0/2
+        description: TRUNK TO pod3SW2
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+        bside_device: pod3sw2
+        bside_interface: GigabitEthernet0/2
+      - name: GigabitEthernet0/3
+        description: TRUNK TO pod3SW3
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        bside_device: pod3sw3
+        bside_interface: GigabitEthernet0/1
+      - name: GigabitEthernet1/0
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/1
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/2
+        type: 1000base-t
+        enabled: False 
+  - name: pod3sw2
+    device_role_slug: pod_l3_switch
+    manufacturer_slug: cisco
+    device_types_slug: vios_switch
+    site_slug: pod3
+    interfaces:
+      - name: Loopback0
+        description: iBGP LOOPBACK
+        type: virtual
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.0.3.3/32
+            status: active
+            tags:
+              - ospf_area_0
+      - name: vlan300
+        description: USER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.3.1
+        vrrp_group: 1
+        vrrp_description: "USER_VLAN"
+        vrrp_priority: 100
+        vrrp_primary_ip: 155.3.3.1
+        ip_addresses:
+          - address: 155.3.3.3/26
+            status: active
+      - name: vlan350
+        description: SERVER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.3.1
+        vrrp_group: 2
+        vrrp_description: "SERVER_VLAN"
+        vrrp_priority: 100
+        vrrp_primary_ip: 155.3.3.65
+        ip_addresses:
+          - address: 155.3.3.67/26
+            status: active
+      - name: vlan400
+        description: GUEST_SVI
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.3.1
+        vrrp_group: 3
+        vrrp_description: "GUEST_VLAN"
+        vrrp_priority: 100
+        vrrp_primary_ip: 155.3.3.129
+        ip_addresses:
+          - address: 155.3.3.131/26
+            status: active
+      - name: GigabitEthernet0/0
+        description: UPLINK pod3R1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.10.3.3/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet1/3
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.53/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: Port-Channel12
+        description: TRUNK TO pod3SW1
+        type: lag
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/1
+        description: TRUNK TO pod3SW1
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+      - name: GigabitEthernet0/2
+        description: TRUNK TO pod3SW1
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+      - name: GigabitEthernet0/3
+        description: TRUNK TO pod3SW3
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        bside_device: pod3sw3
+        bside_interface: GigabitEthernet0/2
+      - name: GigabitEthernet1/0
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/1
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/2
+        type: 1000base-t
+        enabled: False 
+  - name: pod3sw3
+    device_role_slug: pod_l2_switch
+    manufacturer_slug: cisco
+    device_types_slug: vios_switch
+    site_slug: pod3
+    interfaces:
+      - name: GigabitEthernet1/3
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.54/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: GigabitEthernet0/1
+        description: TRUNK TO pod3SW1
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/2
+        description: TRUNK TO pod3SW2
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/3
+        description: USERS
+        type: 1000base-t
+        label: access
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: access
+        untagged_vlan: USERS
+      - name: GigabitEthernet1/0
+        description: SERVERS
+        type: 1000base-t
+        label: access
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: access
+        untagged_vlan: SERVERS
+      - name: GigabitEthernet1/1
+        description: GUESTS
+        type: 1000base-t
+        label: access
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: access
+        untagged_vlan: GUESTS
+      - name: GigabitEthernet1/2
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/0
+        type: 1000base-t
+        enabled: False 
+  - name: pod4r1
+    device_role_slug: pod_router
+    manufacturer_slug: cisco
+    device_types_slug: vios_router
+    site_slug: pod4
+    interfaces:
+      - name: Loopback0
+        description: iBGP LOOPBACK
+        type: virtual
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.0.4.1/32
+            status: active
+            tags:
+              - ospf_area_0
+      - name: GigabitEthernet0/0
+        description: UPLINK TO INTERNET PROVIDER
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 24.24.4.2/24
+            status: active
+      - name: GigabitEthernet0/1
+        description: DOWNLINK pod4SW1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        bside_device: pod4sw1
+        bside_interface: GigabitEthernet0/0
+        ip_addresses:
+          - address: 10.10.4.0/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet0/2
+        description: DOWNLINK pod4SW2
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        bside_device: pod4sw2
+        bside_interface: GigabitEthernet0/0
+        ip_addresses:
+          - address: 10.10.4.2/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet0/7
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.55/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: GigabitEthernet0/3
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/4
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/5
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/6
+        type: 1000base-t
+        enabled: False 
+  - name: pod4sw1
+    device_role_slug: pod_l3_switch
+    manufacturer_slug: cisco
+    device_types_slug: vios_switch
+    site_slug: pod4
+    interfaces:
+      - name: Loopback0
+        description: iBGP LOOPBACK
+        type: virtual
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.0.4.2/32
+            status: active
+            tags:
+              - ospf_area_0
+      - name: vlan300
+        description: USER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.4.1
+        vrrp_group: 1
+        vrrp_description: "USER_VLAN"
+        vrrp_priority: 200
+        vrrp_primary_ip: 155.4.4.1
+        ip_addresses:
+          - address: 155.4.4.2/26
+            status: active
+      - name: vlan350
+        description: SERVER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.4.1
+        vrrp_group: 2
+        vrrp_description: "SERVER_VLAN"
+        vrrp_priority: 200
+        vrrp_primary_ip: 155.4.4.65
+        ip_addresses:
+          - address: 155.4.4.66/26
+            status: active
+      - name: vlan400
+        description: GUEST_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.4.1
+        vrrp_group: 3
+        vrrp_description: "GUEST_VLAN"
+        vrrp_priority: 200
+        vrrp_primary_ip: 155.4.4.129
+        ip_addresses:
+          - address: 155.4.4.130/26
+            status: active
+      - name: GigabitEthernet0/0
+        description: UPLINK pod4R1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.10.4.3/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet1/3
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.56/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: Port-Channel12
+        description: TRUNK TO pod4SW2
+        type: lag
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/1
+        description: TRUNK TO pod4SW2
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+        bside_device: pod4sw2
+        bside_interface: GigabitEthernet0/1
+      - name: GigabitEthernet0/2
+        description: TRUNK TO pod4SW2
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+        bside_device: pod4sw2
+        bside_interface: GigabitEthernet0/2
+      - name: GigabitEthernet0/3
+        description: TRUNK TO pod4SW3
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        bside_device: pod4sw3
+        bside_interface: GigabitEthernet0/1
+      - name: GigabitEthernet1/0
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/1
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/2
+        type: 1000base-t
+        enabled: False 
+  - name: pod4sw2
+    device_role_slug: pod_l3_switch
+    manufacturer_slug: cisco
+    device_types_slug: vios_switch
+    site_slug: pod4
+    interfaces:
+      - name: Loopback0
+        description: iBGP LOOPBACK
+        type: virtual
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.0.4.3/32
+            status: active
+            tags:
+              - ospf_area_0
+      - name: vlan300
+        description: USER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.4.1
+        vrrp_group: 1
+        vrrp_description: "USER_VLAN"
+        vrrp_priority: 100
+        vrrp_primary_ip: 155.4.4.1
+        ip_addresses:
+          - address: 155.4.4.3/26
+            status: active
+      - name: vlan350
+        description: SERVER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.4.1
+        vrrp_group: 2
+        vrrp_description: "SERVER_VLAN"
+        vrrp_priority: 100
+        vrrp_primary_ip: 155.4.4.65
+        ip_addresses:
+          - address: 155.4.4.67/26
+            status: active
+      - name: vlan400
+        description: GUEST_SVI
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.4.1
+        vrrp_group: 3
+        vrrp_description: "GUEST_VLAN"
+        vrrp_priority: 100
+        vrrp_primary_ip: 155.4.4.129
+        ip_addresses:
+          - address: 155.4.4.131/26
+            status: active
+      - name: GigabitEthernet0/0
+        description: UPLINK pod4R1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.10.4.3/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet1/3
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.57/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: Port-Channel12
+        description: TRUNK TO pod4SW1
+        type: lag
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/1
+        description: TRUNK TO pod4SW1
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+      - name: GigabitEthernet0/2
+        description: TRUNK TO pod4SW1
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+      - name: GigabitEthernet0/3
+        description: TRUNK TO pod4SW3
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        bside_device: pod4sw3
+        bside_interface: GigabitEthernet0/2
+      - name: GigabitEthernet1/0
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/1
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/2
+        type: 1000base-t
+        enabled: False 
+  - name: pod4sw3
+    device_role_slug: pod_l2_switch
+    manufacturer_slug: cisco
+    device_types_slug: vios_switch
+    site_slug: pod4
+    interfaces:
+      - name: GigabitEthernet1/3
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.58/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: GigabitEthernet0/1
+        description: TRUNK TO pod4SW1
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/2
+        description: TRUNK TO pod4SW2
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/3
+        description: USERS
+        type: 1000base-t
+        label: access
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: access
+        untagged_vlan: USERS
+      - name: GigabitEthernet1/0
+        description: SERVERS
+        type: 1000base-t
+        label: access
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: access
+        untagged_vlan: SERVERS
+      - name: GigabitEthernet1/1
+        description: GUESTS
+        type: 1000base-t
+        label: access
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: access
+        untagged_vlan: GUESTS
+      - name: GigabitEthernet1/2
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/0
+        type: 1000base-t
+        enabled: False 
+  - name: pod5r1
+    device_role_slug: pod_router
+    manufacturer_slug: cisco
+    device_types_slug: vios_router
+    site_slug: pod5
+    interfaces:
+      - name: Loopback0
+        description: iBGP LOOPBACK
+        type: virtual
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.0.5.1/32
+            status: active
+            tags:
+              - ospf_area_0
+      - name: GigabitEthernet0/0
+        description: UPLINK TO INTERNET PROVIDER
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 24.24.5.2/24
+            status: active
+      - name: GigabitEthernet0/1
+        description: DOWNLINK pod5SW1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        bside_device: pod5sw1
+        bside_interface: GigabitEthernet0/0
+        ip_addresses:
+          - address: 10.10.5.0/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet0/2
+        description: DOWNLINK pod5SW2
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        bside_device: pod5sw2
+        bside_interface: GigabitEthernet0/0
+        ip_addresses:
+          - address: 10.10.5.2/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet0/7
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.59/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: GigabitEthernet0/3
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/4
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/5
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/6
+        type: 1000base-t
+        enabled: False 
+  - name: pod5sw1
+    device_role_slug: pod_l3_switch
+    manufacturer_slug: cisco
+    device_types_slug: vios_switch
+    site_slug: pod5
+    interfaces:
+      - name: Loopback0
+        description: iBGP LOOPBACK
+        type: virtual
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.0.5.2/32
+            status: active
+            tags:
+              - ospf_area_0
+      - name: vlan300
+        description: USER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.5.1
+        vrrp_group: 1
+        vrrp_description: "USER_VLAN"
+        vrrp_priority: 200
+        vrrp_primary_ip: 155.5.5.1
+        ip_addresses:
+          - address: 155.5.5.2/26
+            status: active
+      - name: vlan350
+        description: SERVER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.5.1
+        vrrp_group: 2
+        vrrp_description: "SERVER_VLAN"
+        vrrp_priority: 200
+        vrrp_primary_ip: 155.5.5.65
+        ip_addresses:
+          - address: 155.5.5.66/26
+            status: active
+      - name: vlan400
+        description: GUEST_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.5.1
+        vrrp_group: 3
+        vrrp_description: "GUEST_VLAN"
+        vrrp_priority: 200
+        vrrp_primary_ip: 155.5.5.129
+        ip_addresses:
+          - address: 155.5.5.130/26
+            status: active
+      - name: GigabitEthernet0/0
+        description: UPLINK pod5R1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.10.5.3/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet1/3
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.60/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: Port-Channel12
+        description: TRUNK TO pod5SW2
+        type: lag
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/1
+        description: TRUNK TO pod5SW2
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+        bside_device: pod5sw2
+        bside_interface: GigabitEthernet0/1
+      - name: GigabitEthernet0/2
+        description: TRUNK TO pod5SW2
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+        bside_device: pod5sw2
+        bside_interface: GigabitEthernet0/2
+      - name: GigabitEthernet0/3
+        description: TRUNK TO pod5SW3
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        bside_device: pod5sw3
+        bside_interface: GigabitEthernet0/1
+      - name: GigabitEthernet1/0
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/1
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/2
+        type: 1000base-t
+        enabled: False 
+  - name: pod5sw2
+    device_role_slug: pod_l3_switch
+    manufacturer_slug: cisco
+    device_types_slug: vios_switch
+    site_slug: pod5
+    interfaces:
+      - name: Loopback0
+        description: iBGP LOOPBACK
+        type: virtual
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.0.5.3/32
+            status: active
+            tags:
+              - ospf_area_0
+      - name: vlan300
+        description: USER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.5.1
+        vrrp_group: 1
+        vrrp_description: "USER_VLAN"
+        vrrp_priority: 100
+        vrrp_primary_ip: 155.5.5.1
+        ip_addresses:
+          - address: 155.5.5.3/26
+            status: active
+      - name: vlan350
+        description: SERVER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.5.1
+        vrrp_group: 2
+        vrrp_description: "SERVER_VLAN"
+        vrrp_priority: 100
+        vrrp_primary_ip: 155.5.5.65
+        ip_addresses:
+          - address: 155.5.5.67/26
+            status: active
+      - name: vlan400
+        description: GUEST_SVI
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.5.1
+        vrrp_group: 3
+        vrrp_description: "GUEST_VLAN"
+        vrrp_priority: 100
+        vrrp_primary_ip: 155.5.5.129
+        ip_addresses:
+          - address: 155.5.5.131/26
+            status: active
+      - name: GigabitEthernet0/0
+        description: UPLINK pod5R1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.10.5.3/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet1/3
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.61/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: Port-Channel12
+        description: TRUNK TO pod5SW1
+        type: lag
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/1
+        description: TRUNK TO pod5SW1
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+      - name: GigabitEthernet0/2
+        description: TRUNK TO pod5SW1
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+      - name: GigabitEthernet0/3
+        description: TRUNK TO pod5SW3
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        bside_device: pod5sw3
+        bside_interface: GigabitEthernet0/2
+      - name: GigabitEthernet1/0
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/1
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/2
+        type: 1000base-t
+        enabled: False 
+  - name: pod5sw3
+    device_role_slug: pod_l2_switch
+    manufacturer_slug: cisco
+    device_types_slug: vios_switch
+    site_slug: pod5
+    interfaces:
+      - name: GigabitEthernet1/3
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.62/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: GigabitEthernet0/1
+        description: TRUNK TO pod5SW1
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/2
+        description: TRUNK TO pod5SW2
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/3
+        description: USERS
+        type: 1000base-t
+        label: access
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: access
+        untagged_vlan: USERS
+      - name: GigabitEthernet1/0
+        description: SERVERS
+        type: 1000base-t
+        label: access
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: access
+        untagged_vlan: SERVERS
+      - name: GigabitEthernet1/1
+        description: GUESTS
+        type: 1000base-t
+        label: access
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: access
+        untagged_vlan: GUESTS
+      - name: GigabitEthernet1/2
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/0
+        type: 1000base-t
+        enabled: False 
+  - name: pod6r1
+    device_role_slug: pod_router
+    manufacturer_slug: cisco
+    device_types_slug: vios_router
+    site_slug: pod6
+    interfaces:
+      - name: Loopback0
+        description: iBGP LOOPBACK
+        type: virtual
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.0.6.1/32
+            status: active
+            tags:
+              - ospf_area_0
+      - name: GigabitEthernet0/0
+        description: UPLINK TO INTERNET PROVIDER
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 24.24.6.2/24
+            status: active
+      - name: GigabitEthernet0/1
+        description: DOWNLINK pod6SW1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        bside_device: pod6sw1
+        bside_interface: GigabitEthernet0/0
+        ip_addresses:
+          - address: 10.10.6.0/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet0/2
+        description: DOWNLINK pod6SW2
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        bside_device: pod6sw2
+        bside_interface: GigabitEthernet0/0
+        ip_addresses:
+          - address: 10.10.6.2/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet0/7
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.63/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: GigabitEthernet0/3
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/4
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/5
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/6
+        type: 1000base-t
+        enabled: False 
+  - name: pod6sw1
+    device_role_slug: pod_l3_switch
+    manufacturer_slug: cisco
+    device_types_slug: vios_switch
+    site_slug: pod6
+    interfaces:
+      - name: Loopback0
+        description: iBGP LOOPBACK
+        type: virtual
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.0.6.2/32
+            status: active
+            tags:
+              - ospf_area_0
+      - name: vlan300
+        description: USER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.6.1
+        vrrp_group: 1
+        vrrp_description: "USER_VLAN"
+        vrrp_priority: 200
+        vrrp_primary_ip: 155.6.6.1
+        ip_addresses:
+          - address: 155.6.6.2/26
+            status: active
+      - name: vlan350
+        description: SERVER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.6.1
+        vrrp_group: 2
+        vrrp_description: "SERVER_VLAN"
+        vrrp_priority: 200
+        vrrp_primary_ip: 155.6.6.65
+        ip_addresses:
+          - address: 155.6.6.66/26
+            status: active
+      - name: vlan400
+        description: GUEST_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.6.1
+        vrrp_group: 3
+        vrrp_description: "GUEST_VLAN"
+        vrrp_priority: 200
+        vrrp_primary_ip: 155.6.6.129
+        ip_addresses:
+          - address: 155.6.6.130/26
+            status: active
+      - name: GigabitEthernet0/0
+        description: UPLINK pod6R1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.10.6.3/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet1/3
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.64/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: Port-Channel12
+        description: TRUNK TO pod6SW2
+        type: lag
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/1
+        description: TRUNK TO pod6SW2
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+        bside_device: pod6sw2
+        bside_interface: GigabitEthernet0/1
+      - name: GigabitEthernet0/2
+        description: TRUNK TO pod6SW2
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+        bside_device: pod6sw2
+        bside_interface: GigabitEthernet0/2
+      - name: GigabitEthernet0/3
+        description: TRUNK TO pod6SW3
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        bside_device: pod6sw3
+        bside_interface: GigabitEthernet0/1
+      - name: GigabitEthernet1/0
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/1
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/2
+        type: 1000base-t
+        enabled: False 
+  - name: pod6sw2
+    device_role_slug: pod_l3_switch
+    manufacturer_slug: cisco
+    device_types_slug: vios_switch
+    site_slug: pod6
+    interfaces:
+      - name: Loopback0
+        description: iBGP LOOPBACK
+        type: virtual
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.0.6.3/32
+            status: active
+            tags:
+              - ospf_area_0
+      - name: vlan300
+        description: USER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.6.1
+        vrrp_group: 1
+        vrrp_description: "USER_VLAN"
+        vrrp_priority: 100
+        vrrp_primary_ip: 155.6.6.1
+        ip_addresses:
+          - address: 155.6.6.3/26
+            status: active
+      - name: vlan350
+        description: SERVER_SVI
+        type: virtual
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.6.1
+        vrrp_group: 2
+        vrrp_description: "SERVER_VLAN"
+        vrrp_priority: 100
+        vrrp_primary_ip: 155.6.6.65
+        ip_addresses:
+          - address: 155.6.6.67/26
+            status: active
+      - name: vlan400
+        description: GUEST_SVI
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        dhcp_helper: 10.0.6.1
+        vrrp_group: 3
+        vrrp_description: "GUEST_VLAN"
+        vrrp_priority: 100
+        vrrp_primary_ip: 155.6.6.129
+        ip_addresses:
+          - address: 155.6.6.131/26
+            status: active
+      - name: GigabitEthernet0/0
+        description: UPLINK pod6R1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        ip_addresses:
+          - address: 10.10.6.3/31
+            status: active
+            tags:
+              - ospf_area_0
+              - p2p
+      - name: GigabitEthernet1/3
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.65/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: Port-Channel12
+        description: TRUNK TO pod6SW1
+        type: lag
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/1
+        description: TRUNK TO pod6SW1
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+      - name: GigabitEthernet0/2
+        description: TRUNK TO pod6SW1
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        lag: port-channel12
+      - name: GigabitEthernet0/3
+        description: TRUNK TO pod6SW3
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+        bside_device: pod6sw3
+        bside_interface: GigabitEthernet0/2
+      - name: GigabitEthernet1/0
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/1
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet1/2
+        type: 1000base-t
+        enabled: False 
+  - name: pod6sw3
+    device_role_slug: pod_l2_switch
+    manufacturer_slug: cisco
+    device_types_slug: vios_switch
+    site_slug: pod6
+    interfaces:
+      - name: GigabitEthernet1/3
+        description: MGMT-INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.66/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: GigabitEthernet0/1
+        description: TRUNK TO pod6SW1
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/2
+        description: TRUNK TO pod6SW2
+        type: 1000base-t
+        label: trunk
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: tagged
+        untagged_vlan: NATIVE_VLAN
+        tagged_vlans:
+          - USERS
+          - SERVERS
+          - GUESTS
+      - name: GigabitEthernet0/3
+        description: USERS
+        type: 1000base-t
+        label: access
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: access
+        untagged_vlan: USERS
+      - name: GigabitEthernet1/0
+        description: SERVERS
+        type: 1000base-t
+        label: access
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: access
+        untagged_vlan: SERVERS
+      - name: GigabitEthernet1/1
+        description: GUESTS
+        type: 1000base-t
+        label: access
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        mode: access
+        untagged_vlan: GUESTS
+      - name: GigabitEthernet1/2
+        type: 1000base-t
+        enabled: False 
+      - name: GigabitEthernet0/0
+        type: 1000base-t
+        enabled: False 

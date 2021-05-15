@@ -1,0 +1,6 @@
+---
+tags:
+- name: ospf_area_0
+  description: "Interface OSPF Area 0"
+- name: p2p
+  description: "Interface network type for OSPF Protocol"  
