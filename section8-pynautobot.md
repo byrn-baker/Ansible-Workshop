@@ -25,4 +25,4 @@ My pb.transform.data.yaml
       dest: "/home/Nautobot_Workshop/pynautobot/nb_initial_load.yaml"
 ```
 
-I have several files created under vars_files that I used to track all of the things I needed inside Nautobot.
+I have several files created under vars that I used to track all of the things I needed inside Nautobot.
