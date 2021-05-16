@@ -187,10 +187,9 @@ for site in data["sites"]:
     nb_site.save()
 ```
 
-
-
-
 # Manufacturers
+This section is pretty straight forward. We are just simply creating a name and a slug, there is a third fields that can be filled in called description, but typically once you see the vendor name you know what it is. The device_types will break down all the different types of devices under a manufacturer so most of the detail will reside there.
+
 ```
 # manufacturers 
 for manufacturer in data["manufacturers"]: 
@@ -198,20 +197,40 @@ for manufacturer in data["manufacturers"]:
     nb_data = nb.dcim.manufacturers.get(slug=manufacturer["slug"])
     if not nb_data: 
         nb_data = nb.dcim.manufacturers.create(name=manufacturer["name"], slug=manufacturer["slug"])
+```
+
 
 # device_types
+Here we define the specific devices. We can assign it several different attributes. Lets take a look at the API docs to see what attributes are available. 
+<img src="/assets/images/nautobot_api_7_device_types.PNG" alt="">
+Three things are required, Manufacturer(This associates it to a previously created one), Model(The name of the device for example Cisco C9300-48T), Slug(All lowercase version of the model c9300_48t). We also can include a part number, unit height, if it is full depth or not, comments, tags, and custom fields if any are associated with devices. There is also a sub device role, like a UCS or something like that. We are going to stick with the basics and just include the height so that it can be modeled inside of our relay rack. These four items are required so if one is not included the script should stop and let us know we don't have the particular item defined in our nb_initial_load.yaml file.
+
+```
 for device_type in data["device_types"]: 
     print(f"Creating or Updating device_type {device_type['model']}")
     nb_data = nb.dcim.device_types.get(slug=device_type["slug"])
     if not nb_data: 
         nb_data = nb.dcim.device_types.create(
-            model=device_type["model"], 
-            slug=device_type["slug"], 
-            manufacturer=nb.dcim.manufacturers.get(slug=device_type["manufacturer_slug"]).id, 
-            height=device_type["height"]
+            model = device_type["model"], 
+            slug = device_type["slug"], 
+            manufacturer = nb.dcim.manufacturers.get(slug=device_type["manufacturer_slug"]).id, 
+            height = device_type["height"]
             )
+```
+Notice that to associate this device type to a manufacturer we need to perform a get for the UUID of the manufacturer we created above. We can place these calls inside of variables and just tack them on in a similar way that we did with the sites. 
+We have the variable "manufacturer" ```manufacturer=nb.dcim.manufacturers.get(slug=device_type["manufacturer_slug"]).id,``` which is equal to a get for the manufacturer assigned to this device type in the for loop ```nb.dcim.manufacturers.get``` and the slug is inside our nb_initial_load.yaml ```(slug=device_type["manufacturer_slug"])``` and we just want to return the UUID of this item inside of our manufacturer variable ```.id```.
+```
+>>> nb.dcim.manufacturers.get(slug='cisco').id
+'499b6870-ea4f-4863-99e9-470a0bfe705d'
+>>> manufacturer = nb.dcim.manufacturers.get(slug='cisco').id
+>>> print(manufacturer)
+499b6870-ea4f-4863-99e9-470a0bfe705d
+>>> 
+```
 
 # device_roles
+Repeat the same process for the device roles. Pick a nice color. 
+```
 for device_role in data["device_roles"]: 
     print(f"Creating or Updating device_role {device_role['name']}")
     nb_data = nb.dcim.device_roles.get(slug=device_role["slug"])
@@ -221,8 +240,13 @@ for device_role in data["device_roles"]:
             slug=device_role["slug"], 
             color=device_role["color"]
             )
+```
+
 
 # platforms
+Repeating the same process for platforms. Again we need to associate this to a manufacturer, again we perform that same get function as before with device types.
+
+```
 for platform in data["platforms"]: 
     print(f"Creating or Updating platform {platform['name']}")
     nb_data = nb.dcim.platforms.get(slug=platform["slug"])
@@ -232,8 +256,11 @@ for platform in data["platforms"]:
             slug=platform["slug"], 
             manufacturer=nb.dcim.manufacturers.get(slug=platform["manufacturer_slug"]).id 
             )
+```
 
 # tags
+Once again repeating our previous process.
+```
 for tag in data["tags"]:
     print(f"Creating or Updating tag {tag['name']}")
     nb_data = nb.extras.tags.get(slug=tag["slug"])
@@ -245,10 +272,11 @@ for tag in data["tags"]:
         )
 ```
 
-We will repeat this process throughout adding manufacturers, device types, device roles and platforms.
+
+# custom fields
+Custom Fields are pretty handy for data that is not modeled in nautobot already. We are going to use it to store a dhcp helper and vrrp configuration items. We again look to make sure there this custom field is not already created and if not we create the custom field from our ```nb_initial_load.yaml```
 
 ```
-# custom fields
 for cf in data["custom_fields"]:
     print(f"Creating or Updating Custom Fields {cf['name']}")
     nb_data = nb.extras.custom_fields.get(name=cf["name"])
@@ -260,9 +288,10 @@ for cf in data["custom_fields"]:
             description=cf["description"]
         )
 ```        
-Here is something new we did not cover before. Custom Fields are pretty handy for data that is not modeled in nautobot already. We are going to use it to store a dhcp helper and vrrp configuration items. We again look to make sure there is not already a custom field created and if not we create the custom field from our ```nb_initial_load.yaml```
 
 ```
+# nb_initial_load.yaml
+
 custom_fields:
   - name: dhcp_helper
     description: Used to assign helper address to an interface
@@ -291,12 +320,10 @@ custom_fields:
       - dcim.interface
 ```
 
-Custom fields can be attached to several different tables in nautobot. For our use case we will attach these fields to interfaces only, we could attach them to multiple content types if you needed it. Nautobot also has an API explorer we can use to figure out what is needed to create the entries. Check out the demo [here](https://demo.nautobot.com/api/docs/)
-<img src="/assets/images/nautobot_api.PNG" alt="">
-Reviewing the API documentation here is crucial to figuring out what fields need to be filled out and what fields can be filled out. We will reference this often as we construct the rest of this script.
+Custom fields can be attached to several different tables in nautobot. For our use case we will attach these fields to interfaces only, we could attach them to multiple content types if you needed it. We will fill these out in the interface section.
 
-```
 # vrfs 
+```
 for vrf in data["vrfs"]: 
     print(f"Creating or Updating vrf {vrf['name']}")
     nb_data = nb.ipam.vrfs.get(name=vrf["name"])
@@ -306,10 +333,11 @@ for vrf in data["vrfs"]:
             print(f"Configuring vrf {vrf['rd']}")
             vrf_rd = nb.ipam.vrfs.create(name=vrf["name"], rd=vrf["rd"])  
 ```
-Notice here that inside the loop we have two IF statements. The first looks for just the VRF name, the second is looking for does the VRF have an route Route Distinguisher? This is done so that if we do not have an RD defined the script does not fail and simply creates the vrf name only.
+Notice here that inside the loop we have two IF statements. The first looks for just the VRF name, the second is looking for does the VRF have a route Route Distinguisher. This is done so that if we do not have an RD defined the script does not fail and simply creates the vrf name only.
 
-```
+
 # vlans
+```
 for vlan in data["vlans"]: 
     print(f"Creating or updating vlan {vlan['name']}")
     nb_vlan = nb.ipam.vlans.get(
@@ -337,7 +365,7 @@ for vlan in data["vlans"]:
                 vlan=nb_vlan.id,
             )
 ```
-If you recall from the last section we had prefixes assigned to vlans, which were assigned to sites. Notice that when we perform the get call that we need to specify the site and the vid. Because we will have multiple vlans potentially and in multiple sites we have to narrow down the search, otherwise pynatobot will complain about there being to many results.
+If you recall from section 6, we had prefixes assigned to vlans, which were assigned to sites. Notice that when we perform the get call that we need to specify the site and the vid. Because we will have multiple vlans potentially and in multiple sites we have to narrow down the search, otherwise pynatobot will complain about there being to many results.
 ```
 >>> nb.ipam.vlans.get()
 Traceback (most recent call last):
@@ -354,4 +382,44 @@ Instead if we want to see everything we need to use the all function. For our us
 [USERS, SERVERS, GUEST, GUESTS, NATIVE_VLAN]
 >>>
 ```
- 
+Take not that we can re-use previously defined variables with in the loop. Above we defined the nb_vlan variable as the results of the get function for a specific site and vid. We use that variable in our IF statement for determining if the prefix already exists for that side and associated with that vid. Inside of the nb.ipam.prefixes.get function we create a new variable named site_id and vlan_vid. Lets run this through the python interpreter. 
+
+```
+>>> nb_vlan = nb.ipam.vlans.get(site='pod1', vid='300')
+>>> nb_prefix = nb.ipam.prefixes.get(site_id=nb_vlan.site.id, vlan_vid=nb_vlan.vid)
+>>> print(nb_vlan)
+USERS
+>>> print(nb_prefix)
+155.1.1.0/26
+```
+So from our scripts perspective if nb_prefixes returned a result then we would not add the prefix again. However if the result returned was none, then it would create the assigned prefix from our yaml file. 
+```
+>>> print(nb_prefix)
+None
+```
+```
+vlans:
+  - name: USERS
+    vid: 300
+    prefix: 155.1.1.0/26
+    status: active
+    site: pod1
+```
+
+# Site Prefixes
+
+```
+for pfx in data["prefixes"]:
+    print(f"Creating or Updating prefix {pfx['prefix']}")
+    nb_prefix = nb.ipam.prefixes.get(
+        site=pfx["site"],
+        prefix=pfx["prefix"],
+    )
+    if not nb_prefix:
+        nb_prefix = nb.ipam.prefixes.create(
+            prefix=pfx["prefix"],
+            site={"slug": pfx["site"]},
+            description=pfx["description"],
+            status=pfx["status"],
+        )
+```
