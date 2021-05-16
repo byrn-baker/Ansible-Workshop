@@ -12,7 +12,7 @@ sites:
     contact_phone: 867-5309
     contact_email: joe@pod1.com
     slug: pod1
-    comments: ### Placeholder
+    comments: Placeholder
     racks:
       - name: pod1_rr_1
         status: active
@@ -29,7 +29,7 @@ sites:
     contact_phone: 867-5309
     contact_email: joe@pod2.com
     slug: pod2
-    comments: ### Placeholder
+    comments: Placeholder
     racks:
       - name: pod2_rr_1
         status: active
@@ -46,7 +46,7 @@ sites:
     contact_phone: 867-5309
     contact_email: joe@pod3.com
     slug: pod3
-    comments: ### Placeholder
+    comments: Placeholder
     racks:
       - name: pod3_rr_1
         status: active
@@ -63,14 +63,14 @@ sites:
     contact_phone: 867-5309
     contact_email: joe@pod4.com
     slug: pod4
-    comments: ### Placeholder
+    comments: Placeholder
     racks:
       - name: pod4_rr_1
         status: active
   - name: POD5
     status: Active
     asn: 65005
-    time_zone: America/Los Angeles
+    time_zone: America/Los_Angeles
     description: Ansible Workshop for POD5
     physical_address: Los Angeles, CA
     shipping_address: Los Angeles, CA
@@ -80,14 +80,14 @@ sites:
     contact_phone: 867-5309
     contact_email: joe@pod5.com
     slug: pod5
-    comments: ### Placeholder
+    comments: Placeholder
     racks:
       - name: pod5_rr_1
         status: active
   - name: POD6
     status: Active
     asn: 65006
-    time_zone: America/Los Angeles
+    time_zone: America/Los_Angeles
     description: Ansible Workshop for POD6
     physical_address: San Jose, CA
     shipping_address: San Jose, CA
@@ -97,7 +97,7 @@ sites:
     contact_phone: 867-5309
     contact_email: joe@pod6.com
     slug: pod6
-    comments: ### Placeholder
+    comments: Placeholder
     racks:
       - name: pod6_rr_1
         status: active
@@ -361,6 +361,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_router
     site_slug: pod1
+    status: active
+    position: 38
+    face: front
+    rack: pod1_rr_1
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -442,6 +446,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_switch
     site_slug: pod1
+    status: active
+    position: 37
+    face: front
+    rack: pod1_rr_1
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -598,6 +606,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_switch
     site_slug: pod1
+    status: active
+    position: 36
+    face: front
+    rack: pod1_rr_1
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -750,6 +762,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_switch
     site_slug: pod1
+    status: active
+    position: 35
+    face: front
+    rack: pod1_rr_1
     interfaces:
       - name: GigabitEthernet1/3
         description: MGMT-INTERFACE
@@ -827,6 +843,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_router
     site_slug: pod2
+    status: active
+    position: 38
+    face: front
+    rack: pod2_rr_1
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -908,6 +928,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_switch
     site_slug: pod2
+    status: active
+    position: 37
+    face: front
+    rack: pod2_rr_1
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -1064,6 +1088,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_switch
     site_slug: pod2
+    status: active
+    position: 36
+    face: front
+    rack: pod2_rr_1
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -1216,6 +1244,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_switch
     site_slug: pod2
+    status: active
+    position: 35
+    face: front
+    rack: pod2_rr_1
     interfaces:
       - name: GigabitEthernet1/3
         description: MGMT-INTERFACE
@@ -1293,6 +1325,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_router
     site_slug: pod3
+    status: active
+    position: 38
+    face: front
+    rack: pod3_rr_1
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -1374,6 +1410,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_switch
     site_slug: pod3
+    status: active
+    position: 37
+    face: front
+    rack: pod3_rr_1
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -1530,6 +1570,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_switch
     site_slug: pod3
+    status: active
+    position: 36
+    face: front
+    rack: pod3_rr_1
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -1682,6 +1726,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_switch
     site_slug: pod3
+    status: active
+    position: 35
+    face: front
+    rack: pod3_rr_1
     interfaces:
       - name: GigabitEthernet1/3
         description: MGMT-INTERFACE
@@ -1759,6 +1807,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_router
     site_slug: pod4
+    status: active
+    position: 38
+    face: front
+    rack: pod4_rr_1
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -1840,6 +1892,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_switch
     site_slug: pod4
+    status: active
+    position: 37
+    face: front
+    rack: pod4_rr_1
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -1996,6 +2052,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_switch
     site_slug: pod4
+    status: active
+    position: 36
+    face: front
+    rack: pod4_rr_1
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -2148,6 +2208,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_switch
     site_slug: pod4
+    status: active
+    position: 35
+    face: front
+    rack: pod4_rr_1
     interfaces:
       - name: GigabitEthernet1/3
         description: MGMT-INTERFACE
@@ -2225,6 +2289,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_router
     site_slug: pod5
+    status: active
+    position: 38
+    face: front
+    rack: pod5_rr_1
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -2306,6 +2374,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_switch
     site_slug: pod5
+    status: active
+    position: 37
+    face: front
+    rack: pod5_rr_1
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -2462,6 +2534,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_switch
     site_slug: pod5
+    status: active
+    position: 36
+    face: front
+    rack: pod5_rr_1
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -2614,6 +2690,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_switch
     site_slug: pod5
+    status: active
+    position: 35
+    face: front
+    rack: pod5_rr_1
     interfaces:
       - name: GigabitEthernet1/3
         description: MGMT-INTERFACE
@@ -2691,6 +2771,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_router
     site_slug: pod6
+    status: active
+    position: 38
+    face: front
+    rack: pod6_rr_1
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -2772,6 +2856,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_switch
     site_slug: pod6
+    status: active
+    position: 37
+    face: front
+    rack: pod6_rr_1
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -2928,6 +3016,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_switch
     site_slug: pod6
+    status: active
+    position: 36
+    face: front
+    rack: pod6_rr_1
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -3080,6 +3172,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: vios_switch
     site_slug: pod6
+    status: active
+    position: 35
+    face: front
+    rack: pod6_rr_1
     interfaces:
       - name: GigabitEthernet1/3
         description: MGMT-INTERFACE

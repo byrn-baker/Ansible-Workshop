@@ -96,6 +96,10 @@ devices:
     manufacturer_slug: cisco
     device_types_slug: {{ dv.device_type }}
     site_slug: {{ dv.site }}
+    status: {{ dv.status }}
+    position: {{ dv.position }}
+    face: {{ dv.face }}
+    rack: {{ dv.rack }}
     interfaces:
     {% if dv["l3_interfaces"] is defined  %}
     {% for int in dv["l3_interfaces"] %}
