@@ -163,7 +163,7 @@ for site in data["sites"]:
         )
     nb_site = nb.dcim.sites.get(slug=site["slug"])
     if "asn" in site.keys():        
-        nb_data.asn = asn=site["asn"]
+        nb_site.asn = site["asn"]
     if "time_zone" in site.keys():    
         nb_site.time_zone = site["time_zone"]
     if "description" in site.keys():    
@@ -185,6 +185,16 @@ for site in data["sites"]:
     if "comments" in site.keys():
         nb_site.comments = site["comments"]
     nb_site.save()
+# Relay Racks
+    for rack in site["racks"]:
+        print(f"Creating or Updating Relay rack {rack['name']} for site {site['name']}")
+        nb_rack = nb.dcim.racks.get(site=site["slug"])
+        if not nb_rack:
+            nb_rack = nb.dcim.racks.create(
+                name=rack["name"],
+                status=rack["status"],
+                site=nb.dcim.sites.get(slug=site["slug"]).id
+            )
 ```
 
 # Manufacturers
@@ -422,4 +432,113 @@ for pfx in data["prefixes"]:
             description=pfx["description"],
             status=pfx["status"],
         )
+```
+
+# Devices
+Things become a little more complicated setting up devices simply because there are a lot of components to a device that are not strictly related to the device model. The ones we will be dealing with are manufacturer, site, device role, device type, IP addresses, Relay Racks, vlans, vrfs, tags, and primary IPs. So we need to be able to pull in the UUID of the attributes and associate them to this device. 
+
+```
+for device in data["devices"]: 
+    print(f"Creating or Updating device {device['name']}")
+    nb_device = nb.dcim.devices.get(name=device["name"])
+    if not nb_device: 
+        nb_device = nb.dcim.devices.create(
+            name=device["name"], 
+            manufacturer=nb.dcim.manufacturers.get(slug=device["manufacturer_slug"]).id, 
+            site=nb.dcim.sites.get(slug=device["site_slug"]).id,
+            device_role=nb.dcim.device_roles.get(slug=device["device_role_slug"]).id, 
+            device_type=nb.dcim.device_types.get(slug=device["device_types_slug"]).id,
+            status=device["status"],
+            )
+```
+We will first check and see if the devices inside our loop have already been created. If not then we will create them. As you can see we need several pieces of information from the DCIM app these are all in their own tables (manufacturer, site, device role, device type). So we will need to perform several gets for each of the UUIDs for these attributes in our create function.
+
+Now that we have the devices created we also want to make sure they are installed in the relay racks we created. So we will check to see if the device is already installed in a relay rack, and if not then go ahead and add it to the rack and position we listed in our YAML file. 
+
+```
+if nb_device.rack is None:
+        print(f"Moving device into rack {device['rack']}")
+        if "rack" in device.keys():
+            nb_device.rack = nb.dcim.racks.get(site=device["site_slug"]).id
+        if "position" in device.keys():
+            nb_device.position = device["position"]
+        if "face" in device.keys():    
+            nb_device.face = device["face"]
+        nb_device.save()
+```
+
+We move on to the interfaces. This should look pretty familiar as it follows along with our previous loops, this loop will be nested below our original ```for device in data["devices"]``` loop.
+
+```
+for interface in device["interfaces"]: 
+        print(f"Creating or updating interface {interface['name']} on device {device['name']}")
+        nb_interface = nb.dcim.interfaces.get(
+            device_id=nb_device.id, 
+            name=interface["name"]
+        )
+        if not nb_interface: 
+            nb_interface = nb.dcim.interfaces.create(
+                device=nb_device.id, 
+                name=interface["name"],
+                type=interface["type"] 
+            )
+```
+If the interface listed in our YAML file is not seen then again we will create that interface. Once the interfaces are created we will also add in some attributes to the interfaces like descriptions, labels, vlans etc. 
+
+```
+if "description" in interface.keys():
+            nb_interface.description = interface["description"]
+        if "label" in interface.keys():
+            nb_interface.label = interface["label"]
+        if "mtu" in interface.keys():
+            nb_interface.mtu = interface["mtu"]    
+        if "mgmt_only" in interface.keys():
+            nb_interface.mgmt_only = interface["mgmt_only"]
+        if "enabled" in interface.keys():
+            nb_interface.enabled = interface["enabled"]
+        if "mode" in interface.keys():
+            nb_interface.mode = interface["mode"]
+        if "dhcp_helper" in interface.keys():
+            nb_interface.custom_fields["dhcp_helper"] = interface["dhcp_helper"]    
+        if "vrrp_group" in interface.keys():
+            nb_interface.custom_fields["vrrp_group"] = interface["vrrp_group"]
+        if "vrrp_description" in interface.keys():
+            nb_interface.custom_fields["vrrp_description"] = interface["vrrp_description"]
+        if "vrrp_priority" in interface.keys():
+            nb_interface.custom_fields["vrrp_priority"] = interface["vrrp_priority"]
+        if "vrrp_primary_ip" in interface.keys():
+            nb_interface.custom_fields["vrrp_primary_ip"] = interface["vrrp_primary_ip"]
+            if "untagged_vlan" in interface.keys():
+                nb_interface.untagged_vlan = nb.ipam.vlans.get(site=device["site_slug"],
+                    name=interface["untagged_vlan"]
+                ).id
+            if "tagged_vlans" in interface.keys():
+                vl = [ nb.ipam.vlans.get(site=device["site_slug"], name=vlan_name).id for vlan_name in interface["tagged_vlans"] ]
+                nb_interface.tagged_vlans = vl
+        if "ip_addresses" in interface.keys(): 
+            for ip in interface["ip_addresses"]: 
+                print(f"  Adding IP {ip['address']}")
+                nb_ipadd = nb.ipam.ip_addresses.get(
+                    address = ip["address"]
+                )
+                if not nb_ipadd: 
+                    nb_ipadd = nb.ipam.ip_addresses.create(
+                        address = ip["address"],
+                        status = ip["status"],
+                        assigned_object_type = "dcim.interface",
+                        assigned_object_id = nb.dcim.interfaces.get(
+                            device=device["name"],
+                            name=interface["name"]).id
+                    )
+                if "vrf" in ip.keys():
+                    nb_ipadd.vrf = nb.ipam.vrfs.get(name=ip["vrf"]).id
+                if "tags" in ip.keys():
+                    tgs = [ nb.extras.tags.get(name=tag).id for tag in ip["tags"] ]
+                    nb_ipadd.tags = tgs
+                nb_ipadd.interface = nb_interface.id
+                nb_ipadd.save()
+                if "primary" in ip.keys(): 
+                    nb_device.primary_ip4 = nb_ipadd.id
+                    nb_device.save()
+        nb_interface.save()
 ```
