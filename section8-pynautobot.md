@@ -63,6 +63,7 @@ nb.http_session.verify = False
 ```
 Next we need to create a variable for our api url and token. We should already have one of these created from our previous section so we can use that here as well. The nb.http_session.verify = False will ensure that the API calls can be done without ssl. 
 
+# Sites
 ```
 # sites: 
 for site in data["sites"]: 
@@ -148,6 +149,48 @@ We will create a new variable called nb_site and call for the sites slug, which 
 Notice the change log has POD26 modified and we can see that the ASN is now populated.
 <img src="/assets/images/nautobot_api_6.PNG" alt="">
 
+Cool I think we have a structure to follow from here on out. Once the site has been created we will stay inside the loop and check for other attributes to add to each site. We will ask first if the attribute exists, and if it does we will update the site with the attribute data from our nb_initial_load.yaml file that was read into memory at the first couple of steps. Here is the finished product for adding sites to Nautobot.
+
+```
+for site in data["sites"]: 
+    print(f"Creating or Updating Site {site['name']}")
+    nb_data = nb.dcim.sites.get(slug=site["slug"])
+    if not nb_data: 
+        nb_data = nb.dcim.sites.create(
+            name=site["name"],
+            slug=site["slug"],
+            status=site["status"],
+        )
+    nb_site = nb.dcim.sites.get(slug=site["slug"])
+    if "asn" in site.keys():        
+        nb_data.asn = asn=site["asn"]
+    if "time_zone" in site.keys():    
+        nb_site.time_zone = site["time_zone"]
+    if "description" in site.keys():    
+        nb_site.description = site["description"]
+    if "physical_address" in site.keys():
+        nb_site.physical_address = site["physical_address"]
+    if "shipping_address" in site.keys():
+        nb_site.shipping_address = site["shipping_address"]
+    if "latitude" in site.keys():
+        nb_site.latitude = site["latitude"]
+    if "longitude" in site.keys():
+        nb_site.longitude = site["longitude"]
+    if "contact_name" in site.keys():
+        nb_site.contact_name = site["contact_name"]
+    if "contact_phone" in site.keys():
+        nb_site.contact_phone = site["contact_phone"]
+    if "contact_email" in site.keys():
+        nb_site.contact_email = site["contact_email"]
+    if "comments" in site.keys():
+        nb_site.comments = site["comments"]
+    nb_site.save()
+```
+
+
+
+
+# Manufacturers
 ```
 # manufacturers 
 for manufacturer in data["manufacturers"]: 
