@@ -1,5 +1,5 @@
 ## Section 7: Introducing a source of truth to our Ansible workflow 
-<!-- {% include section5.html %} -->
+{% include section7.html %}
 
 We have built out our roles to deploy our pod. Now lets take a look at how we can replace all of the group_vars, host_vars, and inventory folders and files with a database. To do this we will take a look at a tool called [Nautobot](https://www.networktocode.com/nautobot/)
 
