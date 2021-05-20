@@ -805,3 +805,18 @@ No results returned or None. Now we check our YAML file to see if the bside_devi
                     status="connected"
                 )
 ```
+
+
+[Installing Ansible - Section 1](installing_ansible.md)
+
+[Creating an Inventory File - Section 2](inventory_file.md)
+
+[Creating a playbook - Section 3](first_play.md)
+
+[Building Roles - Section 4](building_roles.md)
+
+[Building the core switch Roles - Section 5](section5-coreswitch.md)
+
+[Building the router Roles - Section 6](section6-router.md)
+
+[Introducing Nautobot - Section 7](section7-nautobot.md)
