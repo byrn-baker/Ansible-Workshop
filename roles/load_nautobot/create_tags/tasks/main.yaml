@@ -1,0 +1,30 @@
+#############################################################
+# Create tags in Nautobot
+#############################################################
+- name: Create tags within Nautobot
+  networktocode.nautobot.tag:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      name: "{{ item.name }}"
+      description: "{{ item.description }}"
+    state: present  
+  loop: "{{ tags }}"
+
+# Associating tags to the IP addresses
+- name: Add tags to IP addresses
+  networktocode.nautobot.ip_address:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      address: "{{ item.1.ipv4_address }}"
+      status: "{{ item.1.status }}"
+      tags: "{{ item.1.tags }}"
+      assigned_object:
+        name: "{{ item.1.name }}"
+        device: "{{ item.0.name }}"
+    state: present
+  loop: "{{ device_list | subelements('l3_interfaces', 'skip_missing=True') }}"
+  when: item.1.tags is defined

@@ -1,0 +1,13 @@
+---
+#############################################################
+# Create Manufacturer in Nautobot
+#############################################################    
+- name: Create manufacturer within Nautobot 
+  networktocode.nautobot.manufacturer:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      name: "{{ item.name }}"
+    state: present
+  loop: "{{ manufacturer }}"

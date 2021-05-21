@@ -1,0 +1,43 @@
+---
+#############################################################
+# Create cables between devices in Nautobot
+#############################################################
+- name: Create cable within Nautobot with only required information
+  networktocode.nautobot.cable:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      termination_a_type: dcim.interface
+      termination_a:
+        device: "{{ item.0.name }}"
+        name: "{{ item.1.name }}"
+      termination_b_type: dcim.interface
+      termination_b:
+        device: "{{ item.1.bside_device }}"
+        name: "{{ item.1.bside_interface }}"
+      type: cat5e
+      status: connected
+    state: present
+  loop: "{{ device_list | subelements('l3_interfaces', 'skip_missing=True') }}"
+  when: item.1.bside_device is defined
+
+- name: Create cable within Nautobot with only required information
+  networktocode.nautobot.cable:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      termination_a_type: dcim.interface
+      termination_a:
+        device: "{{ item.0.name }}"
+        name: "{{ item.1.name }}"
+      termination_b_type: dcim.interface
+      termination_b:
+        device: "{{ item.1.bside_device }}"
+        name: "{{ item.1.bside_interface }}"
+      type: cat5e  
+      status: connected
+    state: present
+  loop: "{{ device_list | subelements('trunk_interfaces', 'skip_missing=True') }}"
+  when: item.1.bside_device is defined

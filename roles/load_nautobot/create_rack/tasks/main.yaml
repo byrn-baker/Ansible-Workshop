@@ -1,0 +1,15 @@
+---
+#############################################################
+# Create Rack in Nautobot
+#############################################################
+- name: "Create new rack"
+  networktocode.nautobot.rack:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      name: "{{ item.1.name }}"
+      site: "{{ item.0.slug }}"
+      status: "{{ item.1.status }}"
+    state: present
+  loop: "{{ sites | subelements('racks', 'skip_missing=True') }}"  

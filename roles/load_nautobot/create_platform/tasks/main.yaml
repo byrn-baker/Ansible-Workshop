@@ -1,0 +1,15 @@
+---
+#############################################################
+# Create Platform in Nautobot
+#############################################################   
+- name: Create platform within Nautobot with only required information
+  networktocode.nautobot.platform:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      name: "{{ item.1.name }}"
+      manufacturer: "{{ item.0.name }}"
+      napalm_driver: "{{ item.1.napalm_driver }}"
+    state: present
+  loop: "{{ manufacturer | subelements('platform', 'skip_missing=True') }}"

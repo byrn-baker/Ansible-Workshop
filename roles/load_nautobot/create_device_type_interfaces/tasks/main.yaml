@@ -1,0 +1,15 @@
+---
+############################################################
+Create Interfaces on the Device Types in Nautobot
+############################################################
+- name: Create interfaces on device types within Nautobot
+  networktocode.nautobot.device_interface_template:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      device_type: "{{ item.0.slug }}" 
+      name: "{{ item.1.name }}"
+      type: "{{ item.1.type }}"
+    state: present
+  loop: "{{ device_types  | subelements('interfaces', 'skip_missing=True') }}"

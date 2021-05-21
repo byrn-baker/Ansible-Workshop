@@ -1,0 +1,20 @@
+---
+#############################################################
+# Create Devices in Nautobot
+#############################################################
+- name: Add Devices
+  networktocode.nautobot.device:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      name: "{{ item.name }}"
+      device_type: "{{ item.device_type }}"
+      device_role: "{{ item.device_role }}"
+      site: "{{ item.site }}"
+      rack: "{{ item.rack }}"
+      position: "{{ item.position }}"
+      face: "{{ item.face }}"
+      status: "{{ item.status }}"
+    state: present
+  loop: "{{ device_list }}"

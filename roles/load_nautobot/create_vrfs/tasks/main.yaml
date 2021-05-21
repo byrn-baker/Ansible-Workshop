@@ -1,0 +1,31 @@
+---
+#############################################################
+# Create VRFs in Nautobot
+#############################################################    
+- name: Create VRFs within Nautobot
+  networktocode.nautobot.vrf:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      name: "{{ item.name }}"
+      description: "{{ item.description }}"
+    state: present
+  loop: "{{ vrf }}"
+
+#############################################################
+# Create prefixes for each VRF in Nautobot
+#############################################################
+- name: Create prefixes and assign to VRFs within Nautobot
+  networktocode.nautobot.prefix:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      family: 4
+      prefix: "{{ item.prefix }}"
+      description: "{{ item.description }}"
+      vrf: "{{ item.name }}"
+      status: active
+    state: present  
+  loop: "{{ vrf }}"

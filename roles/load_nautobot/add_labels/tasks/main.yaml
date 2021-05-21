@@ -1,0 +1,42 @@
+---
+#############################################################
+# Update Device Layer3 interfaces with labels in Nautobot
+#############################################################
+- name: Add labels to Layer3 interfaces
+  networktocode.nautobot.device_interface:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      device: "{{ item.0.name }}"
+      name: "{{ item.1.name }}"
+      label: "{{ item.1.label }}"
+    state: present
+  loop: "{{ device_list | subelements('l3_interfaces', 'skip_missing=True') }}"
+  when: item.1.label is defined
+
+- name: Add labels to trunk interfaces
+  networktocode.nautobot.device_interface:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      device: "{{ item.0.name }}"
+      name: "{{ item.1.name }}"
+      label: "{{ item.1.label }}"
+    state: present
+  loop: "{{ device_list | subelements('trunk_interfaces', 'skip_missing=True') }}"
+  when: item.1.label is defined
+
+- name: Add labels to access interfaces
+  networktocode.nautobot.device_interface:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      device: "{{ item.0.name }}"
+      name: "{{ item.1.name }}"
+      label: "{{ item.1.label }}"
+    state: present
+  loop: "{{ device_list | subelements('access_interfaces', 'skip_missing=True') }}"
+  when: item.1.label is defined   

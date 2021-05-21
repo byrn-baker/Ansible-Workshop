@@ -1,0 +1,23 @@
+---
+#############################################################
+# Update Device access interfaces inherited in Nautobot
+#############################################################
+- name: Add access interfaces
+  networktocode.nautobot.device_interface:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: no
+    data:
+      device: "{{ item.0.name }}"
+      name: "{{ item.1.name }}"
+      description: "{{ item.1.description }}"
+      type: "{{ item.1.type }}"
+      enabled: "{{ item.1.enabled }}"
+      mode: "{{ item.1.mode }}"
+      untagged_vlan:
+        name: "{{ item.1.untag_vlan }}"
+        site: "{{ item.0.site }}"
+      mtu: "{{ item.1.mtu }}"
+      mgmt_only: "{{ item.1.mgmt_only }}"  
+    state: present
+  loop: "{{ device_list | subelements('access_interfaces', 'skip_missing=True') }}"
