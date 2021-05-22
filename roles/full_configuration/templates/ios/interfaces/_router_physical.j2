@@ -1,0 +1,62 @@
+{% if interface["label"] == "layer3" and interface["enabled"] == true and 'GigabitEthernet' in interface["name"] %}
+interface {{ interface["name"]["split"]('.')[0] }}
+{% if interface["description"] is defined %}
+ description {{ interface.description }}
+{% endif %}
+{% if interface["ip_addresses"] | length > 0 %}
+{% for addr in interface["ip_addresses"] %}
+{% if addr["address"] is defined %}
+ ip address {{ addr["address"] | ipaddr('address') }} {{ addr["address"] | ipaddr('netmask') }}
+{% for tags in interface["ip_addresses"][0]["tags"] %}
+{% if tags["slug"] is defined %}
+{% if 'ospf' in tags["slug"] %}
+ ip ospf {{ devices[0]["config_context"]["ospf"]["id"] }} area {{ tags["slug"]|replace("ospf_area_","") }}
+{% endif %}
+{% if 'p2p' in tags["slug"] %}
+ ip ospf network point-to-point
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% else %}
+{% endif %}
+{% if devices[0]["config_context"]["acl"] is defined %}
+{% if devices[0]["config_context"]["acl"]["interfaces"][interface["name"]] is defined %}
+ip access-group {{ devices[0]["config_context"]["acl"]["interfaces"][interface["name"]]["acl"] }} {{ devices[0]["config_context"]["acl"]["interfaces"][interface["name"]]["direction"] }}
+{% endif %}
+{% endif %}
+{% if 'null' not in interface["_custom_field_data"]["vrrp_group"] %}
+ vrrp {{ interface["_custom_field_data"]["vrrp_group"] }} ip {{ interface["_custom_field_data"]["vrrp_primary_ip"] }}
+ vrrp {{ interface["_custom_field_data"]["vrrp_group"] }} description {{ interface["_custom_field_data"]["vrrp_description"] }}
+ vrrp {{ interface["_custom_field_data"]["vrrp_group"] }} priority {{ interface["_custom_field_data"]["vrrp_priority"] }}
+ vrrp {{ interface["_custom_field_data"]["vrrp_group"] }} timers learn
+{% endif %}
+ no shut
+!
+{% elif interface["label"] == "mgmt" %}
+interface {{ interface["name"] }}
+{% if interface["description"] is defined %}
+ description {{ interface["description"] }}    
+{% endif %}
+ vrf forwarding MGMT
+{% if interface["ip_addresses"] | length > 0 %}
+{% for addr in interface["ip_addresses"] %}
+{% if addr["address"] is defined %}
+ ip address {{ addr["address"] | ipaddr('address') }} {{ addr.address | ipaddr('netmask') }}
+ duplex auto
+ speed auto
+ no cdp enable
+ no shutdown
+!
+{% endif %}
+{% endfor %}
+{% endif %}
+{% else %}
+interface {{ interface["name"] }}
+ description NOT IN USE
+ duplex auto
+ speed auto
+ shutdown
+!
+{% endif %}

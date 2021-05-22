@@ -1,0 +1,14 @@
+aaa new-model
+!
+!
+aaa group server {{ devices[0]["config_context"]["aaa-new-model"]["type"] }} {{ devices[0]["config_context"]["aaa-new-model"]["name"] }}
+ server-private {{ devices[0]["config_context"]["aaa-new-model"]["ip_address"] }} auth-port {{ devices[0]["config_context"]["aaa-new-model"]["auth_port"] }} acct-port {{ devices[0]["config_context"]["aaa-new-model"]["acct_port"] }} key {{ devices[0]["config_context"]["aaa-new-model"]["key"] }}
+!
+aaa authentication login default group {{ devices[0]["config_context"]["aaa-new-model"]["name"] }} local
+aaa authorization exec default group {{ devices[0]["config_context"]["aaa-new-model"]["name"] }} local if-authenticated
+!
+!
+!
+!
+!
+aaa session-id common

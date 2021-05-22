@@ -1,0 +1,16 @@
+{% if devices[0]["config_context"]["ospf"] is defined %}
+router ospf {{ devices[0]["config_context"]["ospf"]["id"] }}
+{% if devices[0]["config_context"]["ospf"]["rid"] %}
+ router-id {{ devices[0]["config_context"]["ospf"]["rid"] }}
+{% endif %}
+{% for tags in devices[0]["tags"] %}
+{% if tags["name"] is defined %}
+{% if 'mpls' in tags["slug"] %}
+ mpls traffic-eng area {{ tags["slug"] | replace("ospf_area_","") }}
+ mpls traffic-eng router-id Loopback0
+{% endif %}
+{% endif %}
+{% endfor %}
+ passive-interface Loopback0   
+{% else %}
+{% endif %}

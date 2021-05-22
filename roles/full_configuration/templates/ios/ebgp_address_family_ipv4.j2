@@ -1,0 +1,7 @@
+{% for rpeer,rpeer_attr in devices[0]["config_context"]["bgp"]["ebgp"]["neighbors"]["items"]() %}
+  neighbor {{rpeer}} activate
+{% if rpeer_attr["default_orig"] is defined and rpeer_attr["default_orig"] == True %}
+  neighbor {{ rpeer }} default-originate
+{% else %}
+{% endif %}
+{% endfor %}

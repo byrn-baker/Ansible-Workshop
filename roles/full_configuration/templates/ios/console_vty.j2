@@ -1,0 +1,29 @@
+line con 0
+ stopbits 1
+{% if devices[0]["config_context"]["aaa-new-model"] is defined %} 
+line vty 0 4
+ privilege level 15
+ transport preferred ssh
+ transport input all
+ transport output telnet ssh
+{% else %}
+line vty 0 4
+ privilege level 15
+ login local
+ transport preferred ssh
+ transport input all
+{% endif %}
+{% if devices[0]["config_context"]["aaa-new-model"] is defined %}
+line vty 5 15
+ privilege level 15
+ transport preferred ssh
+ transport input all
+! 
+{% else %}
+line vty 5 15
+ privilege level 15
+ login local
+ transport preferred ssh
+ transport input all
+!
+{% endif %}

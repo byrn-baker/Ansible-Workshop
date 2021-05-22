@@ -1,0 +1,53 @@
+
+{% if interface["label"] == "access" and interface["enabled"] == true %}
+interface {{ interface["name"] }}
+{% if interface["description"] is defined %}
+ description {{ interface["description"] }}    
+{% endif %}
+ switchport mode access
+ switchport access vlan {{ interface["untagged_vlan"]["vid"] }}  
+ spanning-tree portfast edge
+ no cdp enable
+ no shut 
+ !
+{% elif interface["label"] == "trunk" and interface["enabled"] == true %}
+interface {{ interface["name"] }}
+{% if interface["description"] is defined %}
+ description {{ interface["description"] }}
+{% endif %}
+{% if interface["tagged_vlans"] != 'null' %}
+ switchport trunk native vlan {{ interface.untagged_vlan.vid }}
+{% endif %}
+{% if interface.tagged_vlans != 'null'%}
+ switch trunk allowed vlan {{ interface["tagged_vlans"] | join(',', attribute='vid') }}  
+{% endif %}
+ switchport trunk encapsulation dot1q
+ switchport mode trunk 
+{% if interface['lag']["name"] is defined %}
+ channel-group {{ interface['lag']["name"] | replace ('Port-Channel', '') }} mode active 
+{% endif %}
+ no shut  
+ !
+{% elif interface["label"] == "mgmt" %}
+interface {{ interface["name"] }}
+{% if interface["description"] is defined %}
+ description {{ interface["description"] }}    
+{% endif %}
+ no switchport
+ vrf forwarding MGMT
+{% if interface["ip_addresses"] | length > 0 %}
+{% for addr in interface["ip_addresses"] %}
+{% if addr["address"] is defined %}
+ ip address {{ addr["address"] | ipaddr('address') }} {{ addr["address"] | ipaddr('netmask') }}
+ negotiation auto
+ no cdp enable
+ no shutdown
+{% endif %}
+{% endfor %}
+{% endif %}
+{% else %}
+interface {{ interface["name"] }}
+ description NOT IN USE
+ negotiation auto
+ shutdown
+{% endif %}

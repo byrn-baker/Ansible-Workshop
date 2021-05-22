@@ -1,0 +1,4 @@
+- name: Configuration Assembly
+  template:
+    src: "cisco_ios.j2"
+    dest: "configs/{{ inventory_hostname }}.conf"

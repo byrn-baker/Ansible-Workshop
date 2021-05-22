@@ -1,0 +1,17 @@
+- name: Get data from Nautobot
+  networktocode.nautobot.query_graphql:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: False
+    query: "{{ query_string }}"
+    variables: "{{ device }}"
+  register: "nb_output"  
+
+- name: Print this stuff
+  debug:
+    msg: "{{ nb_output }}"
+
+- name: Print to file
+  copy:
+    content: "{{ nb_output }}"
+    dest: nb_output.json

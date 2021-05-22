@@ -1,0 +1,10 @@
+{% for address in devices[0]["config_context"]["dhcp_pool"] %}
+ip dhcp excluded-address {{ address["excluded_address"] }}
+{% endfor %}
+{% for pool in devices[0]["config_context"]["dhcp_pool"] %}
+ip dhcp pool {{ pool["name"] }}
+ network {{ pool["network"] | replace("/"," /") }}
+ default-router {{ pool["default_router"] }}
+ lease {{ pool["lease"] }}
+!
+{% endfor %}

@@ -1,0 +1,5 @@
+{% for peer in devices[0]["config_context"]["bgp"]["ibgp"]["neighbors"] %}
+ neighbor {{ peer }} remote-as {{ devices[0]["config_context"]["bgp"]["ibgp"]["l_asn"] }}
+ neighbor {{ peer }} update-source Loopback0
+ neighbor {{ peer }} route-reflector-client
+{% endfor %}

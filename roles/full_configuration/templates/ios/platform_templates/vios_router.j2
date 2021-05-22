@@ -1,0 +1,166 @@
+!
+version 15.6
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+{% include './ios/hostname.j2' %}
+
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition MGMT
+ !
+ address-family ipv4
+ exit-address-family
+!
+!
+{% if devices[0]["config_context"]["aaa-new-model"] is defined %}
+{% include './ios/aaa.j2' %}
+{% else %}
+no aaa new-model
+{% endif %}
+
+ethernet lmi ce
+!
+!
+!
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+{% if devices[0]["config_context"]["dhcp_pool"] is defined %}
+{% include './ios/dhcp_server.j2' %}
+{% endif %}
+!
+!
+{% include './ios/dns.j2' %}
+
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+file prompt quiet
+{% include './ios/local_user.j2' %}
+!
+redundancy
+!
+{% if devices[0]["config_context"]["lldp"] == true %}
+lldp run
+{% endif %}
+{% if devices[0]["config_context"]["cdp"] == true %}
+cdp run
+{% endif %}
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+{% include './ios/interfaces.j2' %}
+
+!
+{% if devices[0]["config_context"]["ospf"] is defined %}
+{% include './ios/ospf.j2' %}
+{% endif %}
+!
+{% if devices[0]["config_context"]["bgp"] is defined %}
+{% include './ios/bgp.j2' %}
+{% endif %}
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+{% if devices[0]["config_context"]["routes"] is defined %}
+{% if devices[0]["config_context"]["routes"]["static"] is defined %}
+{% for static in devices[0]["config_context"]["routes"]["static"] %}
+{{ static }}
+{% endfor %}
+{% endif %}
+{% endif %}
+{% if devices[0]["config_context"]["routes"]["mgmt_gateway"] is defined %}
+ip route vrf MGMT 0.0.0.0 0.0.0.0 {{ devices[0]["config_context"]["routes"]["mgmt_gateway"] }}
+{% endif %}
+{% if devices[0]["device_role"]["name"] == "pod_l2_switch" %}
+ip ssh source-interface GigabitEthernet1/3
+{% elif devices[0]["device_role"]["name"] == "pod_l3_switch" %}
+ip ssh source-interface GigabitEthernet1/3
+{% elif devices[0]["device_role"]["name"] == "pod_router" %}
+ip ssh source-interface GigabitEthernet0/7
+{% endif %}
+ip ssh version 2
+ip scp server enable
+!
+!
+!
+{% if devices[0]["tags"] is defined %}
+{% for tags in devices[0]["tags"] %}
+{% if 'mpls' in tags["slug"] %}
+mpls ldp router-id Loopback0
+{% else %}
+{% endif %}
+{% endfor %}
+{% endif %}
+!
+control-plane
+!
+banner exec ^C
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************
+^C
+banner incoming ^C
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************
+^C
+banner login ^C
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************
+^C
+!
+{% include './ios/console_vty.j2' %}
+
+no scheduler allocate
+!
+end 

@@ -1,0 +1,86 @@
+query_string: |
+        query ($device: [String]) {
+        devices(name: $device) {
+            config_context
+            name
+            position
+            serial
+            primary_ip4 {
+            address
+            }
+            tenant {
+            name
+            }
+            tags {
+            name
+            slug
+            }
+            device_role {
+            name
+            }
+            platform {
+            name
+            slug
+            manufacturer {
+                name
+            }
+            napalm_driver
+            }
+            site {
+            name
+            slug
+            vlans {
+                name
+                vid
+            }
+            vlan_groups {
+                name
+            }
+            }
+            interfaces {
+            description
+            mac_address
+            enabled
+            label
+            _custom_field_data
+            lag {
+                name
+            }
+            name
+            ip_addresses {
+                address
+                tags {
+                slug
+                }
+            }
+            connected_circuit_termination {
+                circuit {
+                cid
+                commit_rate
+                provider {
+                    name
+                }
+                }
+            }
+            tagged_vlans {
+                vid
+            }
+            untagged_vlan {
+                vid
+            }
+            cable {
+                termination_a_type
+                status {
+                name
+                }
+                color
+            }
+            tagged_vlans {
+                vid
+            }
+            tags {
+                slug
+            }
+            }
+        }
+        }
