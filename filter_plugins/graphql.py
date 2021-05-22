@@ -1,6 +1,24 @@
-query_string: |
-        query {
-        devices(name: "{{device}}") {
+class FilterModule(object):
+
+    def filters(self):
+        return {
+            'graphql': self.graphql,
+        }
+
+    def graphql(self, device):
+        
+        import json
+        from pynautobot import api
+
+
+        nautobot = api(url="http://192.168.130.202:8000", token="c7fdc6be609a244bb1e851c5e47b3ccd9d990b58")
+        nautobot.http_session.verify = False
+
+        variables = {"device": device}
+
+        query = """
+        query ($device: [String]) {
+        devices(name: $device) {
             config_context
             name
             position
@@ -84,3 +102,8 @@ query_string: |
             }
         }
         }
+        """
+        graphql_response = nautobot.graphql.query(query=query, variables=variables)
+        graphql_response.json
+
+        return graphql_response

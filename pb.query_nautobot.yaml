@@ -5,6 +5,7 @@
   connection: local
   
   vars:
-    device: "POD1SW3"
+    device: "{{inventory_hostname}}"
   roles:
   - { role: nautobot_query }
+  - { role: full_configuration }

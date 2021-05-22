@@ -1,0 +1,308 @@
+{
+	"url": "http://192.168.130.202:8000",
+	"query": "query {\ndevices(name: \"pod1sw3\") {\n    config_context\n    name\n    position\n    serial\n    primary_ip4 {\n    address\n    }\n    tenant {\n    name\n    }\n    tags {\n    name\n    slug\n    }\n    device_role {\n    name\n    }\n    platform {\n    name\n    slug\n    manufacturer {\n        name\n    }\n    napalm_driver\n    }\n    site {\n    name\n    slug\n    vlans {\n        name\n        vid\n    }\n    vlan_groups {\n        name\n    }\n    }\n    interfaces {\n    description\n    mac_address\n    enabled\n    label\n    _custom_field_data\n    lag {\n        name\n    }\n    name\n    ip_addresses {\n        address\n        tags {\n        slug\n        }\n    }\n    connected_circuit_termination {\n        circuit {\n        cid\n        commit_rate\n        provider {\n            name\n        }\n        }\n    }\n    tagged_vlans {\n        vid\n    }\n    untagged_vlan {\n        vid\n    }\n    cable {\n        termination_a_type\n        status {\n        name\n        }\n        color\n    }\n    tagged_vlans {\n        vid\n    }\n    tags {\n        slug\n    }\n    }\n}\n}",
+	"graph_variables": null,
+	"data": {
+		"devices": [
+			{
+				"config_context": {
+
+				},
+				"name": "pod1sw3",
+				"position": 36,
+				"serial": "",
+				"primary_ip4": {
+					"address": "192.168.4.20/24"
+				},
+				"tenant": null,
+				"tags": [
+
+				],
+				"device_role": {
+					"name": "pod_access_switch"
+				},
+				"platform": null,
+				"site": {
+					"name": "POD1",
+					"slug": "pod1",
+					"vlans": [
+						{
+							"name": "USERS",
+							"vid": 300
+						},
+						{
+							"name": "SERVERS",
+							"vid": 350
+						},
+						{
+							"name": "GUESTS",
+							"vid": 400
+						},
+						{
+							"name": "NATIVE_VLAN",
+							"vid": 666
+						}
+					],
+					"vlan_groups": [
+
+					]
+				},
+				"interfaces": [
+					{
+						"description": "",
+						"mac_address": null,
+						"enabled": false,
+						"label": "",
+						"_custom_field_data": {
+							"vrrp_group": null,
+							"dhcp_helper": null,
+							"vrrp_priority": null,
+							"vrrp_primary_ip": null,
+							"vrrp_description": null
+						},
+						"lag": null,
+						"name": "GigabitEthernet0/0",
+						"ip_addresses": [
+
+						],
+						"connected_circuit_termination": null,
+						"tagged_vlans": [
+
+						],
+						"untagged_vlan": null,
+						"cable": null,
+						"tags": [
+
+						]
+					},
+					{
+						"description": "TRUNK TO POD1SW1",
+						"mac_address": null,
+						"enabled": true,
+						"label": "trunk",
+						"_custom_field_data": {
+							"vrrp_group": null,
+							"dhcp_helper": null,
+							"vrrp_priority": null,
+							"vrrp_primary_ip": null,
+							"vrrp_description": null
+						},
+						"lag": null,
+						"name": "GigabitEthernet0/1",
+						"ip_addresses": [
+
+						],
+						"connected_circuit_termination": null,
+						"tagged_vlans": [
+							{
+								"vid": 300
+							},
+							{
+								"vid": 350
+							}
+						],
+						"untagged_vlan": {
+							"vid": 666
+						},
+						"cable": {
+							"termination_a_type": "dcim.interface",
+							"status": {
+								"name": "Connected"
+							},
+							"color": ""
+						},
+						"tags": [
+
+						]
+					},
+					{
+						"description": "TRUNK TO POD1SW2",
+						"mac_address": null,
+						"enabled": true,
+						"label": "trunk",
+						"_custom_field_data": {
+							"vrrp_group": null,
+							"dhcp_helper": null,
+							"vrrp_priority": null,
+							"vrrp_primary_ip": null,
+							"vrrp_description": null
+						},
+						"lag": null,
+						"name": "GigabitEthernet0/2",
+						"ip_addresses": [
+
+						],
+						"connected_circuit_termination": null,
+						"tagged_vlans": [
+							{
+								"vid": 300
+							},
+							{
+								"vid": 350
+							}
+						],
+						"untagged_vlan": {
+							"vid": 666
+						},
+						"cable": {
+							"termination_a_type": "dcim.interface",
+							"status": {
+								"name": "Connected"
+							},
+							"color": ""
+						},
+						"tags": [
+
+						]
+					},
+					{
+						"description": "USERS",
+						"mac_address": null,
+						"enabled": true,
+						"label": "access",
+						"_custom_field_data": {
+							"vrrp_group": null,
+							"dhcp_helper": null,
+							"vrrp_priority": null,
+							"vrrp_primary_ip": null,
+							"vrrp_description": null
+						},
+						"lag": null,
+						"name": "GigabitEthernet0/3",
+						"ip_addresses": [
+
+						],
+						"connected_circuit_termination": null,
+						"tagged_vlans": [
+
+						],
+						"untagged_vlan": {
+							"vid": 300
+						},
+						"cable": null,
+						"tags": [
+
+						]
+					},
+					{
+						"description": "SERVERS",
+						"mac_address": null,
+						"enabled": true,
+						"label": "access",
+						"_custom_field_data": {
+							"vrrp_group": null,
+							"dhcp_helper": null,
+							"vrrp_priority": null,
+							"vrrp_primary_ip": null,
+							"vrrp_description": null
+						},
+						"lag": null,
+						"name": "GigabitEthernet1/0",
+						"ip_addresses": [
+
+						],
+						"connected_circuit_termination": null,
+						"tagged_vlans": [
+
+						],
+						"untagged_vlan": {
+							"vid": 350
+						},
+						"cable": null,
+						"tags": [
+
+						]
+					},
+					{
+						"description": "GUESTS",
+						"mac_address": null,
+						"enabled": true,
+						"label": "access",
+						"_custom_field_data": {
+							"vrrp_group": null,
+							"dhcp_helper": null,
+							"vrrp_priority": null,
+							"vrrp_primary_ip": null,
+							"vrrp_description": null
+						},
+						"lag": null,
+						"name": "GigabitEthernet1/1",
+						"ip_addresses": [
+
+						],
+						"connected_circuit_termination": null,
+						"tagged_vlans": [
+
+						],
+						"untagged_vlan": null,
+						"cable": null,
+						"tags": [
+
+						]
+					},
+					{
+						"description": "",
+						"mac_address": null,
+						"enabled": false,
+						"label": "",
+						"_custom_field_data": {
+							"vrrp_group": null,
+							"dhcp_helper": null,
+							"vrrp_priority": null,
+							"vrrp_primary_ip": null,
+							"vrrp_description": null
+						},
+						"lag": null,
+						"name": "GigabitEthernet1/2",
+						"ip_addresses": [
+
+						],
+						"connected_circuit_termination": null,
+						"tagged_vlans": [
+
+						],
+						"untagged_vlan": null,
+						"cable": null,
+						"tags": [
+
+						]
+					},
+					{
+						"description": "MGMT-INTERFACE",
+						"mac_address": null,
+						"enabled": true,
+						"label": "mgmt",
+						"_custom_field_data": {
+							"vrrp_group": null,
+							"dhcp_helper": null,
+							"vrrp_priority": null,
+							"vrrp_primary_ip": null,
+							"vrrp_description": null
+						},
+						"lag": null,
+						"name": "GigabitEthernet1/3",
+						"ip_addresses": [
+							{
+								"address": "192.168.4.20/24",
+								"tags": [
+
+								]
+							}
+						],
+						"connected_circuit_termination": null,
+						"tagged_vlans": [
+
+						],
+						"untagged_vlan": null,
+						"cable": null,
+						"tags": [
+
+						]
+					}
+				]
+			}
+		]
+	},
+	"failed": false,
+	"changed": false
+}
