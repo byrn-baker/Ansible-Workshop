@@ -15,10 +15,10 @@ interface {{ interface["name"] }}
 {% if interface["description"] is defined %}
  description {{ interface["description"] }}
 {% endif %}
-{% if interface["tagged_vlans"] != 'null' %}
+{% if interface["tagged_vlans"] is not none %}
  switchport trunk native vlan {{ interface.untagged_vlan.vid }}
 {% endif %}
-{% if interface.tagged_vlans != 'null'%}
+{% if interface.tagged_vlans is not none %}
  switch trunk allowed vlan {{ interface["tagged_vlans"] | join(',', attribute='vid') }}  
 {% endif %}
  switchport trunk encapsulation dot1q
