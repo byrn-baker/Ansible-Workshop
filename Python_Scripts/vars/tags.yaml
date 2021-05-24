@@ -1,6 +1,20 @@
 ---
-tags:
+_tags:
 - name: ospf_area_0
   description: "Interface OSPF Area 0"
 - name: p2p
-  description: "Interface network type for OSPF Protocol"  
+  description: "Interface network type for OSPF Protocol"
+- name: ospf
+  description: Used to assigned OSPF config context to pod devices
+- name: pod1_dhcp_server
+  description: POD1 DHCP Server configuration
+- name: pod2_dhcp_server
+  description: POD2 DHCP Server configuration
+- name: pod3_dhcp_server
+  description: POD3 DHCP Server configuration
+- name: pod4_dhcp_server
+  description: POD4 DHCP Server configuration 
+- name: pod5_dhcp_server
+  description: POD5 DHCP Server configuration 
+- name: pod6_dhcp_server
+  description: POD6 DHCP Server configuration           

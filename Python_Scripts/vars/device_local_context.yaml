@@ -1,0 +1,253 @@
+local_context:
+  - name: pod1r1
+    bgp:
+      address_family_ipv4:
+        advertised_networks:
+          - 155.1.1.0/26
+          - 155.1.1.128/26
+          - 155.1.1.64/26
+        agg_network: 
+          - 155.1.1.0/24
+      ebgp:
+        neighbors:
+          24.24.1.1:
+            r_asn: 400
+      ibgp:
+        l_asn: 65001
+        neighbors:
+        - 10.0.1.2
+        - 10.0.1.3
+  - name: pod1sw1
+    bgp:
+      address_family_ipv4:
+        advertised_networks:
+          - 155.1.1.0/26
+          - 155.1.1.128/26
+          - 155.1.1.64/26
+      ibgp:
+        l_asn: 65001
+        neighbors:
+        - 10.0.1.1
+        - 10.0.1.3
+  - name: pod1sw2
+    bgp:
+      address_family_ipv4:
+        advertised_networks:
+          - 155.1.1.0/26
+          - 155.1.1.128/26
+          - 155.1.1.64/26
+      ibgp:
+        l_asn: 65001
+        neighbors:
+        - 10.0.1.1
+        - 10.0.1.2
+  - name: pod2r1
+    bgp:
+      address_family_ipv4:
+        advertised_networks:
+          - 155.2.2.0/26
+          - 155.2.2.128/24
+          - 155.2.2.64/24
+        agg_network:
+          - 155.2.2.0/24
+      ebgp:
+        neighbors:
+          24.24.2.1:
+            r_asn: 400
+      ibgp:
+        l_asn: 65002
+        neighbors:
+        - 10.0.2.2
+        - 10.0.2.3
+  - name: pod2sw1
+    bgp:
+      address_family_ipv4:
+        advertised_networks:
+          - 155.2.2.0/26
+          - 155.2.2.128/24
+          - 155.2.2.64/24
+      ibgp:
+        l_asn: 65002
+        neighbors:
+        - 10.0.2.1
+        - 10.0.2.3
+  - name: pod2sw2
+    bgp:
+      address_family_ipv4:
+        advertised_networks:
+          - 155.2.2.0/26
+          - 155.2.2.128/24
+          - 155.2.2.64/24
+      ibgp:
+        l_asn: 65002
+        neighbors:
+        - 10.0.2.1
+        - 10.0.2.2
+  - name: pod3r1
+    bgp:
+      address_family_ipv4:
+        advertised_networks:
+          - 155.3.3.0/26
+          - 155.3.3.128/26
+          - 155.3.3.64/26
+        agg_network:
+          - 155.3.3.0/24
+      ebgp:
+        neighbors:
+          24.24.3.1:
+            r_asn: 400
+      ibgp:
+        l_asn: 65003
+        neighbors:
+        - 10.0.3.2
+        - 10.0.3.3
+  - name: pod3sw1
+    bgp:
+      address_family_ipv4:
+        advertised_networks:
+          - 155.3.3.0/26
+          - 155.3.3.128/26
+          - 155.3.3.64/26
+      ibgp:
+        l_asn: 65003
+        neighbors:
+        - 10.0.3.1
+        - 10.0.3.3
+  - name: pod3sw2
+    bgp:
+      address_family_ipv4:
+        advertised_networks:
+          - 155.3.3.0/26
+          - 155.3.3.128/26
+          - 155.3.3.64/26
+      ibgp:
+        l_asn: 65003
+        neighbors:
+        - 10.0.3.1
+        - 10.0.3.2
+  - name: pod4r1
+    bgp:
+      address_family_ipv4:
+        advertised_networks:
+          - 155.4.4.0/26
+          - 155.4.4.128/26
+          - 155.4.4.64/26
+        agg_network:
+          - 155.4.4.0/24
+      ebgp:
+        neighbors:
+          24.24.4.1:
+            r_asn: 400
+      ibgp:
+        l_asn: 65004
+        neighbors:
+        - 10.0.4.2
+        - 10.0.4.3
+  - name: pod4sw1
+    bgp:
+      address_family_ipv4:
+        advertised_networks:
+          - 155.4.4.0/26
+          - 155.4.4.128/26
+          - 155.4.4.64/26
+      ibgp:
+        l_asn: 65004
+        neighbors:
+        - 10.0.4.1
+        - 10.0.4.3
+  - name: pod4sw2
+    bgp:
+      address_family_ipv4:
+        advertised_networks:
+          - 155.4.4.0/26
+          - 155.4.4.128/26
+          - 155.4.4.64/26
+      ibgp:
+        l_asn: 65004
+        neighbors:
+        - 10.0.4.1
+        - 10.0.4.2
+  - name: pod5r1
+    bgp:
+      address_family_ipv4:
+        advertised_networks:
+          - 155.5.5.0/26
+          - 155.5.5.128/26
+          - 155.5.5.64/26
+        agg_network:
+          - 155.5.5.0/24
+      ebgp:
+        neighbors:
+          24.24.5.1:
+            r_asn: 400
+      ibgp:
+        l_asn: 65005
+        neighbors:
+        - 10.0.5.2
+        - 10.0.5.3
+  - name: pod5sw1
+    bgp:
+      address_family_ipv4:
+        advertised_networks:
+          - 155.5.5.0/26
+          - 155.5.5.128/26
+          - 155.5.5.64/26
+      ibgp:
+        l_asn: 65005
+        neighbors:
+        - 10.0.5.1
+        - 10.0.5.3
+  - name: pod5sw2
+    bgp:
+      address_family_ipv4:
+        advertised_networks:
+          - 155.5.5.0/26
+          - 155.5.5.128/26
+          - 155.5.5.64/26
+      ibgp:
+        l_asn: 65005
+        neighbors:
+        - 10.0.5.1
+        - 10.0.5.2
+  - name: pod6r1
+    bgp:
+      address_family_ipv4:
+        advertised_networks:
+          - 155.6.6.0/26
+          - 155.6.6.128/26
+          - 155.6.6.64/26
+        agg_network:
+          - 155.6.6.0/24
+      ebgp:
+        neighbors:
+          24.24.6.1:
+            r_asn: 400
+      ibgp:
+        l_asn: 65006
+        neighbors:
+        - 10.0.6.2
+        - 10.0.6.3
+  - name: pod6sw1
+    bgp:
+      address_family_ipv4:
+        advertised_networks:
+          - 155.6.6.0/26
+          - 155.6.6.128/26
+          - 155.6.6.64/26
+      ibgp:
+        l_asn: 65006
+        neighbors:
+        - 10.0.6.1
+        - 10.0.6.3
+  - name: pod6sw2
+    bgp:
+      address_family_ipv4:
+        advertised_networks:
+          - 155.6.6.0/26
+          - 155.6.6.128/26
+          - 155.6.6.64/26
+      ibgp:
+        l_asn: 65006
+        neighbors:
+        - 10.0.6.1
+        - 10.0.6.2                       

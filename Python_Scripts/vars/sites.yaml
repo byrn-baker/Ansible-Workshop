@@ -16,7 +16,7 @@ sites:
   contact_phone: "867-5309"
   contact_email: "joe@pod1.com"
   slug: pod1
-  comments: "### Placeholder"
+  comments: " Placeholder"
   int_prefixes:
   - prefix: 10.10.1.0/31
     description: "R1-GI0/1 - SW1-GI0/0"
@@ -57,7 +57,7 @@ sites:
   contact_phone: "867-5309"
   contact_email: "joe@pod2.com"
   slug: pod2
-  comments: "### Placeholder"
+  comments: " Placeholder"
   int_prefixes:
   - prefix: 10.10.2.0/31
     description: "R1-GI0/1 - SW1-GI0/0"
@@ -98,7 +98,7 @@ sites:
   contact_phone: "867-5309"
   contact_email: "joe@pod3.com"
   slug: pod3
-  comments: "### Placeholder" 
+  comments: " Placeholder" 
   int_prefixes:
   - prefix: 10.10.3.0/31
     description: "R1-GI0/1 - SW1-GI0/0"
@@ -139,7 +139,7 @@ sites:
   contact_phone: "867-5309"
   contact_email: "joe@pod4.com"
   slug: pod4
-  comments: "### Placeholder" 
+  comments: " Placeholder" 
   int_prefixes:
   - prefix: 10.10.4.0/31
     description: "R1-GI0/1 - SW1-GI0/0"
@@ -170,7 +170,7 @@ sites:
 - name: POD5
   status: Active
   asn: 65005
-  time_zone: "America/Los Angeles"
+  time_zone: "America/Los_Angeles"
   description: "Ansible Workshop for POD5"
   physical_address: "Los Angeles, CA"
   shipping_address: "Los Angeles, CA"
@@ -180,7 +180,7 @@ sites:
   contact_phone: "867-5309"
   contact_email: "joe@pod5.com"
   slug: pod5
-  comments: "### Placeholder"
+  comments: " Placeholder"
   int_prefixes:
   - prefix: 10.10.5.0/31
     description: "R1-GI0/1 - SW1-GI0/0"
@@ -211,7 +211,7 @@ sites:
 - name: POD6
   status: Active
   asn: 65006
-  time_zone: "America/Los Angeles"
+  time_zone: "America/Los_Angeles"
   description: "Ansible Workshop for POD6"
   physical_address: "San Jose, CA"
   shipping_address: "San Jose, CA"
@@ -221,7 +221,7 @@ sites:
   contact_phone: "867-5309"
   contact_email: "joe@pod6.com"
   slug: pod6
-  comments: "### Placeholder" 
+  comments: " Placeholder" 
   int_prefixes:
   - prefix: 10.10.6.0/31
     description: "R1-GI0/1 - SW1-GI0/0"

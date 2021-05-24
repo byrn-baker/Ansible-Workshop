@@ -10,6 +10,7 @@
    - vars/vrfs.yaml
    - vars/devices.yaml
    - vars/nodes_design.yaml
+   - vars/device_local_context.yaml
    - vars/custom_fields.yaml
    - vars/device_connections.yaml
 

@@ -53,10 +53,10 @@ vrfs:
     prefix: {{ vrf.prefix }}
 {% endfor %}
 tags: 
-{% for tag in tags %}
-  - name: {{ tag.name }}
-    slug: {{ tag.name | lower }}
-    description: {{ tag.description }}
+{% for _tag in _tags %}
+  - name: {{ _tag.name }}
+    slug: {{ _tag.name | lower }}
+    description: {{ _tag.description }}
 {% endfor %}
 custom_fields:
 {% for cf in custom_fields %}
@@ -100,6 +100,55 @@ devices:
     position: {{ dv.position }}
     face: {{ dv.face }}
     rack: {{ dv.rack }}
+    {% if 'r1' in dv.name %}
+    tags:
+      - ospf
+      - {{ dv.name | replace('r1','')}}_dhcp_server
+    {% endif %}
+    {% if 'sw1' in dv.name %}
+    tags:
+      - ospf
+    {% endif %}
+    {% if 'sw2' in dv.name %}
+    tags:
+      - ospf
+    {% endif %}
+    {% if local_context is defined %}
+    {% for cntx in local_context %}
+    {% if cntx["name"] == dv.name %}
+      {% if cntx["bgp"] is defined %}
+    local_context:
+      bgp:
+        address_family_ipv4:
+          advertised_networks:
+          {% for pfx in cntx["bgp"]["address_family_ipv4"]["advertised_networks"] %}
+            - {{ pfx }}
+          {% endfor %}
+          {% if cntx["bgp"]["address_family_ipv4"]["agg_network"] is defined %}
+          {% for agg in cntx["bgp"]["address_family_ipv4"]["agg_network"] %}
+          agg_network: 
+            - {{ agg }}
+          {% endfor %}
+          {% endif %}
+        {% if cntx["bgp"]["ebgp"] is defined %}
+        ebgp:
+          neighbors:
+          {% for neigh, neigh_attr in cntx["bgp"]["ebgp"]["neighbors"].items() %}
+            {{ neigh }}: { r_asn: {{ neigh_attr["r_asn"] }} }
+          {% endfor %}
+        {% endif %}
+        {% if cntx["bgp"]["ibgp"] is defined %}
+        ibgp:
+          l_asn: {{ cntx["bgp"]["ibgp"]["l_asn"] }}
+          neighbors:
+          {% for neigh in cntx["bgp"]["ibgp"]["neighbors"] %}
+            - {{ neigh }}
+          {% endfor %}
+        {% endif %}
+      {% endif %}
+    {% endif %}
+    {% endfor %}
+    {% endif %}
     interfaces:
     {% if dv["l3_interfaces"] is defined  %}
     {% for int in dv["l3_interfaces"] %}

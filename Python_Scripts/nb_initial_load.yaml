@@ -12,7 +12,7 @@ sites:
     contact_phone: 867-5309
     contact_email: joe@pod1.com
     slug: pod1
-    comments: Placeholder
+    comments:  Placeholder
     racks:
       - name: pod1_rr_1
         status: active
@@ -29,7 +29,7 @@ sites:
     contact_phone: 867-5309
     contact_email: joe@pod2.com
     slug: pod2
-    comments: Placeholder
+    comments:  Placeholder
     racks:
       - name: pod2_rr_1
         status: active
@@ -46,7 +46,7 @@ sites:
     contact_phone: 867-5309
     contact_email: joe@pod3.com
     slug: pod3
-    comments: Placeholder
+    comments:  Placeholder
     racks:
       - name: pod3_rr_1
         status: active
@@ -63,7 +63,7 @@ sites:
     contact_phone: 867-5309
     contact_email: joe@pod4.com
     slug: pod4
-    comments: Placeholder
+    comments:  Placeholder
     racks:
       - name: pod4_rr_1
         status: active
@@ -80,7 +80,7 @@ sites:
     contact_phone: 867-5309
     contact_email: joe@pod5.com
     slug: pod5
-    comments: Placeholder
+    comments:  Placeholder
     racks:
       - name: pod5_rr_1
         status: active
@@ -97,7 +97,7 @@ sites:
     contact_phone: 867-5309
     contact_email: joe@pod6.com
     slug: pod6
-    comments: Placeholder
+    comments:  Placeholder
     racks:
       - name: pod6_rr_1
         status: active
@@ -141,6 +141,27 @@ tags:
   - name: p2p
     slug: p2p
     description: Interface network type for OSPF Protocol
+  - name: ospf
+    slug: ospf
+    description: Used to assigned OSPF config context to pod devices
+  - name: pod1_dhcp_server
+    slug: pod1_dhcp_server
+    description: POD1 DHCP Server configuration
+  - name: pod2_dhcp_server
+    slug: pod2_dhcp_server
+    description: POD2 DHCP Server configuration
+  - name: pod3_dhcp_server
+    slug: pod3_dhcp_server
+    description: POD3 DHCP Server configuration
+  - name: pod4_dhcp_server
+    slug: pod4_dhcp_server
+    description: POD4 DHCP Server configuration
+  - name: pod5_dhcp_server
+    slug: pod5_dhcp_server
+    description: POD5 DHCP Server configuration
+  - name: pod6_dhcp_server
+    slug: pod6_dhcp_server
+    description: POD6 DHCP Server configuration
 custom_fields:
   - name: dhcp_helper
     description: Used to assign helper address to an interface
@@ -365,6 +386,26 @@ devices:
     position: 38
     face: front
     rack: pod1_rr_1
+    tags:
+      - ospf
+      - pod1_dhcp_server
+    local_context:
+      bgp:
+        address_family_ipv4:
+          advertised_networks:
+            - 155.1.1.0/26
+            - 155.1.1.128/26
+            - 155.1.1.64/26
+          agg_network: 
+            - 155.1.1.0/24
+        ebgp:
+          neighbors:
+            24.24.1.1: { r_asn: 400 }
+        ibgp:
+          l_asn: 65001
+          neighbors:
+            - 10.0.1.2
+            - 10.0.1.3
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -450,6 +491,20 @@ devices:
     position: 37
     face: front
     rack: pod1_rr_1
+    tags:
+      - ospf
+    local_context:
+      bgp:
+        address_family_ipv4:
+          advertised_networks:
+            - 155.1.1.0/26
+            - 155.1.1.128/26
+            - 155.1.1.64/26
+        ibgp:
+          l_asn: 65001
+          neighbors:
+            - 10.0.1.1
+            - 10.0.1.3
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -610,6 +665,20 @@ devices:
     position: 36
     face: front
     rack: pod1_rr_1
+    tags:
+      - ospf
+    local_context:
+      bgp:
+        address_family_ipv4:
+          advertised_networks:
+            - 155.1.1.0/26
+            - 155.1.1.128/26
+            - 155.1.1.64/26
+        ibgp:
+          l_asn: 65001
+          neighbors:
+            - 10.0.1.1
+            - 10.0.1.2
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -847,6 +916,26 @@ devices:
     position: 38
     face: front
     rack: pod2_rr_1
+    tags:
+      - ospf
+      - pod2_dhcp_server
+    local_context:
+      bgp:
+        address_family_ipv4:
+          advertised_networks:
+            - 155.2.2.0/26
+            - 155.2.2.128/24
+            - 155.2.2.64/24
+          agg_network: 
+            - 155.2.2.0/24
+        ebgp:
+          neighbors:
+            24.24.2.1: { r_asn: 400 }
+        ibgp:
+          l_asn: 65002
+          neighbors:
+            - 10.0.2.2
+            - 10.0.2.3
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -932,6 +1021,20 @@ devices:
     position: 37
     face: front
     rack: pod2_rr_1
+    tags:
+      - ospf
+    local_context:
+      bgp:
+        address_family_ipv4:
+          advertised_networks:
+            - 155.2.2.0/26
+            - 155.2.2.128/24
+            - 155.2.2.64/24
+        ibgp:
+          l_asn: 65002
+          neighbors:
+            - 10.0.2.1
+            - 10.0.2.3
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -1092,6 +1195,20 @@ devices:
     position: 36
     face: front
     rack: pod2_rr_1
+    tags:
+      - ospf
+    local_context:
+      bgp:
+        address_family_ipv4:
+          advertised_networks:
+            - 155.2.2.0/26
+            - 155.2.2.128/24
+            - 155.2.2.64/24
+        ibgp:
+          l_asn: 65002
+          neighbors:
+            - 10.0.2.1
+            - 10.0.2.2
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -1329,6 +1446,26 @@ devices:
     position: 38
     face: front
     rack: pod3_rr_1
+    tags:
+      - ospf
+      - pod3_dhcp_server
+    local_context:
+      bgp:
+        address_family_ipv4:
+          advertised_networks:
+            - 155.3.3.0/26
+            - 155.3.3.128/26
+            - 155.3.3.64/26
+          agg_network: 
+            - 155.3.3.0/24
+        ebgp:
+          neighbors:
+            24.24.3.1: { r_asn: 400 }
+        ibgp:
+          l_asn: 65003
+          neighbors:
+            - 10.0.3.2
+            - 10.0.3.3
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -1414,6 +1551,20 @@ devices:
     position: 37
     face: front
     rack: pod3_rr_1
+    tags:
+      - ospf
+    local_context:
+      bgp:
+        address_family_ipv4:
+          advertised_networks:
+            - 155.3.3.0/26
+            - 155.3.3.128/26
+            - 155.3.3.64/26
+        ibgp:
+          l_asn: 65003
+          neighbors:
+            - 10.0.3.1
+            - 10.0.3.3
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -1574,6 +1725,20 @@ devices:
     position: 36
     face: front
     rack: pod3_rr_1
+    tags:
+      - ospf
+    local_context:
+      bgp:
+        address_family_ipv4:
+          advertised_networks:
+            - 155.3.3.0/26
+            - 155.3.3.128/26
+            - 155.3.3.64/26
+        ibgp:
+          l_asn: 65003
+          neighbors:
+            - 10.0.3.1
+            - 10.0.3.2
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -1811,6 +1976,26 @@ devices:
     position: 38
     face: front
     rack: pod4_rr_1
+    tags:
+      - ospf
+      - pod4_dhcp_server
+    local_context:
+      bgp:
+        address_family_ipv4:
+          advertised_networks:
+            - 155.4.4.0/26
+            - 155.4.4.128/26
+            - 155.4.4.64/26
+          agg_network: 
+            - 155.4.4.0/24
+        ebgp:
+          neighbors:
+            24.24.4.1: { r_asn: 400 }
+        ibgp:
+          l_asn: 65004
+          neighbors:
+            - 10.0.4.2
+            - 10.0.4.3
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -1896,6 +2081,20 @@ devices:
     position: 37
     face: front
     rack: pod4_rr_1
+    tags:
+      - ospf
+    local_context:
+      bgp:
+        address_family_ipv4:
+          advertised_networks:
+            - 155.4.4.0/26
+            - 155.4.4.128/26
+            - 155.4.4.64/26
+        ibgp:
+          l_asn: 65004
+          neighbors:
+            - 10.0.4.1
+            - 10.0.4.3
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -2056,6 +2255,20 @@ devices:
     position: 36
     face: front
     rack: pod4_rr_1
+    tags:
+      - ospf
+    local_context:
+      bgp:
+        address_family_ipv4:
+          advertised_networks:
+            - 155.4.4.0/26
+            - 155.4.4.128/26
+            - 155.4.4.64/26
+        ibgp:
+          l_asn: 65004
+          neighbors:
+            - 10.0.4.1
+            - 10.0.4.2
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -2293,6 +2506,26 @@ devices:
     position: 38
     face: front
     rack: pod5_rr_1
+    tags:
+      - ospf
+      - pod5_dhcp_server
+    local_context:
+      bgp:
+        address_family_ipv4:
+          advertised_networks:
+            - 155.5.5.0/26
+            - 155.5.5.128/26
+            - 155.5.5.64/26
+          agg_network: 
+            - 155.5.5.0/24
+        ebgp:
+          neighbors:
+            24.24.5.1: { r_asn: 400 }
+        ibgp:
+          l_asn: 65005
+          neighbors:
+            - 10.0.5.2
+            - 10.0.5.3
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -2378,6 +2611,20 @@ devices:
     position: 37
     face: front
     rack: pod5_rr_1
+    tags:
+      - ospf
+    local_context:
+      bgp:
+        address_family_ipv4:
+          advertised_networks:
+            - 155.5.5.0/26
+            - 155.5.5.128/26
+            - 155.5.5.64/26
+        ibgp:
+          l_asn: 65005
+          neighbors:
+            - 10.0.5.1
+            - 10.0.5.3
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -2538,6 +2785,20 @@ devices:
     position: 36
     face: front
     rack: pod5_rr_1
+    tags:
+      - ospf
+    local_context:
+      bgp:
+        address_family_ipv4:
+          advertised_networks:
+            - 155.5.5.0/26
+            - 155.5.5.128/26
+            - 155.5.5.64/26
+        ibgp:
+          l_asn: 65005
+          neighbors:
+            - 10.0.5.1
+            - 10.0.5.2
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -2775,6 +3036,26 @@ devices:
     position: 38
     face: front
     rack: pod6_rr_1
+    tags:
+      - ospf
+      - pod6_dhcp_server
+    local_context:
+      bgp:
+        address_family_ipv4:
+          advertised_networks:
+            - 155.6.6.0/26
+            - 155.6.6.128/26
+            - 155.6.6.64/26
+          agg_network: 
+            - 155.6.6.0/24
+        ebgp:
+          neighbors:
+            24.24.6.1: { r_asn: 400 }
+        ibgp:
+          l_asn: 65006
+          neighbors:
+            - 10.0.6.2
+            - 10.0.6.3
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -2860,6 +3141,20 @@ devices:
     position: 37
     face: front
     rack: pod6_rr_1
+    tags:
+      - ospf
+    local_context:
+      bgp:
+        address_family_ipv4:
+          advertised_networks:
+            - 155.6.6.0/26
+            - 155.6.6.128/26
+            - 155.6.6.64/26
+        ibgp:
+          l_asn: 65006
+          neighbors:
+            - 10.0.6.1
+            - 10.0.6.3
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK
@@ -3020,6 +3315,20 @@ devices:
     position: 36
     face: front
     rack: pod6_rr_1
+    tags:
+      - ospf
+    local_context:
+      bgp:
+        address_family_ipv4:
+          advertised_networks:
+            - 155.6.6.0/26
+            - 155.6.6.128/26
+            - 155.6.6.64/26
+        ibgp:
+          l_asn: 65006
+          neighbors:
+            - 10.0.6.1
+            - 10.0.6.2
     interfaces:
       - name: Loopback0
         description: iBGP LOOPBACK

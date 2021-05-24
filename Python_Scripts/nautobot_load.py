@@ -188,6 +188,16 @@ for device in data["devices"]:
             device_type=nb.dcim.device_types.get(slug=device["device_types_slug"]).id,
             status=device["status"],
             )
+    if nb_device.local_context_data is None:
+        print(f"Adding local configuration context to {device['name']}")
+        if "local_context" in device.keys():
+            nb_device.local_context_data = device["local_context"]
+    
+    if "tags" in device.keys():
+        print(f"Setting tags on {device['name']}")
+        tags = [ nb.extras.tags.get(name=tag).id for tag in device["tags"] ]
+        nb_device.tags = tags
+           
     if nb_device.rack is None:
         print(f"Moving device into rack {device['rack']}")
         if "rack" in device.keys():
@@ -251,7 +261,6 @@ for device in data["devices"]:
                     nb_ipadd = nb.ipam.ip_addresses.create(
                         address = ip["address"],
                         status = ip["status"],
-
                         assigned_object_type = "dcim.interface",
                         assigned_object_id = nb.dcim.interfaces.get(
                             device=device["name"],
