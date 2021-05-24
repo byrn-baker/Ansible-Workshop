@@ -14,10 +14,10 @@ interface {{ interface["name"] }}
         {% if interface["description"] is defined %}
  description {{ interface["description"] }}
         {% endif %}
-        {% if interface["tagged_vlans"] != 'null' %}
+        {% if interface["untagged_vlan"]["vid"] is defined %}
  switchport trunk native vlan {{ interface["untagged_vlan"]["vid"] }}
         {% endif %}
-        {% if interface["tagged_vlans"] != 'null'%}
+        {% if interface["tagged_vlans"][0]["vid"] is defined %}
  switch trunk allowed vlan {{ interface["tagged_vlans"] | join(',', attribute='vid') }}
         {% endif %}
  switchport trunk encapsulation dot1q
@@ -32,11 +32,11 @@ interface {{ interface["name"] }}
         {% if interface["description"] is defined %}
  description {{ interface["description"] }}
         {% endif %}
-        {% if interface["tagged_vlans"] != 'null' %}
+        {% if interface["untagged_vlan"]["vid"] is defined %}
  switchport trunk native vlan {{ interface["untagged_vlan"]["vid"] }}
         {% endif %}
-        {% if interface["tagged_vlans"] != 'null'%}
- switch trunk allowed vlan {{ interface["tagged_vlans"] | join(',', attribute='vid') }}  
+        {% if interface["tagged_vlans"][0]["vid"] is defined %}
+ switch trunk allowed vlan {{ interface["tagged_vlans"] | join(',', attribute='vid') }}
         {% endif %}
  switchport trunk encapsulation dot1q
  switchport mode trunk
@@ -70,10 +70,10 @@ interface {{ interface["name"]["split"]('.')[0] }}
 ip access-group {{ devices[0]["config_context"]["acl"]["interfaces"][interface["name"]]["acl"] }} {{ devices[0]["config_context"]["acl"]["interfaces"][interface["name"]]["direction"] }}
             {% endif %}
         {% endif %}
-        {% if 'null' not in interface["_custom_field_data"]["dhcp_helper"] %}
+        {% if interface["_custom_field_data"]["dhcp_helper"] %}
  ip helper-address {{ interface["_custom_field_data"]["dhcp_helper"] }}
         {% endif %}
-        {% if 'null' not in interface["_custom_field_data"]["dhcp_helper"] %}
+        {% if interface["_custom_field_data"]["dhcp_helper"] %}
  vrrp {{ interface._custom_field_data.vrrp_group }} ip {{ interface._custom_field_data.vrrp_primary_ip }}
  vrrp {{ interface._custom_field_data.vrrp_group }} description {{ interface._custom_field_data.vrrp_description }}
  vrrp {{ interface._custom_field_data.vrrp_group }} priority {{ interface._custom_field_data.vrrp_priority }}
@@ -97,7 +97,7 @@ interface {{ interface.name.split('.')[0] }}
                             {% endif %}
                             {% if 'p2p' in tags.slug%} 
  ip ospf network point-to-point
-                            {% endif %}       
+                            {% endif %}     
                             {% else %}
                         {% endif %}
                     {% endfor %}
@@ -110,10 +110,10 @@ interface {{ interface.name.split('.')[0] }}
 ip access-group {{ devices[0]["config_context"]["acl"]["interfaces"][interface["name"]]["acl"] }} {{ devices[0]["config_context"]["acl"]["interfaces"][interface["name"]]["direction"] }}
             {% endif %}
         {% endif %}
-        {% if interface._custom_field_data.dhcp_helper != "False" %}
+        {% if interface._custom_field_data.dhcp_helper %}
  ip helper-address {{ interface._custom_field_data.dhcp_helper }}
         {% endif %}
-        {% if 'null' not in interface["_custom_field_data"]["vrrp_group"] %}
+        {% if interface["_custom_field_data"]["vrrp_group"] %}
  vrrp {{ interface["_custom_field_data"]["vrrp_group"] }} ip {{ interface["_custom_field_data"]["vrrp_primary_ip"] }}
  vrrp {{ interface["_custom_field_data"]["vrrp_group"] }} description {{ interface["_custom_field_data"]["vrrp_description"] }}
  vrrp {{ interface["_custom_field_data"]["vrrp_group"] }} priority {{ interface["_custom_field_data"]["vrrp_priority"] }}
@@ -125,7 +125,7 @@ ip access-group {{ devices[0]["config_context"]["acl"]["interfaces"][interface["
 {% elif interface["label"] == "mgmt" %}
 interface {{ interface["name"] }}
     {% if interface["description"] is defined %}
- description {{ interface["description"] }}    
+ description {{ interface["description"] }}
     {% endif %}
  no switchport
  vrf forwarding MGMT

@@ -1,8 +1,14 @@
-{% if devices[0]["config_context"]["ospf"] is defined %}
 router ospf {{ devices[0]["config_context"]["ospf"]["id"] }}
-{% if devices[0]["config_context"]["ospf"]["rid"] %}
- router-id {{ devices[0]["config_context"]["ospf"]["rid"] }}
+{% for interface in devices[0]["interfaces"] %}
+{% if 'Loop' in interface["name"] %}
+{% for addr in interface.ip_addresses %}
+{% if addr.address is defined %}
+{% set rid = addr.address | ipaddr('address') %}
+ router-id {{ rid }}
 {% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
 {% for tags in devices[0]["tags"] %}
 {% if tags["name"] is defined %}
 {% if 'mpls' in tags["slug"] %}
@@ -11,6 +17,4 @@ router ospf {{ devices[0]["config_context"]["ospf"]["id"] }}
 {% endif %}
 {% endif %}
 {% endfor %}
- passive-interface Loopback0   
-{% else %}
-{% endif %}
+ passive-interface Loopback0

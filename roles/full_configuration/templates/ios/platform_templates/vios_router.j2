@@ -84,6 +84,7 @@ cdp run
 {% if devices[0]["config_context"]["ospf"] is defined %}
 {% include './ios/ospf.j2' %}
 {% endif %}
+
 !
 {% if devices[0]["config_context"]["bgp"] is defined %}
 {% include './ios/bgp.j2' %}
@@ -163,4 +164,4 @@ banner login ^C
 
 no scheduler allocate
 !
-end 
+end

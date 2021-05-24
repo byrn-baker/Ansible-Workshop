@@ -11,7 +11,7 @@ interface {{ interface["name"] }}
 {% if tags.slug is defined %}
 {% if 'p2p' and 'ospf' in tags.slug %}
  ip ospf {{ devices[0].config_context.ospf.id }} area {{ tags.slug|replace("ospf_area_","") }}
- {# ip ospf network point-to-point         #}
+ ip ospf network point-to-point
 {% else %}
 {% endif %}
 {% endif %}

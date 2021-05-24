@@ -1,6 +1,16 @@
 
 router bgp {{ devices[0]["config_context"]["bgp"]["ibgp"]["l_asn"] }}
  bgp log-neighbor-changes
+{% for interface in devices[0]["interfaces"] %}
+{% if 'Loop' in interface["name"] %}
+{% for addr in interface.ip_addresses %}
+{% if addr.address is defined %}
+{% set rid = addr.address | ipaddr('address') %}
+ bgp router-id {{ rid }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
 {% if devices[0]["config_context"]["bgp"]["ibgp"]["rr"] is defined %}
 {% include './ios/bgp_route_reflector.j2' %}
 {% else %}
