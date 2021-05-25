@@ -226,7 +226,7 @@ device_list:
       mtu: 1500
       mgmt_only: False
 
-      ipv4_address: 10.10.0.1/31
+      ipv4_address: 10.10.1.1/31
       tags: 
         - ospf_area_0
         - p2p 

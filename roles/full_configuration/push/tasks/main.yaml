@@ -1,0 +1,10 @@
+---
+- name: Pushing Full configuration to {{ inventory_hostname }}
+  cisco.ios.ios_config:
+    src: "configs/{{ inventory_hostname }}.conf"
+    replace: line
+    save_when: modified
+
+# - name: Saving the running config on {{ inventory_hostname }}
+#   ios_config:
+#     save_when: modified

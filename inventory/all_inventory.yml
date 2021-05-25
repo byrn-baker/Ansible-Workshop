@@ -1,0 +1,81 @@
+---
+all:
+  children:
+    routers:
+      hosts:
+        pod1r1:
+          ansible_host: 192.168.4.17
+          ansible_network_os: ios
+        pod2r1:
+          ansible_host: 192.168.4.21
+          ansible_network_os: ios
+        pod3r1:
+          ansible_host: 192.168.4.51
+          ansible_network_os: ios
+        pod4r1:
+          ansible_host: 192.168.4.55
+          ansible_network_os: ios
+        pod5r1:
+          ansible_host: 192.168.4.59
+          ansible_network_os: ios
+        pod6r1:
+          ansible_host: 192.168.4.63
+          ansible_network_os: ios  
+    core_switches:
+      hosts:
+        pod1sw1:
+          ansible_host: 192.168.4.18
+          ansible_network_os: ios
+        pod1sw2:
+          ansible_host: 192.168.4.19
+          ansible_network_os: ios
+        pod2sw1:
+          ansible_host: 192.168.4.22
+          ansible_network_os: ios
+        pod2sw2:
+          ansible_host: 192.168.4.23
+          ansible_network_os: ios
+        pod3sw1:
+          ansible_host: 192.168.4.52
+          ansible_network_os: ios
+        pod3sw2:
+          ansible_host: 192.168.4.53
+          ansible_network_os: ios
+        pod4sw1:
+          ansible_host: 192.168.4.56
+          ansible_network_os: ios
+        pod4sw2:
+          ansible_host: 192.168.4.57
+          ansible_network_os: ios
+        pod5sw1:
+          ansible_host: 192.168.4.60
+          ansible_network_os: ios
+        pod5sw2:
+          ansible_host: 192.168.4.61
+          ansible_network_os: ios
+        pod6sw1:
+          ansible_host: 192.168.4.64
+          ansible_network_os: ios
+        pod6sw2:
+          ansible_host: 192.168.4.65
+          ansible_network_os: ios        
+    access_switches:
+      hosts:
+        pod1sw3:
+          ansible_host: 192.168.4.20
+          ansible_network_os: ios
+        pod2sw3:
+          ansible_host: 192.168.4.24
+          ansible_network_os: ios  
+        pod3sw3:
+          ansible_host: 192.168.4.54
+          ansible_network_os: ios 
+        pod4sw3:
+          ansible_host: 192.168.4.58
+          ansible_network_os: ios
+        pod5sw3: 
+          ansible_host: 192.168.4.62
+          ansible_network_os: ios  
+        pod6sw3:
+          ansible_host: 192.168.4.66
+          ansible_network_os: ios

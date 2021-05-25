@@ -1,0 +1,8 @@
+---
+- name: Push full configurations to POD Nodes
+  hosts: pod1sw1
+  gather_facts: false
+  connection: network_cli
+
+  roles:
+  - { role: full_configuration/push }
