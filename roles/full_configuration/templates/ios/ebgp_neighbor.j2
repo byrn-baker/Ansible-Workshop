@@ -1,3 +1,0 @@
-{% for rpeer,rpeer_attr in devices[0]["config_context"]["bgp"]["ebgp"]["neighbors"]["items"]()%}
- neighbor {{ rpeer }} remote-as {{ rpeer_attr["r_asn"] }}
-{% endfor%}

@@ -242,15 +242,15 @@ for device in data["devices"]:
             nb_interface.custom_fields["vrrp_priority"] = interface["vrrp_priority"]
         if "vrrp_primary_ip" in interface.keys():
             nb_interface.custom_fields["vrrp_primary_ip"] = interface["vrrp_primary_ip"]
-            if "untagged_vlan" in interface.keys():
-                nb_interface.untagged_vlan = nb.ipam.vlans.get(site=device["site_slug"],
-                    name=interface["untagged_vlan"]
-                ).id
-            if "tagged_vlans" in interface.keys():
-                vl = [ nb.ipam.vlans.get(site=device["site_slug"], name=vlan_name).id for vlan_name in interface["tagged_vlans"] ]
-                # print("VLAN LIST")
-                # print(vl)
-                nb_interface.tagged_vlans = vl
+        if "untagged_vlan" in interface.keys():
+            nb_interface.untagged_vlan = nb.ipam.vlans.get(site=device["site_slug"],
+                name=interface["untagged_vlan"]
+            ).id
+        if "tagged_vlans" in interface.keys():
+            vl = [ nb.ipam.vlans.get(site=device["site_slug"], name=vlan_name).id for vlan_name in interface["tagged_vlans"] ]
+            # print("VLAN LIST")
+            # print(vl)
+            nb_interface.tagged_vlans = vl
         if "ip_addresses" in interface.keys(): 
             for ip in interface["ip_addresses"]: 
                 print(f"  Adding IP {ip['address']}")

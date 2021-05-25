@@ -12,7 +12,7 @@ router bgp {{ devices[0]["config_context"]["bgp"]["ibgp"]["l_asn"] }}
 {% endif %}
 {% endfor %}
 {% if devices[0]["config_context"]["bgp"]["ibgp"]["rr"] is defined %}
-{% include './ios/bgp_route_reflector.j2' %}
+{% include './ios/bgp/bgp_route_reflector.j2' %}
 {% else %}
   {% for peer in devices[0]["config_context"]["bgp"]["ibgp"]["neighbors"] %}
  neighbor {{ peer }} remote-as {{ devices[0]["config_context"]["bgp"]["ibgp"]["l_asn"] }}
@@ -20,18 +20,20 @@ router bgp {{ devices[0]["config_context"]["bgp"]["ibgp"]["l_asn"] }}
   {% endfor %}
 {% endif %}
 {% if devices[0]["config_context"]["bgp"]["ebgp"] is defined %}
-{% include './ios/ebgp_neighbor.j2' %}
+{% include './ios/bgp/ebgp_neighbor.j2' %}
 {% else %}
 {% endif %}
  !
 {% if devices[0]["config_context"]["bgp"]["address_family_ipv4"] is defined %}
  address-family ipv4
   {% if devices[0]["config_context"]["bgp"]["address_family_ipv4"]["advertised_networks"] is defined %}
-    {% for adv_nets,adv_nets_attr in devices[0]["config_context"]["bgp"]["address_family_ipv4"]["advertised_networks"]["items"]() %}
-  network {{ adv_nets }} mask {{ adv_nets_attr["net_mask"] }} 
+    {% for adv_nets in devices[0]["config_context"]["bgp"]["address_family_ipv4"]["advertised_networks"] %}
+  network {{ adv_nets | ipaddr('network') }} mask {{ adv_nets | ipaddr('netmask') }} 
     {% endfor %}
     {% if devices[0]["config_context"]["bgp"]["address_family_ipv4"]["agg_network"] is defined %}
-  aggregate-address {{ devices[0]["config_context"]["bgp"]["address_family_ipv4"]["agg_network"] }} {{ devices[0]["config_context"]["bgp"]["address_family_ipv4"]["agg_mask"] }} summary-only
+    {% for agg in devices[0]["config_context"]["bgp"]["address_family_ipv4"]["agg_network"] %}
+  aggregate-address {{ agg | ipaddr('network') }} {{ agg | ipaddr('netmask') }} summary-only
+    {% endfor %}
     {% endif %}
   {% endif %}
   {% for peer in devices[0]["config_context"]["bgp"]["ibgp"]["neighbors"] %}
@@ -40,7 +42,7 @@ router bgp {{ devices[0]["config_context"]["bgp"]["ibgp"]["l_asn"] }}
   {% endfor %}
 {% endif %}
 {% if devices[0]["config_context"]["bgp"]["ebgp"] is defined %}
-{% include './ios/ebgp_address_family_ipv4.j2' %}
+{% include './ios/bgp/ebgp_address_family_ipv4.j2' %}
 {% else %}
 {% endif %}
  exit-address-family
