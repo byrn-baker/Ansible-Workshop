@@ -1,6 +1,6 @@
 # POD devices default login
 ansible_user: nautobot
-ansible_password: N@utobot123
+ansible_password: N@utobot123!
 
 # Nautobot API
 nb_url: "http://192.168.130.202:8000"
