@@ -1,6 +1,6 @@
 ---
 - name: Push full configurations to POD Nodes
-  hosts: pod1sw1
+  hosts: pod3sw3
   gather_facts: false
   connection: network_cli
 

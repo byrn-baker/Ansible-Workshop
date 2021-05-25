@@ -1177,7 +1177,7 @@ device_list:
       enabled: True
       mtu: 1500
       mgmt_only: False
-      ipv4_address: 10.10.3.3/31
+      ipv4_address: 10.10.3.1/31
       tags: 
         - ospf_area_0
         - p2p 
@@ -1652,7 +1652,7 @@ device_list:
       enabled: True
       mtu: 1500
       mgmt_only: False
-      ipv4_address: 10.10.4.3/31
+      ipv4_address: 10.10.4.1/31
       tags: 
         - ospf_area_0
         - p2p 
@@ -2127,7 +2127,7 @@ device_list:
       enabled: True
       mtu: 1500
       mgmt_only: False
-      ipv4_address: 10.10.5.3/31
+      ipv4_address: 10.10.5.1/31
       tags: 
         - ospf_area_0
         - p2p 
@@ -2602,7 +2602,7 @@ device_list:
       enabled: True
       mtu: 1500
       mgmt_only: False
-      ipv4_address: 10.10.6.3/31
+      ipv4_address: 10.10.6.1/31
       tags: 
         - ospf_area_0
         - p2p 
