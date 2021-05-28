@@ -116,15 +116,13 @@ device_types:
 device_roles:
   - name: pod_router
     slug: pod_router
-    color: FFFFFF
-device_roles:
+    color: f4f0ec
   - name: pod_l3_switch
     slug: pod_l3_switch
-    color: FFFFFA
-device_roles:
+    color: 696969
   - name: pod_l2_switch
     slug: pod_l2_switch
-    color: FFFFFB
+    color: 808080
 platforms:
   - name: ios
     slug: ios

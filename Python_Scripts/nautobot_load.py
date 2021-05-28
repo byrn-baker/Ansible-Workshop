@@ -2,14 +2,15 @@
 
 from pynautobot import api
 import yaml 
-import os 
+import os
+PYTHONWARNINGS="ignore:Unverified HTTPS request"
 
 data_file = "nb_initial_load.yaml"
 
 with open(data_file) as f: 
     data = yaml.safe_load(f.read())
 
-nb = api(url="http://192.168.130.202:8000", token="c7fdc6be609a244bb1e851c5e47b3ccd9d990b58")
+nb = api(url="https://nautobot-demo.byrnbaker.local", token="c7fdc6be609a244bb1e851c5e47b3ccd9d990b58")
 nb.http_session.verify = False
 
 # sites: 
@@ -286,8 +287,8 @@ for device in data["devices"]:
         if nb_interface["cable"] is None:
             if "bside_device" in interface.keys():
                 print(f"  Creating or updating interface connections between {device['name']}-{interface['name']} and {interface['bside_device']}-{interface['bside_interface']}")
-                int_a = nb.dcim.interfaces.get(name=interface["name"], device=nb.dcim.devices.get(name=device["name"])).id
-                int_b = nb.dcim.interfaces.get(name=interface["bside_interface"], device=nb.dcim.devices.get(name=interface["bside_device"])).id
+                int_a = nb.dcim.interfaces.get(name=interface["name"], device=device["name"]).id
+                int_b = nb.dcim.interfaces.get(name=interface["bside_interface"], device=interface["bside_device"]).id
                 nb.dcim.cables.create(
                     termination_a_type="dcim.interface",
                     termination_a_id=int_a,

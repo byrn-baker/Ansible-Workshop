@@ -1,0 +1,145 @@
+connections:
+- name: pod1r1
+  interface:
+  - name: GigabitEthernet0/1
+    bside_device: pod1sw1
+    bside_port: GigabitEthernet0/0 
+  - name: GigabitEthernet0/2
+    bside_device: pod1sw2
+    bside_port: GigabitEthernet0/0  
+- name: pod1sw1
+  interface: 
+  - name: GigabitEthernet0/1
+    bside_device: pod1sw2
+    bside_port: GigabitEthernet0/1
+  - name: GigabitEthernet0/2
+    bside_device: pod1sw2
+    bside_port: GigabitEthernet0/2  
+  - name: GigabitEthernet0/3
+    bside_device: pod1sw3
+    bside_port: GigabitEthernet0/1
+- name: pod1sw2
+  interface:
+  - name: GigabitEthernet0/3
+    bside_device: pod1sw3
+    bside_port: GigabitEthernet0/2
+- name: pod2r1
+  interface:
+  - name: GigabitEthernet0/1
+    bside_device: pod2sw1
+    bside_port: GigabitEthernet0/0
+  - name: GigabitEthernet0/2
+    bside_device: pod2sw2
+    bside_port: GigabitEthernet0/0  
+- name: pod2sw1
+  interface:
+  - name: GigabitEthernet0/1
+    bside_device: pod2sw2
+    bside_port: GigabitEthernet0/1
+  - name: GigabitEthernet0/2
+    bside_device: pod2sw2
+    bside_port: GigabitEthernet0/2  
+  - name: GigabitEthernet0/3
+    bside_device: pod2sw3
+    bside_port: GigabitEthernet0/1
+- name: pod2sw2
+  interface:
+  - name: GigabitEthernet0/3
+    bside_device: pod2sw3
+    bside_port: GigabitEthernet0/2
+- name: pod3r1
+  interface:
+  - name: GigabitEthernet0/1
+    bside_device: pod3sw1
+    bside_port: GigabitEthernet0/0
+  - name: GigabitEthernet0/2
+    bside_device: pod3sw2
+    bside_port: GigabitEthernet0/0  
+- name: pod3sw1
+  interface:
+  - name: GigabitEthernet0/1
+    bside_device: pod3sw2
+    bside_port: GigabitEthernet0/1
+  - name: GigabitEthernet0/2
+    bside_device: pod3sw2
+    bside_port: GigabitEthernet0/2  
+  - name: GigabitEthernet0/3
+    bside_device: pod3sw3
+    bside_port: GigabitEthernet0/1
+- name: pod3sw2
+  interface:
+  - name: GigabitEthernet0/3
+    bside_device: pod3sw3
+    bside_port: GigabitEthernet0/2
+- name: pod4r1
+  interface:
+  - name: GigabitEthernet0/1
+    bside_device: pod4sw1
+    bside_port: GigabitEthernet0/0
+  - name: GigabitEthernet0/2
+    bside_device: pod4sw2
+    bside_port: GigabitEthernet0/0  
+- name: pod4sw1
+  interface:
+  - name: GigabitEthernet0/1
+    bside_device: pod4sw2
+    bside_port: GigabitEthernet0/1
+  - name: GigabitEthernet0/2
+    bside_device: pod4sw2
+    bside_port: GigabitEthernet0/2  
+  - name: GigabitEthernet0/3
+    bside_device: pod4sw3
+    bside_port: GigabitEthernet0/1
+- name: pod4sw2
+  interface:
+  - name: GigabitEthernet0/3
+    bside_device: pod4sw3
+    bside_port: GigabitEthernet0/2
+- name: pod5r1
+  interface:
+  - name: GigabitEthernet0/1
+    bside_device: pod5sw1
+    bside_port: GigabitEthernet0/0
+  - name: GigabitEthernet0/2
+    bside_device: pod5sw2
+    bside_port: GigabitEthernet0/0  
+- name: pod5sw1
+  interface:
+  - name: GigabitEthernet0/1
+    bside_device: pod5sw2
+    bside_port: GigabitEthernet0/1
+  - name: GigabitEthernet0/2
+    bside_device: pod5sw2
+    bside_port: GigabitEthernet0/2  
+  - name: GigabitEthernet0/3
+    bside_device: pod5sw3
+    bside_port: GigabitEthernet0/1
+- name: pod5sw2
+  interface:
+  - name: GigabitEthernet0/3
+    bside_device: pod5sw3
+    bside_port: GigabitEthernet0/2
+- name: pod6r1
+  interface:
+  - name: GigabitEthernet0/1
+    bside_device: pod6sw1
+    bside_port: GigabitEthernet0/0
+  - name: GigabitEthernet0/2
+    bside_device: pod6sw2
+    bside_port: GigabitEthernet0/0  
+- name: pod6sw1
+  interface:
+  - name: GigabitEthernet0/1
+    bside_device: pod6sw2
+    bside_port: GigabitEthernet0/1
+  - name: GigabitEthernet0/2
+    bside_device: pod6sw2
+    bside_port: GigabitEthernet0/2  
+  - name: GigabitEthernet0/3
+    bside_device: pod6sw3
+    bside_port: GigabitEthernet0/1
+- name: pod6sw2
+  interface:
+  - name: GigabitEthernet0/3
+    bside_device: pod6sw3
+    bside_port: GigabitEthernet0/2

@@ -11,6 +11,9 @@
    - inventory/nautobot_vars/vrfs.yaml
    - inventory/nautobot_vars/devices.yaml
    - inventory/nautobot_vars/node_design.yaml
+   - inventory/nautobot_vars/device_local_context.yaml
+   - inventory/nautobot_vars/custom_fields.yaml
+   - inventory/nautobot_vars/device_connections.yaml
 
   roles:
   - { role: load_nautobot/create_site }
