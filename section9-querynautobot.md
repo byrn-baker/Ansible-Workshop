@@ -216,3 +216,572 @@ You should see a rendered configuration and it can be viewed as JSON or YAML for
 
 <img src="/assets/images/nautobot_config_context_3.png" alt="">
 
+Now that we have all that completed we should look at our graphql query and see if we can pull all of this config_context stuff into the query.
+The Query should now look like this
+
+```
+query {
+        devices(name: "pod1r1") {
+    inventory_hostname:name
+    config_context
+  }
+}
+```
+It should render a result like this
+
+```
+{
+  "data": {
+    "devices": [
+      {
+        "inventory_hostname": "pod1r1",
+        "config_context": {
+          "aaa-new-model": {
+            "key": "cisco",
+            "name": "RAD_SERVERS",
+            "type": "radius",
+            "acct_port": 1813,
+            "auth_port": 1812,
+            "ip_address": "192.168.4.253"
+          },
+          "cdp": false,
+          "lldp": true,
+          "routes": {
+            "mgmt_gateway": "192.168.4.254"
+          },
+          "dhcp_pool": [
+            {
+              "name": "USERS_POOL",
+              "lease": 30,
+              "network": "155.1.1.0/26",
+              "default_router": "155.1.1.1",
+              "excluded_address": "155.1.1.1 155.1.1.3"
+            },
+            {
+              "name": "SERVERS_POOL",
+              "lease": 30,
+              "network": "155.1.1.64/26",
+              "default_router": "155.1.1.65",
+              "excluded_address": "155.1.1.65 155.1.1.67"
+            },
+            {
+              "name": "GUEST_POOL",
+              "lease": 30,
+              "network": "155.1.1.128/26",
+              "default_router": "155.1.1.129",
+              "excluded_address": "155.1.1.129 155.1.1.131"
+            }
+          ],
+          "ospf": {
+            "id": 1
+          },
+          "bgp": {
+            "ebgp": {
+              "neighbors": {
+                "24.24.1.1": {
+                  "r_asn": 400
+                }
+              }
+            },
+            "ibgp": {
+              "l_asn": 65001,
+              "neighbors": [
+                "10.0.1.2",
+                "10.0.1.3"
+              ]
+            },
+            "address_family_ipv4": {
+              "agg_network": [
+                "155.1.1.0/24"
+              ],
+              "advertised_networks": [
+                "155.1.1.0/26",
+                "155.1.1.128/26",
+                "155.1.1.64/26"
+              ]
+            }
+          }
+        }
+      }
+    ]
+  }
+```
+Excellent we know have all of this data rendering with the specific device in a similar fashion as it would appear in a file under a host_var folder. Lets add in all of the fields that we will require to build out the configuration.
+
+```
+query {
+        devices(name: "pod1r1") {
+    inventory_hostname:name
+    config_context
+    primary_ip4 {
+            address
+            }
+    device_role {
+            name
+            }
+            platform {
+            name
+            slug
+            manufacturer {
+                name
+            }
+            napalm_driver
+            }
+    site{
+      slug
+      vlans{
+        name
+        vid
+      }
+    }
+    interfaces {
+            name
+            description
+            enabled
+            label
+            ip_addresses {
+                address
+                tags {
+                slug
+                }
+            }
+            _custom_field_data
+            lag {
+                name
+            }
+            tagged_vlans {
+                vid
+            }
+            untagged_vlan {
+                vid
+            }
+            tagged_vlans {
+                vid
+            }
+            tags {
+                slug
+            }
+      connected_interface{
+        device {
+          name
+        }
+        name
+      }
+            }
+  }
+}
+```
+Notice that we have added several new fields to query. Starting at the top after the device name we need the config_context data, the role of the device, the vlans assigned to the site, and the interface configuration details. Lets run this query on our graphiQL interface and make sure the results returned are what we expect to see and that is actually works. If you type out the query yourself you will also notice that there is autocomplete provided by the interface which can be useful for figure out what works in the query and what does not. Also on the right side there is a Docs button that can be used to look up fields you are interested in and how to access them from a query perspective. Alright lets look at the results of our query.
+
+```
+{
+  "data": {
+    "devices": [
+      {
+        "inventory_hostname": "pod1r1",
+        "config_context": {
+          "aaa-new-model": {
+            "key": "cisco",
+            "name": "RAD_SERVERS",
+            "type": "radius",
+            "acct_port": 1813,
+            "auth_port": 1812,
+            "ip_address": "192.168.4.253"
+          },
+          "cdp": false,
+          "lldp": true,
+          "routes": {
+            "mgmt_gateway": "192.168.4.254"
+          },
+          "dhcp_pool": [
+            {
+              "name": "USERS_POOL",
+              "lease": 30,
+              "network": "155.1.1.0/26",
+              "default_router": "155.1.1.1",
+              "excluded_address": "155.1.1.1 155.1.1.3"
+            },
+            {
+              "name": "SERVERS_POOL",
+              "lease": 30,
+              "network": "155.1.1.64/26",
+              "default_router": "155.1.1.65",
+              "excluded_address": "155.1.1.65 155.1.1.67"
+            },
+            {
+              "name": "GUEST_POOL",
+              "lease": 30,
+              "network": "155.1.1.128/26",
+              "default_router": "155.1.1.129",
+              "excluded_address": "155.1.1.129 155.1.1.131"
+            }
+          ],
+          "ospf": {
+            "id": 1
+          },
+          "bgp": {
+            "ebgp": {
+              "neighbors": {
+                "24.24.1.1": {
+                  "r_asn": 400
+                }
+              }
+            },
+            "ibgp": {
+              "l_asn": 65001,
+              "neighbors": [
+                "10.0.1.2",
+                "10.0.1.3"
+              ]
+            },
+            "address_family_ipv4": {
+              "agg_network": [
+                "155.1.1.0/24"
+              ],
+              "advertised_networks": [
+                "155.1.1.0/26",
+                "155.1.1.128/26",
+                "155.1.1.64/26"
+              ]
+            }
+          }
+        },
+        "device_role": {
+          "slug": "pod_router"
+        },
+        "site": {
+          "slug": "pod1",
+          "vlans": [
+            {
+              "name": "USERS",
+              "vid": 300
+            },
+            {
+              "name": "SERVERS",
+              "vid": 350
+            },
+            {
+              "name": "GUESTS",
+              "vid": 400
+            },
+            {
+              "name": "NATIVE_VLAN",
+              "vid": 666
+            }
+          ]
+        },
+        "interfaces": [
+          {
+            "name": "GigabitEthernet0/0",
+            "description": "UPLINK TO INTERNET PROVIDER",
+            "enabled": true,
+            "label": "layer3",
+            "ip_addresses": [
+              {
+                "address": "24.24.1.2/24",
+                "tags": []
+              }
+            ],
+            "_custom_field_data": {
+              "vrrp_group": null,
+              "dhcp_helper": null,
+              "vrrp_priority": null,
+              "vrrp_primary_ip": null,
+              "vrrp_description": null
+            },
+            "lag": null,
+            "tagged_vlans": [],
+            "untagged_vlan": null,
+            "tags": [],
+            "connected_interface": null
+          },
+          {
+            "name": "GigabitEthernet0/1",
+            "description": "DOWNLINK POD1SW1",
+            "enabled": true,
+            "label": "layer3",
+            "ip_addresses": [
+              {
+                "address": "10.10.1.0/31",
+                "tags": [
+                  {
+                    "slug": "ospf_area_0"
+                  },
+                  {
+                    "slug": "p2p"
+                  }
+                ]
+              }
+            ],
+            "_custom_field_data": {
+              "vrrp_group": null,
+              "dhcp_helper": null,
+              "vrrp_priority": null,
+              "vrrp_primary_ip": null,
+              "vrrp_description": null
+            },
+            "lag": null,
+            "tagged_vlans": [],
+            "untagged_vlan": null,
+            "tags": [],
+            "connected_interface": {
+              "device": {
+                "name": "pod1sw1"
+              },
+              "name": "GigabitEthernet0/0"
+            }
+          },
+          {
+            "name": "GigabitEthernet0/2",
+            "description": "DOWNLINK POD1SW2",
+            "enabled": true,
+            "label": "layer3",
+            "ip_addresses": [
+              {
+                "address": "10.10.1.2/31",
+                "tags": [
+                  {
+                    "slug": "ospf_area_0"
+                  },
+                  {
+                    "slug": "p2p"
+                  }
+                ]
+              }
+            ],
+            "_custom_field_data": {
+              "vrrp_group": null,
+              "dhcp_helper": null,
+              "vrrp_priority": null,
+              "vrrp_primary_ip": null,
+              "vrrp_description": null
+            },
+            "lag": null,
+            "tagged_vlans": [],
+            "untagged_vlan": null,
+            "tags": [],
+            "connected_interface": {
+              "device": {
+                "name": "pod1sw2"
+              },
+              "name": "GigabitEthernet0/0"
+            }
+          },
+          {
+            "name": "GigabitEthernet0/3",
+            "description": "",
+            "enabled": false,
+            "label": "",
+            "ip_addresses": [],
+            "_custom_field_data": {
+              "vrrp_group": null,
+              "dhcp_helper": null,
+              "vrrp_priority": null,
+              "vrrp_primary_ip": null,
+              "vrrp_description": null
+            },
+            "lag": null,
+            "tagged_vlans": [],
+            "untagged_vlan": null,
+            "tags": [],
+            "connected_interface": null
+          },
+          {
+            "name": "GigabitEthernet0/4",
+            "description": "",
+            "enabled": false,
+            "label": "",
+            "ip_addresses": [],
+            "_custom_field_data": {
+              "vrrp_group": null,
+              "dhcp_helper": null,
+              "vrrp_priority": null,
+              "vrrp_primary_ip": null,
+              "vrrp_description": null
+            },
+            "lag": null,
+            "tagged_vlans": [],
+            "untagged_vlan": null,
+            "tags": [],
+            "connected_interface": null
+          },
+          {
+            "name": "GigabitEthernet0/5",
+            "description": "",
+            "enabled": false,
+            "label": "",
+            "ip_addresses": [],
+            "_custom_field_data": {
+              "vrrp_group": null,
+              "dhcp_helper": null,
+              "vrrp_priority": null,
+              "vrrp_primary_ip": null,
+              "vrrp_description": null
+            },
+            "lag": null,
+            "tagged_vlans": [],
+            "untagged_vlan": null,
+            "tags": [],
+            "connected_interface": null
+          },
+          {
+            "name": "GigabitEthernet0/6",
+            "description": "",
+            "enabled": false,
+            "label": "",
+            "ip_addresses": [],
+            "_custom_field_data": {
+              "vrrp_group": null,
+              "dhcp_helper": null,
+              "vrrp_priority": null,
+              "vrrp_primary_ip": null,
+              "vrrp_description": null
+            },
+            "lag": null,
+            "tagged_vlans": [],
+            "untagged_vlan": null,
+            "tags": [],
+            "connected_interface": null
+          },
+          {
+            "name": "GigabitEthernet0/7",
+            "description": "MGMT-INTERFACE",
+            "enabled": true,
+            "label": "mgmt",
+            "ip_addresses": [
+              {
+                "address": "192.168.4.17/24",
+                "tags": []
+              }
+            ],
+            "_custom_field_data": {
+              "vrrp_group": null,
+              "dhcp_helper": null,
+              "vrrp_priority": null,
+              "vrrp_primary_ip": null,
+              "vrrp_description": null
+            },
+            "lag": null,
+            "tagged_vlans": [],
+            "untagged_vlan": null,
+            "tags": [],
+            "connected_interface": null
+          },
+          {
+            "name": "Loopback0",
+            "description": "iBGP LOOPBACK",
+            "enabled": true,
+            "label": "",
+            "ip_addresses": [
+              {
+                "address": "10.0.1.1/32",
+                "tags": [
+                  {
+                    "slug": "ospf_area_0"
+                  }
+                ]
+              }
+            ],
+            "_custom_field_data": {
+              "vrrp_group": null,
+              "dhcp_helper": null,
+              "vrrp_priority": null,
+              "vrrp_primary_ip": null,
+              "vrrp_description": null
+            },
+            "lag": null,
+            "tagged_vlans": [],
+            "untagged_vlan": null,
+            "tags": [],
+            "connected_interface": null
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+Perfect! I believe we have enough to start building out our Jinja templates based on this query, but first lets look at how to use Ansible and the Nautobot module to retrieve this data from a playbook.
+
+The first thing we will want to do is create a new folder under our roles folder called nautobot_query, along with two sub-folders called tasks and vars. 
+
+In the tasks folder create a file called main.yaml and build out the task similar to the following:
+
+### roles/nautobot_query/tasks/main.yaml
+```
+- name: Get data from Nautobot
+  networktocode.nautobot.query_graphql:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: False
+    query: "{{ query_string }}"
+  register: "nb_devices"
+
+- name: Create directory if none exist
+  file:
+    path: querys
+    state: directory
+    
+- name: Print to file
+  copy:
+    content: "{{ nb_devices | to_json }}"
+    dest: "querys/{{ inventory_hostname }}.json"
+```
+
+We will make the request to the nautobot query_graphql plugin. The url, token, and validate_certs settings should be the same as what we used in Section 7. We will reference our query_string as a variable and place that file in the vars folder we created earlier. The results will be registered as a new variable called nb_devices which will create a new file that shows the results of the query so that we can reference it when building out the Jinja templates.
+
+Create a new file under the vars folder called main.yaml and place the working query from the GraphiQL interface.
+
+### roles/nautobot_query/vars/main.yaml
+```
+query {
+        devices(name: "pod1r1") {
+    inventory_hostname:name
+    config_context
+    device_role {
+            slug
+            }
+    site{
+      slug
+      vlans{
+        name
+        vid
+      }
+    }
+    interfaces {
+            name
+            description
+            enabled
+            label
+            ip_addresses {
+                address
+                tags {
+                slug
+                }
+            }
+            _custom_field_data
+            lag {
+                name
+            }
+            tagged_vlans {
+                vid
+            }
+            untagged_vlan {
+                vid
+            }
+            tagged_vlans {
+                vid
+            }
+            tags {
+                slug
+            }
+      connected_interface{
+        device {
+          name
+        }
+        name
+      }
+            }
+  }
+}
+```
