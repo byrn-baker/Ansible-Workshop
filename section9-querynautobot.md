@@ -176,3 +176,43 @@ aaa-new-model:
   acct_port: 1813
   key: cisco
 ```
+
+Push these changes to your repo and sync the changes to nautobot. Edit your pod router device and add the tag ```pod1_dhcp_server``` and then add the bgp confuguration to the local config context box just below the tags box. This will need to be done in JSON format, click update and then click over to the config context tab.
+
+```
+{
+    "bgp": {
+        "address_family_ipv4": {
+            "advertised_networks": [
+                "155.1.1.0/26",
+                "155.1.1.128/26",
+                "155.1.1.64/26"
+            ],
+            "agg_network": [
+                "155.1.1.0/24"
+            ]
+        },
+        "ebgp": {
+            "neighbors": {
+                "24.24.1.1": {
+                    "r_asn": 400
+                }
+            }
+        },
+        "ibgp": {
+            "l_asn": 65001,
+            "neighbors": [
+                "10.0.1.2",
+                "10.0.1.3"
+            ]
+        }
+    }
+}
+```
+<img src="/assets/images/nautobot_config_context_2.png" alt="">
+
+<img src="/assets/images/nautobot_config_context_1.png" alt="">
+You should see a rendered configuration and it can be viewed as JSON or YAML format.
+
+<img src="/assets/images/nautobot_config_context_3.png" alt="">
+
