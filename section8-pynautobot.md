@@ -820,3 +820,5 @@ No results returned or None. Now we check our YAML file to see if the bside_devi
 [Building the router Roles - Section 6](section6-router.md)
 
 [Introducing Nautobot - Section 7](section7-nautobot.md)
+
+[Querying your device data from nautobot - Section 9](section9-querynautobot.md)

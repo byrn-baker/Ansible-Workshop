@@ -39,3 +39,5 @@ ansible-galaxy collection install cisco.ios clay584.genie
 [Introducing Nautobot - Section 7](section7-nautobot.md)
 
 [Introducing PyNautobot - Section 8](section8-pynautobot.md)
+
+[Querying your device data from nautobot - Section 9](section9-querynautobot.md)

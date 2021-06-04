@@ -1023,3 +1023,5 @@ This covers as much of the data entry that we can do through the Ansible Module.
 [Building the router Roles - Section 6](section6-router.md)
 
 [Introducing PyNautobot - Section 8](section8-pynautobot.md)
+
+[Querying your device data from nautobot - Section 9](section9-querynautobot.md)

@@ -312,3 +312,5 @@ The previous playbook targeted one switch to connect to; this time, we have two 
 [Introducing Nautobot - Section 7](section7-nautobot.md)
 
 [Introducing PyNautobot - Section 8](section8-pynautobot.md)
+
+[Querying your device data from nautobot - Section 9](section9-querynautobot.md)
