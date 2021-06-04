@@ -1,86 +1,51 @@
 query_string: |
         query {
         devices(name: "{{device}}") {
-            config_context
-            name
-            position
-            serial
-            primary_ip4 {
-            address
-            }
-            tenant {
-            name
-            }
-            tags {
-            name
-            slug
-            }
-            device_role {
-            name
-            }
-            platform {
-            name
-            slug
-            manufacturer {
-                name
-            }
-            napalm_driver
-            }
-            site {
-            name
-            slug
-            vlans {
-                name
-                vid
-            }
-            vlan_groups {
-                name
-            }
-            }
-            interfaces {
-            description
-            mac_address
-            enabled
-            label
-            _custom_field_data
-            lag {
-                name
-            }
-            name
-            ip_addresses {
-                address
-                tags {
+        inventory_hostname:name
+        config_context
+        device_role {
                 slug
                 }
-            }
-            connected_circuit_termination {
-                circuit {
-                cid
-                commit_rate
-                provider {
+        site{
+        slug
+        vlans{
+            name
+            vid
+        }
+        }
+        interfaces {
+                name
+                description
+                enabled
+                label
+                ip_addresses {
+                    address
+                    tags {
+                    slug
+                    }
+                }
+                _custom_field_data
+                lag {
                     name
                 }
+                tagged_vlans {
+                    vid
                 }
-            }
-            tagged_vlans {
-                vid
-            }
-            untagged_vlan {
-                vid
-            }
-            cable {
-                termination_a_type
-                status {
-                name
+                untagged_vlan {
+                    vid
                 }
-                color
+                tagged_vlans {
+                    vid
+                }
+                tags {
+                    slug
+                }
+        connected_interface{
+            device {
+            name
             }
-            tagged_vlans {
-                vid
-            }
-            tags {
-                slug
-            }
-            }
+            name
         }
+                }
+            }
         }

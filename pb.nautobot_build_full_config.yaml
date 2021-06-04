@@ -1,6 +1,6 @@
 ---
 - name: Query Nautobot for Device data and build full configuration
-  hosts: all
+  hosts: pod1r1
   gather_facts: false
   connection: local
   
@@ -8,4 +8,4 @@
     device: "{{inventory_hostname}}"
   roles:
   - { role: nautobot_query }
-  - { role: full_configuration/build }
+  # - { role: full_configuration/build }
