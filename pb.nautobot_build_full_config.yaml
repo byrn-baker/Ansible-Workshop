@@ -1,6 +1,6 @@
 ---
 - name: Query Nautobot for Device data and build full configuration
-  hosts: pod1r1
+  hosts: all
   gather_facts: false
   connection: local
   
