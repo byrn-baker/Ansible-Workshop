@@ -1,4 +1,6 @@
 ## Section 9: Querying your device data from nautobot
+{% include section9.html %}
+
 The first thing we need to create is the actual query, and to do that, we can test it from the graphiQL link on the bottom right side of your Nautobot GUI. 
 <img src="/assets/images/nautobot_graphql_1.png" alt="">
 
