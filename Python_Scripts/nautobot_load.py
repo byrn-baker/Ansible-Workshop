@@ -10,7 +10,7 @@ data_file = "nb_initial_load.yaml"
 with open(data_file) as f: 
     data = yaml.safe_load(f.read())
 
-nb = api(url="http://192.168.130.202:8000", token="c7fdc6be609a244bb1e851c5e47b3ccd9d990b58")
+nb = api(url="http://192.168.130.141:8000", token="73ab7cfa821c2cdd311b2c44a6b2442bc982dac9")
 nb.http_session.verify = False
 
 # sites: 
