@@ -2866,3 +2866,87 @@ device_list:
     - name: GigabitEthernet0/0
       type: 1000base-t
       enabled: false
+- name: cloud_router
+  device_type: c8000v
+  device_role: cloud_edge
+  site: cloud
+  rack: "cloud_rr_1"
+  position: 42
+  face: front
+  status: active
+  l3_interfaces:
+    - name: GigabitEthernet1
+      description: "TO POD1R1"
+      type: 1000base-t
+      label: layer3
+      enabled: True
+      mtu: 1500
+      mgmt_only: False
+      ipv4_address: 24.24.1.1/24
+      vrf: global
+      status: active
+    - name: GigabitEthernet2
+      description: "TO POD2R1"
+      type: 1000base-t
+      label: layer3
+      enabled: True
+      mtu: 1500
+      mgmt_only: False
+      ipv4_address: 24.24.2.1/24
+      vrf: global
+      status: active  
+    - name: GigabitEthernet3
+      description: "TO POD3R1"
+      type: 1000base-t
+      label: layer3
+      enabled: True
+      mtu: 1500
+      mgmt_only: False
+      ipv4_address: 24.24.3.1/24
+      vrf: global
+      status: active
+    - name: GigabitEthernet4
+      description: "TO POD4R1"
+      type: 1000base-t
+      label: layer3
+      enabled: True
+      mtu: 1500
+      mgmt_only: False
+      ipv4_address: 24.24.4.1/24
+      vrf: global
+      status: active
+    - name: GigabitEthernet5
+      description: "TO POD5R1"
+      type: 1000base-t
+      label: layer3
+      enabled: True
+      mtu: 1500
+      mgmt_only: False
+      ipv4_address: 24.24.5.1/24
+      vrf: global
+      status: active
+    - name: GigabitEthernet1
+      description: "TO POD6R1"
+      type: 1000base-t
+      label: layer3
+      enabled: True
+      mtu: 1500
+      mgmt_only: False
+      ipv4_address: 24.24.6.1/24
+      vrf: global
+      status: active
+    - name: GigabitEthernet7
+      description: "MGMT INTERFACE"
+      type: 1000base-t
+      label: mgmt
+      enabled: True
+      mtu: 1500
+      mgmt_only: True
+      ipv4_address: 192.168.4.31/24
+      vrf: MGMT
+      status: active           
+    
+  disabled_interfaces:
+    - name: GigabitEthernet8
+      type: 1000base-t
+      enabled: false     

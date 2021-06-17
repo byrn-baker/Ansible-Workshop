@@ -15,6 +15,11 @@ manufacturer:
     part_number: vios-switch
     u_height: 1
     is_full_depth: False
+  - name: c8000v
+    slug: c8000v
+    part_number: c8000v
+    u_height: 1
+    is_full_depth: False  
   device_roles:
   - name: pod_router
     color: f4f0ec
@@ -22,3 +27,5 @@ manufacturer:
     color: 696969
   - name: pod_l2_switch
     color: 808080
+  - name: cloud_edge
+    color: 808080   

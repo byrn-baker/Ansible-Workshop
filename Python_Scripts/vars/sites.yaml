@@ -247,4 +247,9 @@ sites:
     status: active   
   racks:
   - name: "pod6_rr_1"
-    status: active  
+    status: active
+- name: Cloud
+  status: active
+  asn: 400
+  slug: cloud
+  

@@ -5,14 +5,14 @@
   gather_facts: False
 
   vars_files:
-   - /home/inventory/nautobot_vars/sites.yaml
-   - /home/inventory/nautobot_vars/tags.yaml
-   - /home/inventory/nautobot_vars/vrfs.yaml
-   - /home/inventory/nautobot_vars/devices.yaml
-   - /home/inventory/nautobot_vars/nodes_design.yaml
-   - /home/inventory/nautobot_vars/device_local_context.yaml
-   - /home/inventory/nautobot_vars/custom_fields.yaml
-   - /home/inventory/nautobot_vars/device_connections.yaml
+   - /home/Ansible-Workshop/inventory/nautobot_vars/sites.yaml
+   - /home/Ansible-Workshop/inventory/nautobot_vars/tags.yaml
+   - /home/Ansible-Workshop/inventory/nautobot_vars/vrfs.yaml
+   - /home/Ansible-Workshop/inventory/nautobot_vars/devices.yaml
+   - /home/Ansible-Workshop/inventory/nautobot_vars/nodes_design.yaml
+   - /home/Ansible-Workshop/inventory/nautobot_vars/device_local_context.yaml
+   - /home/Ansible-Workshop/inventory/nautobot_vars/custom_fields.yaml
+   - /home/Ansible-Workshop/inventory/nautobot_vars/device_connections.yaml
 
   tasks:
   - name: transform into a single file

@@ -143,3 +143,23 @@ connections:
   - name: GigabitEthernet0/3
     bside_device: pod6sw3
     bside_port: GigabitEthernet0/2
+- name: cloud_router
+  interface:
+  - name: GigabitEthernet1
+    bside_device: pod1r1
+    bside_port: GigabitEthernet0/0
+  - name: GigabitEthernet2
+    bside_device: pod2r1
+    bside_port: GigabitEthernet0/0
+  - name: GigabitEthernet3
+    bside_device: pod3r1
+    bside_port: GigabitEthernet0/0
+  - name: GigabitEthernet4
+    bside_device: pod4r1
+    bside_port: GigabitEthernet0/0
+  - name: GigabitEthernet5
+    bside_device: pod5r1
+    bside_port: GigabitEthernet0/0
+  - name: GigabitEthernet6
+    bside_device: pod6r1
+    bside_port: GigabitEthernet0/0     

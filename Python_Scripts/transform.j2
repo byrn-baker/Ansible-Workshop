@@ -4,17 +4,37 @@ sites:
   - name: {{ sites.name }}
     status: {{ sites.status }}
     asn: {{ sites.asn }}
+    {% if sites["time_zone"] is defined %}
     time_zone: {{ sites.time_zone }}
+    {% endif %}
+    {% if sites["description"] is defined %}
     description: {{ sites.description }}
+    {% endif %}
+    {% if sites["physical_address"] is defined %}
     physical_address: {{ sites.physical_address }}
+    {% endif %}
+    {% if sites["shipping_address"] is defined %}
     shipping_address: {{ sites.shipping_address }}
+    {% endif %}
+    {% if sites["latitude"] is defined %}
     latitude: {{ sites.latitude }}
+    {% endif %}
+    {% if sites["longitude"] is defined %}
     longitude: {{ sites.longitude }}
+    {% endif %}
+    {% if sites["contact_name"] is defined %}
     contact_name: {{ sites.contact_name }}
+    {% endif %}
+    {% if sites["contact_phone"] is defined %}
     contact_phone: {{ sites.contact_phone }}
+    {% endif %}
+    {% if sites["contact_email"] is defined %}
     contact_email: {{ sites.contact_email }}
+    {% endif %}
     slug: {{ sites.slug }}
+    {% if sites["comments"] is defined %}
     comments: {{ sites.comments }}
+    {% endif %}
     racks:
     {% for rack in sites["racks"] %}
       - name: {{ rack.name }}
@@ -70,6 +90,7 @@ custom_fields:
 {% endfor %}
 vlans:
 {% for site in sites %}
+{% if site["vlans"] is defined %}
     {% for vlan in site["vlans"] %}
   - name: {{ vlan.name }}
     vid: {{ vlan.vid }}
@@ -79,15 +100,18 @@ vlans:
     status: {{ vlan.status }}
     site: {{ site.slug }}
     {% endfor %}
+{% endif %}    
 {% endfor %}
 prefixes:
 {% for site in sites %}
+{% if site["int_prefixes"] is defined %}
     {% for pfx in site["int_prefixes"] %}
   - prefix: {{ pfx.prefix }}
     description: {{ pfx.description }}
     site: {{ site.slug }}
     status: active
     {% endfor %}
+{% endif %}
 {% endfor %}
 devices:
 {% for dv in device_list %}

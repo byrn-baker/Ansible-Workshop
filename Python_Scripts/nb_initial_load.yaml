@@ -101,6 +101,13 @@ sites:
     racks:
       - name: pod6_rr_1
         status: active
+  - name: Cloud
+    status: active
+    asn: 400
+    slug: cloud
+    racks:
+      - name: cloud_rr_1
+        status: active
 manufacturers:
   - name: cisco
     slug: cisco
@@ -113,6 +120,10 @@ device_types:
     slug: vios_switch
     manufacturer_slug: cisco
     height: 1
+  - model: c8000v
+    slug: c8000v
+    manufacturer_slug: cisco
+    height: 1
 device_roles:
   - name: pod_router
     slug: pod_router
@@ -122,6 +133,9 @@ device_roles:
     color: 696969
   - name: pod_l2_switch
     slug: pod_l2_switch
+    color: 808080
+  - name: cloud_edge
+    slug: cloud_edge
     color: 808080
 platforms:
   - name: ios
@@ -206,6 +220,7 @@ vlans:
     vid: 666
     status: active
     site: pod1
+    
   - name: USERS
     vid: 300
     prefix: 155.2.2.0/26
@@ -225,6 +240,7 @@ vlans:
     vid: 666
     status: active
     site: pod2
+    
   - name: USERS
     vid: 300
     prefix: 155.3.3.0/26
@@ -244,6 +260,7 @@ vlans:
     vid: 666
     status: active
     site: pod3
+    
   - name: USERS
     vid: 300
     prefix: 155.4.4.0/26
@@ -263,6 +280,7 @@ vlans:
     vid: 666
     status: active
     site: pod4
+    
   - name: USERS
     vid: 300
     prefix: 155.5.5.0/26
@@ -282,6 +300,7 @@ vlans:
     vid: 666
     status: active
     site: pod5
+    
   - name: USERS
     vid: 300
     prefix: 155.6.6.0/26
@@ -301,6 +320,8 @@ vlans:
     vid: 666
     status: active
     site: pod6
+    
+    
 prefixes:
   - prefix: 10.10.1.0/31
     description: R1-GI0/1 - SW1-GI0/0
@@ -3553,5 +3574,102 @@ devices:
         type: 1000base-t
         enabled: False 
       - name: GigabitEthernet0/0
+        type: 1000base-t
+        enabled: False 
+  - name: cloud_router
+    device_role_slug: cloud_edge
+    manufacturer_slug: cisco
+    device_types_slug: c8000v
+    site_slug: cloud
+    status: active
+    position: 42
+    face: front
+    rack: cloud_rr_1
+    interfaces:
+      - name: GigabitEthernet1
+        description: TO POD1R1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        bside_device: pod1r1
+        bside_interface: GigabitEthernet0/0
+        ip_addresses:
+          - address: 24.24.1.1/24
+            status: active
+      - name: GigabitEthernet2
+        description: TO POD2R1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        bside_device: pod2r1
+        bside_interface: GigabitEthernet0/0
+        ip_addresses:
+          - address: 24.24.2.1/24
+            status: active
+      - name: GigabitEthernet3
+        description: TO POD3R1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        bside_device: pod3r1
+        bside_interface: GigabitEthernet0/0
+        ip_addresses:
+          - address: 24.24.3.1/24
+            status: active
+      - name: GigabitEthernet4
+        description: TO POD4R1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        bside_device: pod4r1
+        bside_interface: GigabitEthernet0/0
+        ip_addresses:
+          - address: 24.24.4.1/24
+            status: active
+      - name: GigabitEthernet5
+        description: TO POD5R1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        bside_device: pod5r1
+        bside_interface: GigabitEthernet0/0
+        ip_addresses:
+          - address: 24.24.5.1/24
+            status: active
+      - name: GigabitEthernet6
+        description: TO POD6R1
+        type: 1000base-t
+        label: layer3
+        enabled: True
+        mtu: 1500
+        mgmt_only: False
+        bside_device: pod6r1
+        bside_interface: GigabitEthernet0/0
+        ip_addresses:
+          - address: 24.24.6.1/24
+            status: active
+      - name: GigabitEthernet7
+        description: MGMT INTERFACE
+        type: 1000base-t
+        label: mgmt
+        enabled: True
+        mtu: 1500
+        mgmt_only: True
+        ip_addresses:
+          - address: 192.168.4.31/24
+            vrf: MGMT
+            status: active
+            primary: true
+      - name: GigabitEthernet8
         type: 1000base-t
         enabled: False 
