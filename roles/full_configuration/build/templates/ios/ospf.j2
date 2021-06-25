@@ -9,6 +9,7 @@ router ospf {{ devices[0]["config_context"]["ospf"]["id"] }}
 {% endfor %}
 {% endif %}
 {% endfor %}
+{% if devices[0]["tags"] is defined %}
 {% for tags in devices[0]["tags"] %}
 {% if tags["name"] is defined %}
 {% if 'mpls' in tags["slug"] %}
@@ -17,4 +18,5 @@ router ospf {{ devices[0]["config_context"]["ospf"]["id"] }}
 {% endif %}
 {% endif %}
 {% endfor %}
+{% endif %}
  passive-interface Loopback0

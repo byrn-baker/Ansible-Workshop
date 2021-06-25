@@ -1,11 +1,11 @@
 {% for interface in devices[0]["interfaces"] %}
 {% if 'Loop' in interface["name"] %}
 {% include "./ios/interfaces/_loopback.j2" %}
-{% elif devices[0]["device_role"]["name"] == "pod_l2_switch" %}
+{% elif devices[0]["device_role"]["slug"] == "pod_l2_switch" %}
 {% include "./ios/interfaces/_switch_l2_physical.j2"%}
-{% elif devices[0]["device_role"]["name"] == "pod_l3_switch" %}
+{% elif devices[0]["device_role"]["slug"] == "pod_l3_switch" %}
 {% include "./ios/interfaces/_switch_l3_physical.j2"%}
-{% elif devices[0]["device_role"]["name"] == "pod_router" %}
+{% elif devices[0]["device_role"]["slug"] == "pod_router" %}
 {% include "./ios/interfaces/_router_physical.j2" %}
 {% endif %}
 {% endfor %}

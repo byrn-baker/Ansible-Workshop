@@ -8,4 +8,4 @@
     device: "{{inventory_hostname}}"
   roles:
   - { role: nautobot_query }
-  # - { role: full_configuration/build }
+  - { role: full_configuration/build }

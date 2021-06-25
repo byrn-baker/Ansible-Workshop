@@ -1,9 +1,9 @@
 #jinja2: lstrip_blocks: "True", trim_blocks: "True"
 {% set devices = nb_devices["data"]["devices"] %}
-{% if devices[0]["device_role"]["name"] == "pod_l2_switch" %}
+{% if devices[0]["device_role"]["slug"] == "pod_l2_switch" %}
 {% include "./ios/platform_templates/vios_switch.j2"%}
-{% elif devices[0]["device_role"]["name"] == "pod_l3_switch" %}
+{% elif devices[0]["device_role"]["slug"] == "pod_l3_switch" %}
 {% include "./ios/platform_templates/vios_switch.j2"%}
-{% elif devices[0]["device_role"]["name"] == "pod_router" %}
+{% elif devices[0]["device_role"]["slug"] == "pod_router" %}
 {% include "./ios/platform_templates/vios_router.j2"%}
 {% endif %}

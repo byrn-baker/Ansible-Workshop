@@ -107,11 +107,11 @@ no ip http secure-server
 {% if devices[0]["config_context"]["routes"]["mgmt_gateway"] is defined %}
 ip route vrf MGMT 0.0.0.0 0.0.0.0 {{ devices[0]["config_context"]["routes"]["mgmt_gateway"] }}
 {% endif %}
-{% if devices[0]["device_role"]["name"] == "pod_l2_switch" %}
+{% if devices[0]["device_role"]["slug"] == "pod_l2_switch" %}
 ip ssh source-interface GigabitEthernet1/3
-{% elif devices[0]["device_role"]["name"] == "pod_l3_switch" %}
+{% elif devices[0]["device_role"]["slug"] == "pod_l3_switch" %}
 ip ssh source-interface GigabitEthernet1/3
-{% elif devices[0]["device_role"]["name"] == "pod_router" %}
+{% elif devices[0]["device_role"]["slug"] == "pod_router" %}
 ip ssh source-interface GigabitEthernet0/7
 {% endif %}
 ip ssh version 2
