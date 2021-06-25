@@ -1,0 +1,15 @@
+---
+plugin: networktocode.nautobot.inventory
+api_endpoint: "https://192.168.130.204"
+token: "c7fdc6be609a244bb1e851c5e47b3ccd9d990b58"
+validate_certs: False
+config_context: False
+group_by:
+  - device_roles
+query_filters:
+  - site: 'pod1'
+device_query_filters:
+  - has_primary_ip: 'true'
+compose:
+  ansible_network_os: platform.name
+  ansible_host: primary_ip4.address | ipaddr('address')

@@ -4,24 +4,38 @@
 ############################################################
 
 - name: Connect to access switches
-  hosts: access_switches
+  hosts: device_roles_pod_l2_switch
   gather_facts: false
   connection: network_cli
 
   tasks:
-  - name: show vlan
-    ios_command:
-      commands: 
-        - "show vlan"
-    register: ios_output
+    - name: show vlan 
+      ios_command:
+        commands:
+          - show vlan
+      register: show_vlan
 
-  - set_fact:
-      vlans : "{{ ios_output['stdout'][0] | clay584.genie.parse_genie(command='show vlan', os='ios') }}"
+    - name: register output
+      set_fact:
+        vlans: "{{ show_vlan.stdout[0] | parse_cli_textfsm('/home/ntc-templates/ntc_templates/templates/cisco_ios_show_vlan.textfsm') }}"
+
+    - name: print output
+      debug:
+        msg: "{{ vlans  }}"
+
+  # - name: show vlan
+  #   ios_command:
+  #     commands: 
+  #       - "show vlan"
+  #   register: ios_output
+
+  # - set_fact:
+  #     vlans : "{{ ios_output['stdout'][0] | clay584.genie.parse_genie(command='show vlan', os='ios') }}"
     
-  - name: Vlan validation
-    template:
-      src: vlan_validation.j2
-      dest: print_out.txt
+  # - name: Vlan validation
+  #   template:
+  #     src: vlan_validation.j2
+  #     dest: print_out.txt
 
-  - debug:
-      msg: "print_out.txt"  
+  # - debug:
+  #     msg: "print_out.txt"  
