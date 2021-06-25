@@ -81,3 +81,5 @@ The Lab diagram above consists of the IP addressing for each POD. The (x) will b
 
 [Querying your device data from nautobot - Section 9](section9-querynautobot.md)
 
+[Full configuration Jinja Templates - Section 10](section10-jinja_templates.md)
+

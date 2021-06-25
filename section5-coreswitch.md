@@ -314,3 +314,5 @@ The previous playbook targeted one switch to connect to; this time, we have two 
 [Introducing PyNautobot - Section 8](section8-pynautobot.md)
 
 [Querying your device data from nautobot - Section 9](section9-querynautobot.md)
+
+[Full configuration Jinja Templates - Section 10](section10-jinja_templates.md)

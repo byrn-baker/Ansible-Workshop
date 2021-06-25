@@ -1025,3 +1025,5 @@ This covers as much of the data entry that we can do through the Ansible Module.
 [Introducing PyNautobot - Section 8](section8-pynautobot.md)
 
 [Querying your device data from nautobot - Section 9](section9-querynautobot.md)
+
+[Full configuration Jinja Templates - Section 10](section10-jinja_templates.md)

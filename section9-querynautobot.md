@@ -345,7 +345,11 @@ query {
                 slug
                 }
             }
-            _custom_field_data
+            vrrp_group: cf_vrrp_group
+            vrrp_description: cf_vrrp_description
+            vrrp_priority: cf_vrrp_priority
+            vrrp_primary_ip: cf_vrrp_primary_ip
+            dhcp_helper: cf_dhcp_helper
             lag {
                 name
             }
@@ -380,325 +384,310 @@ Notice that we have added several new fields to the query. Starting at the top a
       {
         "inventory_hostname": "pod1r1",
         "config_context": {
-          "aaa-new-model": {
+        "aaa-new-model": {
             "key": "cisco",
             "name": "RAD_SERVERS",
             "type": "radius",
             "acct_port": 1813,
             "auth_port": 1812,
             "ip_address": "192.168.4.253"
-          },
-          "cdp": false,
-          "lldp": true,
-          "routes": {
+        },
+        "cdp": false,
+        "lldp": true,
+        "routes": {
             "mgmt_gateway": "192.168.4.254"
-          },
-          "dhcp_pool": [
+        },
+        "dhcp_pool": [
             {
-              "name": "USERS_POOL",
-              "lease": 30,
-              "network": "155.1.1.0/26",
-              "default_router": "155.1.1.1",
-              "excluded_address": "155.1.1.1 155.1.1.3"
+                "name": "USERS_POOL",
+                "lease": 30,
+                "network": "155.1.1.0/26",
+                "default_router": "155.1.1.1",
+                "excluded_address": "155.1.1.1 155.1.1.3"
             },
             {
-              "name": "SERVERS_POOL",
-              "lease": 30,
-              "network": "155.1.1.64/26",
-              "default_router": "155.1.1.65",
-              "excluded_address": "155.1.1.65 155.1.1.67"
+                "name": "SERVERS_POOL",
+                "lease": 30,
+                "network": "155.1.1.64/26",
+                "default_router": "155.1.1.65",
+                "excluded_address": "155.1.1.65 155.1.1.67"
             },
             {
-              "name": "GUEST_POOL",
-              "lease": 30,
-              "network": "155.1.1.128/26",
-              "default_router": "155.1.1.129",
-              "excluded_address": "155.1.1.129 155.1.1.131"
+                "name": "GUEST_POOL",
+                "lease": 30,
+                "network": "155.1.1.128/26",
+                "default_router": "155.1.1.129",
+                "excluded_address": "155.1.1.129 155.1.1.131"
             }
-          ],
-          "ospf": {
+        ],
+        "ospf": {
             "id": 1
-          },
-          "bgp": {
+        },
+        "bgp": {
             "ebgp": {
-              "neighbors": {
-                "24.24.1.1": {
-                  "r_asn": 400
+                "neighbors": {
+                    "24.24.1.1": {
+                        "r_asn": 400
+                    }
                 }
-              }
             },
             "ibgp": {
-              "l_asn": 65001,
-              "neighbors": [
-                "10.0.1.2",
-                "10.0.1.3"
-              ]
+                "l_asn": 65001,
+                "neighbors": [
+                    "10.0.1.2",
+                    "10.0.1.3"
+                ]
             },
             "address_family_ipv4": {
-              "agg_network": [
-                "155.1.1.0/24"
-              ],
-              "advertised_networks": [
-                "155.1.1.0/26",
-                "155.1.1.128/26",
-                "155.1.1.64/26"
-              ]
+                "agg_network": [
+                    "155.1.1.0/24"
+                ],
+                "advertised_networks": [
+                    "155.1.1.0/26",
+                    "155.1.1.128/26",
+                    "155.1.1.64/26"
+                ]
             }
-          }
-        },
-        "device_role": {
-          "slug": "pod_router"
-        },
-        "site": {
-          "slug": "pod1",
-          "vlans": [
+        }
+    },
+    "device_role": {
+        "slug": "pod_router"
+    },
+    "site": {
+        "slug": "pod1",
+        "vlans": [
             {
-              "name": "USERS",
-              "vid": 300
+                "name": "USERS",
+                "vid": 300
             },
             {
-              "name": "SERVERS",
-              "vid": 350
+                "name": "SERVERS",
+                "vid": 350
             },
             {
-              "name": "GUESTS",
-              "vid": 400
+                "name": "GUESTS",
+                "vid": 400
             },
             {
-              "name": "NATIVE_VLAN",
-              "vid": 666
+                "name": "NATIVE_VLAN",
+                "vid": 666
             }
-          ]
-        },
-        "interfaces": [
-          {
+        ],
+        "tags": []
+    },
+    "interfaces": [
+        {
             "name": "GigabitEthernet0/0",
             "description": "UPLINK TO INTERNET PROVIDER",
             "enabled": true,
             "label": "layer3",
             "ip_addresses": [
-              {
-                "address": "24.24.1.2/24",
-                "tags": []
-              }
+                {
+                    "address": "24.24.1.2/24",
+                    "tags": []
+                }
             ],
-            "_custom_field_data": {
-              "vrrp_group": null,
-              "dhcp_helper": null,
-              "vrrp_priority": null,
-              "vrrp_primary_ip": null,
-              "vrrp_description": null
-            },
+            "vrrp_group": null,
+            "vrrp_description": null,
+            "vrrp_priority": null,
+            "vrrp_primary_ip": null,
+            "dhcp_helper": null,
             "lag": null,
             "tagged_vlans": [],
             "untagged_vlan": null,
             "tags": [],
-            "connected_interface": null
-          },
-          {
+            "connected_interface": {
+                "device": {
+                    "name": "cloud_router"
+                },
+                "name": "GigabitEthernet1"
+            }
+        },
+        {
             "name": "GigabitEthernet0/1",
             "description": "DOWNLINK POD1SW1",
             "enabled": true,
             "label": "layer3",
             "ip_addresses": [
-              {
-                "address": "10.10.1.0/31",
-                "tags": [
-                  {
-                    "slug": "ospf_area_0"
-                  },
-                  {
-                    "slug": "p2p"
-                  }
-                ]
-              }
+                {
+                    "address": "10.10.1.0/31",
+                    "tags": [
+                        {
+                            "slug": "ospf_area_0"
+                        },
+                        {
+                            "slug": "p2p"
+                        }
+                    ]
+                }
             ],
-            "_custom_field_data": {
-              "vrrp_group": null,
-              "dhcp_helper": null,
-              "vrrp_priority": null,
-              "vrrp_primary_ip": null,
-              "vrrp_description": null
-            },
+            "vrrp_group": null,
+            "vrrp_description": null,
+            "vrrp_priority": null,
+            "vrrp_primary_ip": null,
+            "dhcp_helper": null,
             "lag": null,
             "tagged_vlans": [],
             "untagged_vlan": null,
             "tags": [],
             "connected_interface": {
-              "device": {
-                "name": "pod1sw1"
-              },
-              "name": "GigabitEthernet0/0"
+                "device": {
+                    "name": "pod1sw1"
+                },
+                "name": "GigabitEthernet0/0"
             }
-          },
-          {
+        },
+        {
             "name": "GigabitEthernet0/2",
             "description": "DOWNLINK POD1SW2",
             "enabled": true,
             "label": "layer3",
             "ip_addresses": [
-              {
-                "address": "10.10.1.2/31",
-                "tags": [
-                  {
-                    "slug": "ospf_area_0"
-                  },
-                  {
-                    "slug": "p2p"
-                  }
-                ]
-              }
+                {
+                    "address": "10.10.1.2/31",
+                    "tags": [
+                        {
+                            "slug": "ospf_area_0"
+                        },
+                        {
+                            "slug": "p2p"
+                        }
+                    ]
+                }
             ],
-            "_custom_field_data": {
-              "vrrp_group": null,
-              "dhcp_helper": null,
-              "vrrp_priority": null,
-              "vrrp_primary_ip": null,
-              "vrrp_description": null
-            },
+            "vrrp_group": null,
+            "vrrp_description": null,
+            "vrrp_priority": null,
+            "vrrp_primary_ip": null,
+            "dhcp_helper": null,
             "lag": null,
             "tagged_vlans": [],
             "untagged_vlan": null,
             "tags": [],
             "connected_interface": {
-              "device": {
-                "name": "pod1sw2"
-              },
-              "name": "GigabitEthernet0/0"
+                "device": {
+                    "name": "pod1sw2"
+                },
+                "name": "GigabitEthernet0/0"
             }
-          },
-          {
+        },
+        {
             "name": "GigabitEthernet0/3",
             "description": "",
             "enabled": false,
             "label": "",
             "ip_addresses": [],
-            "_custom_field_data": {
-              "vrrp_group": null,
-              "dhcp_helper": null,
-              "vrrp_priority": null,
-              "vrrp_primary_ip": null,
-              "vrrp_description": null
-            },
+            "vrrp_group": null,
+            "vrrp_description": null,
+            "vrrp_priority": null,
+            "vrrp_primary_ip": null,
+            "dhcp_helper": null,
             "lag": null,
             "tagged_vlans": [],
             "untagged_vlan": null,
             "tags": [],
             "connected_interface": null
-          },
-          {
+        },
+        {
             "name": "GigabitEthernet0/4",
             "description": "",
             "enabled": false,
             "label": "",
             "ip_addresses": [],
-            "_custom_field_data": {
-              "vrrp_group": null,
-              "dhcp_helper": null,
-              "vrrp_priority": null,
-              "vrrp_primary_ip": null,
-              "vrrp_description": null
-            },
+            "vrrp_group": null,
+            "vrrp_description": null,
+            "vrrp_priority": null,
+            "vrrp_primary_ip": null,
+            "dhcp_helper": null,
             "lag": null,
             "tagged_vlans": [],
             "untagged_vlan": null,
             "tags": [],
             "connected_interface": null
-          },
-          {
+        },
+        {
             "name": "GigabitEthernet0/5",
             "description": "",
             "enabled": false,
             "label": "",
             "ip_addresses": [],
-            "_custom_field_data": {
-              "vrrp_group": null,
-              "dhcp_helper": null,
-              "vrrp_priority": null,
-              "vrrp_primary_ip": null,
-              "vrrp_description": null
-            },
+            "vrrp_group": null,
+            "vrrp_description": null,
+            "vrrp_priority": null,
+            "vrrp_primary_ip": null,
+            "dhcp_helper": null,
             "lag": null,
             "tagged_vlans": [],
             "untagged_vlan": null,
             "tags": [],
             "connected_interface": null
-          },
-          {
+        },
+        {
             "name": "GigabitEthernet0/6",
             "description": "",
             "enabled": false,
             "label": "",
             "ip_addresses": [],
-            "_custom_field_data": {
-              "vrrp_group": null,
-              "dhcp_helper": null,
-              "vrrp_priority": null,
-              "vrrp_primary_ip": null,
-              "vrrp_description": null
-            },
+            "vrrp_group": null,
+            "vrrp_description": null,
+            "vrrp_priority": null,
+            "vrrp_primary_ip": null,
+            "dhcp_helper": null,
             "lag": null,
             "tagged_vlans": [],
             "untagged_vlan": null,
             "tags": [],
             "connected_interface": null
-          },
-          {
+        },
+        {
             "name": "GigabitEthernet0/7",
             "description": "MGMT-INTERFACE",
             "enabled": true,
             "label": "mgmt",
             "ip_addresses": [
-              {
-                "address": "192.168.4.17/24",
-                "tags": []
-              }
+                {
+                    "address": "192.168.4.17/24",
+                    "tags": []
+                }
             ],
-            "_custom_field_data": {
-              "vrrp_group": null,
-              "dhcp_helper": null,
-              "vrrp_priority": null,
-              "vrrp_primary_ip": null,
-              "vrrp_description": null
-            },
+            "vrrp_group": null,
+            "vrrp_description": null,
+            "vrrp_priority": null,
+            "vrrp_primary_ip": null,
+            "dhcp_helper": null,
             "lag": null,
             "tagged_vlans": [],
             "untagged_vlan": null,
             "tags": [],
             "connected_interface": null
-          },
-          {
+        },
+        {
             "name": "Loopback0",
             "description": "iBGP LOOPBACK",
             "enabled": true,
             "label": "",
             "ip_addresses": [
-              {
-                "address": "10.0.1.1/32",
-                "tags": [
-                  {
-                    "slug": "ospf_area_0"
-                  }
-                ]
-              }
+                {
+                    "address": "10.0.1.1/32",
+                    "tags": [
+                        {
+                            "slug": "ospf_area_0"
+                        }
+                    ]
+                }
             ],
-            "_custom_field_data": {
-              "vrrp_group": null,
-              "dhcp_helper": null,
-              "vrrp_priority": null,
-              "vrrp_primary_ip": null,
-              "vrrp_description": null
-            },
+            "vrrp_group": null,
+            "vrrp_description": null,
+            "vrrp_priority": null,
+            "vrrp_primary_ip": null,
+            "dhcp_helper": null,
             "lag": null,
             "tagged_vlans": [],
             "untagged_vlan": null,
             "tags": [],
             "connected_interface": null
-          }
-        ]
-      }
+        }
     ]
-  }
 }
 ```
 Perfect! I believe we have enough to start building out our Jinja templates based on this query, but first, let's look at using Ansible and the Nautobot module to retrieve this data from a playbook.
@@ -760,7 +749,11 @@ query_string: |
                     slug
                     }
                 }
-                _custom_field_data
+                vrrp_group: cf_vrrp_group
+                vrrp_description: cf_vrrp_description
+                vrrp_priority: cf_vrrp_priority
+                vrrp_primary_ip: cf_vrrp_primary_ip
+                dhcp_helper: cf_dhcp_helper
                 lag {
                     name
                 }
@@ -905,234 +898,219 @@ For now, let's test this against a single device, "pod1r1". The vars will take t
                     ]
                 },
                 "interfaces": [
-                    {
-                        "name": "GigabitEthernet0/0",
-                        "description": "UPLINK TO INTERNET PROVIDER",
-                        "enabled": true,
-                        "label": "layer3",
-                        "ip_addresses": [
-                            {
-                                "address": "24.24.1.2/24",
-                                "tags": []
-                            }
-                        ],
-                        "_custom_field_data": {
-                            "vrrp_group": null,
-                            "dhcp_helper": null,
-                            "vrrp_priority": null,
-                            "vrrp_primary_ip": null,
-                            "vrrp_description": null
-                        },
-                        "lag": null,
-                        "tagged_vlans": [],
-                        "untagged_vlan": null,
-                        "tags": [],
-                        "connected_interface": null
-                    },
-                    {
-                        "name": "GigabitEthernet0/1",
-                        "description": "DOWNLINK POD1SW1",
-                        "enabled": true,
-                        "label": "layer3",
-                        "ip_addresses": [
-                            {
-                                "address": "10.10.1.0/31",
-                                "tags": [
-                                    {
-                                        "slug": "ospf_area_0"
-                                    },
-                                    {
-                                        "slug": "p2p"
-                                    }
-                                ]
-                            }
-                        ],
-                        "_custom_field_data": {
-                            "vrrp_group": null,
-                            "dhcp_helper": null,
-                            "vrrp_priority": null,
-                            "vrrp_primary_ip": null,
-                            "vrrp_description": null
-                        },
-                        "lag": null,
-                        "tagged_vlans": [],
-                        "untagged_vlan": null,
-                        "tags": [],
-                        "connected_interface": {
-                            "device": {
-                                "name": "pod1sw1"
-                            },
-                            "name": "GigabitEthernet0/0"
+                {
+                    "name": "GigabitEthernet0/0",
+                    "description": "UPLINK TO INTERNET PROVIDER",
+                    "enabled": true,
+                    "label": "layer3",
+                    "ip_addresses": [
+                        {
+                            "address": "24.24.1.2/24",
+                            "tags": []
                         }
-                    },
-                    {
-                        "name": "GigabitEthernet0/2",
-                        "description": "DOWNLINK POD1SW2",
-                        "enabled": true,
-                        "label": "layer3",
-                        "ip_addresses": [
-                            {
-                                "address": "10.10.1.2/31",
-                                "tags": [
-                                    {
-                                        "slug": "ospf_area_0"
-                                    },
-                                    {
-                                        "slug": "p2p"
-                                    }
-                                ]
-                            }
-                        ],
-                        "_custom_field_data": {
-                            "vrrp_group": null,
-                            "dhcp_helper": null,
-                            "vrrp_priority": null,
-                            "vrrp_primary_ip": null,
-                            "vrrp_description": null
+                    ],
+                    "vrrp_group": null,
+                    "vrrp_description": null,
+                    "vrrp_priority": null,
+                    "vrrp_primary_ip": null,
+                    "dhcp_helper": null,
+                    "lag": null,
+                    "tagged_vlans": [],
+                    "untagged_vlan": null,
+                    "tags": [],
+                    "connected_interface": {
+                        "device": {
+                            "name": "cloud_router"
                         },
-                        "lag": null,
-                        "tagged_vlans": [],
-                        "untagged_vlan": null,
-                        "tags": [],
-                        "connected_interface": {
-                            "device": {
-                                "name": "pod1sw2"
-                            },
-                            "name": "GigabitEthernet0/0"
-                        }
-                    },
-                    {
-                        "name": "GigabitEthernet0/3",
-                        "description": "",
-                        "enabled": false,
-                        "label": "",
-                        "ip_addresses": [],
-                        "_custom_field_data": {
-                            "vrrp_group": null,
-                            "dhcp_helper": null,
-                            "vrrp_priority": null,
-                            "vrrp_primary_ip": null,
-                            "vrrp_description": null
-                        },
-                        "lag": null,
-                        "tagged_vlans": [],
-                        "untagged_vlan": null,
-                        "tags": [],
-                        "connected_interface": null
-                    },
-                    {
-                        "name": "GigabitEthernet0/4",
-                        "description": "",
-                        "enabled": false,
-                        "label": "",
-                        "ip_addresses": [],
-                        "_custom_field_data": {
-                            "vrrp_group": null,
-                            "dhcp_helper": null,
-                            "vrrp_priority": null,
-                            "vrrp_primary_ip": null,
-                            "vrrp_description": null
-                        },
-                        "lag": null,
-                        "tagged_vlans": [],
-                        "untagged_vlan": null,
-                        "tags": [],
-                        "connected_interface": null
-                    },
-                    {
-                        "name": "GigabitEthernet0/5",
-                        "description": "",
-                        "enabled": false,
-                        "label": "",
-                        "ip_addresses": [],
-                        "_custom_field_data": {
-                            "vrrp_group": null,
-                            "dhcp_helper": null,
-                            "vrrp_priority": null,
-                            "vrrp_primary_ip": null,
-                            "vrrp_description": null
-                        },
-                        "lag": null,
-                        "tagged_vlans": [],
-                        "untagged_vlan": null,
-                        "tags": [],
-                        "connected_interface": null
-                    },
-                    {
-                        "name": "GigabitEthernet0/6",
-                        "description": "",
-                        "enabled": false,
-                        "label": "",
-                        "ip_addresses": [],
-                        "_custom_field_data": {
-                            "vrrp_group": null,
-                            "dhcp_helper": null,
-                            "vrrp_priority": null,
-                            "vrrp_primary_ip": null,
-                            "vrrp_description": null
-                        },
-                        "lag": null,
-                        "tagged_vlans": [],
-                        "untagged_vlan": null,
-                        "tags": [],
-                        "connected_interface": null
-                    },
-                    {
-                        "name": "GigabitEthernet0/7",
-                        "description": "MGMT-INTERFACE",
-                        "enabled": true,
-                        "label": "mgmt",
-                        "ip_addresses": [
-                            {
-                                "address": "192.168.4.17/24",
-                                "tags": []
-                            }
-                        ],
-                        "_custom_field_data": {
-                            "vrrp_group": null,
-                            "dhcp_helper": null,
-                            "vrrp_priority": null,
-                            "vrrp_primary_ip": null,
-                            "vrrp_description": null
-                        },
-                        "lag": null,
-                        "tagged_vlans": [],
-                        "untagged_vlan": null,
-                        "tags": [],
-                        "connected_interface": null
-                    },
-                    {
-                        "name": "Loopback0",
-                        "description": "iBGP LOOPBACK",
-                        "enabled": true,
-                        "label": "",
-                        "ip_addresses": [
-                            {
-                                "address": "10.0.1.1/32",
-                                "tags": [
-                                    {
-                                        "slug": "ospf_area_0"
-                                    }
-                                ]
-                            }
-                        ],
-                        "_custom_field_data": {
-                            "vrrp_group": null,
-                            "dhcp_helper": null,
-                            "vrrp_priority": null,
-                            "vrrp_primary_ip": null,
-                            "vrrp_description": null
-                        },
-                        "lag": null,
-                        "tagged_vlans": [],
-                        "untagged_vlan": null,
-                        "tags": [],
-                        "connected_interface": null
+                        "name": "GigabitEthernet1"
                     }
-                ]
-            }
-        ]
-    },
+                },
+                {
+                    "name": "GigabitEthernet0/1",
+                    "description": "DOWNLINK POD1SW1",
+                    "enabled": true,
+                    "label": "layer3",
+                    "ip_addresses": [
+                        {
+                            "address": "10.10.1.0/31",
+                            "tags": [
+                                {
+                                    "slug": "ospf_area_0"
+                                },
+                                {
+                                    "slug": "p2p"
+                                }
+                            ]
+                        }
+                    ],
+                    "vrrp_group": null,
+                    "vrrp_description": null,
+                    "vrrp_priority": null,
+                    "vrrp_primary_ip": null,
+                    "dhcp_helper": null,
+                    "lag": null,
+                    "tagged_vlans": [],
+                    "untagged_vlan": null,
+                    "tags": [],
+                    "connected_interface": {
+                        "device": {
+                            "name": "pod1sw1"
+                        },
+                        "name": "GigabitEthernet0/0"
+                    }
+                },
+                {
+                    "name": "GigabitEthernet0/2",
+                    "description": "DOWNLINK POD1SW2",
+                    "enabled": true,
+                    "label": "layer3",
+                    "ip_addresses": [
+                        {
+                            "address": "10.10.1.2/31",
+                            "tags": [
+                                {
+                                    "slug": "ospf_area_0"
+                                },
+                                {
+                                    "slug": "p2p"
+                                }
+                            ]
+                        }
+                    ],
+                    "vrrp_group": null,
+                    "vrrp_description": null,
+                    "vrrp_priority": null,
+                    "vrrp_primary_ip": null,
+                    "dhcp_helper": null,
+                    "lag": null,
+                    "tagged_vlans": [],
+                    "untagged_vlan": null,
+                    "tags": [],
+                    "connected_interface": {
+                        "device": {
+                            "name": "pod1sw2"
+                        },
+                        "name": "GigabitEthernet0/0"
+                    }
+                },
+                {
+                    "name": "GigabitEthernet0/3",
+                    "description": "",
+                    "enabled": false,
+                    "label": "",
+                    "ip_addresses": [],
+                    "vrrp_group": null,
+                    "vrrp_description": null,
+                    "vrrp_priority": null,
+                    "vrrp_primary_ip": null,
+                    "dhcp_helper": null,
+                    "lag": null,
+                    "tagged_vlans": [],
+                    "untagged_vlan": null,
+                    "tags": [],
+                    "connected_interface": null
+                },
+                {
+                    "name": "GigabitEthernet0/4",
+                    "description": "",
+                    "enabled": false,
+                    "label": "",
+                    "ip_addresses": [],
+                    "vrrp_group": null,
+                    "vrrp_description": null,
+                    "vrrp_priority": null,
+                    "vrrp_primary_ip": null,
+                    "dhcp_helper": null,
+                    "lag": null,
+                    "tagged_vlans": [],
+                    "untagged_vlan": null,
+                    "tags": [],
+                    "connected_interface": null
+                },
+                {
+                    "name": "GigabitEthernet0/5",
+                    "description": "",
+                    "enabled": false,
+                    "label": "",
+                    "ip_addresses": [],
+                    "vrrp_group": null,
+                    "vrrp_description": null,
+                    "vrrp_priority": null,
+                    "vrrp_primary_ip": null,
+                    "dhcp_helper": null,
+                    "lag": null,
+                    "tagged_vlans": [],
+                    "untagged_vlan": null,
+                    "tags": [],
+                    "connected_interface": null
+                },
+                {
+                    "name": "GigabitEthernet0/6",
+                    "description": "",
+                    "enabled": false,
+                    "label": "",
+                    "ip_addresses": [],
+                    "vrrp_group": null,
+                    "vrrp_description": null,
+                    "vrrp_priority": null,
+                    "vrrp_primary_ip": null,
+                    "dhcp_helper": null,
+                    "lag": null,
+                    "tagged_vlans": [],
+                    "untagged_vlan": null,
+                    "tags": [],
+                    "connected_interface": null
+                },
+                {
+                    "name": "GigabitEthernet0/7",
+                    "description": "MGMT-INTERFACE",
+                    "enabled": true,
+                    "label": "mgmt",
+                    "ip_addresses": [
+                        {
+                            "address": "192.168.4.17/24",
+                            "tags": []
+                        }
+                    ],
+                    "vrrp_group": null,
+                    "vrrp_description": null,
+                    "vrrp_priority": null,
+                    "vrrp_primary_ip": null,
+                    "dhcp_helper": null,
+                    "lag": null,
+                    "tagged_vlans": [],
+                    "untagged_vlan": null,
+                    "tags": [],
+                    "connected_interface": null
+                },
+                {
+                    "name": "Loopback0",
+                    "description": "iBGP LOOPBACK",
+                    "enabled": true,
+                    "label": "",
+                    "ip_addresses": [
+                        {
+                            "address": "10.0.1.1/32",
+                            "tags": [
+                                {
+                                    "slug": "ospf_area_0"
+                                }
+                            ]
+                        }
+                    ],
+                    "vrrp_group": null,
+                    "vrrp_description": null,
+                    "vrrp_priority": null,
+                    "vrrp_primary_ip": null,
+                    "dhcp_helper": null,
+                    "lag": null,
+                    "tagged_vlans": [],
+                    "untagged_vlan": null,
+                    "tags": [],
+                    "connected_interface": null
+                }
+            ]
+        }
     "failed": false,
     "changed": false
 }
@@ -1155,3 +1133,4 @@ If you use VS CODE, you can use an extension to prettify the JSON output as it m
 
 [Introducing PyNautobot - Section 8](section8-pynautobot.md)
 
+[Full configuration Jinja Templates - Section 10](section10-jinja_templates.md)
