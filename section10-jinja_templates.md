@@ -112,6 +112,7 @@ This is what you will want your query role to look like. Note that we are regist
 ```
 
 We will use several different Jinja templates, and these templates will be called in as needed. To start will create different templates for each device in use on our pod. To ensure that each device configuration looks like a ```show run``` we will need to template the configuration with slite difference between the router and switch. This will be the only file in the root of ```full_configuration/build/templates/``` the rest will be stored inside of ```full_configuration/build/templates/ios```.
+{% raw %}
 ```
 ### full_configuration/build/templates/cisco_ios.j2
 #jinja2: lstrip_blocks: "True", trim_blocks: "True"
@@ -124,9 +125,11 @@ We will use several different Jinja templates, and these templates will be calle
 {% include "./ios/platform_templates/vios_router.j2"%}
 {% endif %}
 ```
+{% endraw %}
 To help keep our variable names short I have included a set command that takes ```nb_devices["data"]["devices"]``` and shortens it to ```devices```. 
 
 Create a new folder ```full_configuration/build/templates/ios/platform_templates``` this will store two different templates, vios_router.j2 and vios_switch.j2. This template will be used for all switches in the pod.
+{% raw %}
 ```
 ### full_configuration/build/templates/ios/platform_templates/vios_switch.j2
 !
@@ -269,7 +272,7 @@ banner login ^C
 !
 end
 ```
-
+{% endraw %}
 When created these templates I will pull a running configuration and starting from the top replace the text for things I will want to include as their own Jinja templates. So for example at the start of this file we have an ```{% include './ios/hostname.j2' %}``` that references a template for formating the cli text that would appear like this ```hostname pod1sw3```. 
 
 
