@@ -3,7 +3,7 @@
 
 If you have been following along, we just finished building out the graphQL query that will pull the data we want back to Ansible. Now we will take that data and run it through Jinja templates that will create a complete device configuration. We will be using very similar approaches as sections 4, 5, and 6. The only difference is that a single playbook will be used to generate a complete configuration that should look as if you did a ```show run``` on your switch or router.
 
-The first step will be to create a new playbook, and I've called mine ```pb.nautobot_build_full_config.yaml```. We will use two roles in this play, the first will be the nautobot_query role that we worked on in [section 9](section9-querynautobot.md), and the second play will be the construction of the complete device configuration.
+The first step will be to create a new playbook, and I've called mine ```pb.nautobot_build_full_config.yaml```. We will use two roles in this play, the first will be the nautobot_query role that we worked on in [section 9](https://www.workshop.ansible-lab.com/section9-querynautobot.html), and the second play will be the construction of the complete device configuration.
 
 ### pb.nautobot_build_full_config.yaml
 ```
