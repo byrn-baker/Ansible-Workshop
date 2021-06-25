@@ -24,7 +24,11 @@ query_string: |
                     slug
                     }
                 }
-                _custom_field_data
+                vrrp_group: cf_vrrp_group
+                vrrp_description: cf_vrrp_description
+                vrrp_priority: cf_vrrp_priority
+                vrrp_primary_ip: cf_vrrp_primary_ip
+                dhcp_helper: cf_dhcp_helper
                 lag {
                     name
                 }
