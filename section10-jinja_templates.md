@@ -280,7 +280,7 @@ end
 {% endraw %}
 
 
-When created these templates I will pull a running configuration and starting from the top replace the text for things I will want to include as their own Jinja templates. So for example at the start of this file we have an ```{% include './ios/hostname.j2' %}``` that references a template for formating the cli text that would appear like this ```hostname pod1sw3```. 
+When created these templates I will pull a running configuration and starting from the top replace the text for things I will want to include as their own Jinja templates. So for example at the start of this file we have an {% raw %}```{% include './ios/hostname.j2' %}```{% endraw %} that references a template for formating the cli text that would appear like this ```hostname pod1sw3```. 
 
 
 
