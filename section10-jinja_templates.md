@@ -973,7 +973,7 @@ We will re-use the following
 We will also re-use the static route and management jinja blocks from the switch template. This wraps up our templates for building full configuration files, now we just need to push this to our devices.
 
 ### Pushing full configuration
-create a new folder and file {% raw %}```roles/full_configuration/push/tasks/main.yaml```{% endraw %}
+create a new folder and file ```roles/full_configuration/push/tasks/main.yaml```
 
 {% raw %}
 ```
