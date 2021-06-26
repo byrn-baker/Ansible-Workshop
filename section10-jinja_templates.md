@@ -278,7 +278,7 @@ When creating these templates, I will pull a running configuration and, starting
 Each section is pretty self-explanatory. So let's look down at the interface templates and walk through developing these.
 
 I have split my interfaces into 4 different groupings which have their own templates. Loopback, and interfaces that are specific to the devices role in our pods network. 
-<!-- {% raw %}
+{% raw %}
 ```
 ### full_configuration/build/templates/ios/interfaces.j2
 {% for interface in devices[0]["interfaces"] %}
@@ -295,7 +295,8 @@ I have split my interfaces into 4 different groupings which have their own templ
 ```
 {% endraw %}
 
-#### Loopback: In our pod design, the loopback has one purpose: to facilitate iBGP peering between the router and 2 L3 switches. So there is only one way to configure it in our design which keeps our options small. We can expand this, of course, and continue evaluating inside the loopback template if a new use case is designed. In this case, we are using tags to determine if this interface will be included in OSPF and the type of interface in OSPF it should be (Point to Point or broadcast). This will be common across all L3 interfaces in our templates.
+#### Loopback: 
+In our pod design, the loopback has one purpose: to facilitate iBGP peering between the router and 2 L3 switches. So there is only one way to configure it in our design which keeps our options small. We can expand this, of course, and continue evaluating inside the loopback template if a new use case is designed. In this case, we are using tags to determine if this interface will be included in OSPF and the type of interface in OSPF it should be (Point to Point or broadcast). This will be common across all L3 interfaces in our templates.
 
 {% raw %}
 ```
@@ -329,7 +330,8 @@ interface {{ interface["name"] }}
 ```
 {% endraw %}
 
-#### pod_l2_switch: In our pod's network design, we have four types of interfaces that will be considered for configuration on a layer 2 (access) switch. In my template, I evaluate the data coming from Nautobot in the below order. I am also using the interface Labels in Nautobot to tell my templates the type of interface it should be (access, trunk, or layer3).
+#### pod_l2_switch: 
+In our pod's network design, we have four types of interfaces that will be considered for configuration on a layer 2 (access) switch. In my template, I evaluate the data coming from Nautobot in the below order. I am also using the interface Labels in Nautobot to tell my templates the type of interface it should be (access, trunk, or layer3).
   1. Access interface:  if the port is has a label of access and enabled, then configure it as an access port.
   2. Trunk interface: else, if the port is has a label of trunk and is enabled, then configure it as a trunk port. 
      For allowed VLANs on trunks ports, we do not want to loop through each one because we will not be able to cleanly place them in the format cisco required (switch trunk allowed vlan 1,4,6). Instead, we need to join these different VLANs to match the correct cli structure. What is cool with Jinja is you can do this with a join statement and pulling a specific attribute from the list of tagged VLANs in the nautobot query.
@@ -395,7 +397,8 @@ interface {{ interface["name"] }}
 ```
 {% endraw %}
 
-#### pod_l3_switch: In our pods network design we have 7 types of interfaces that will be considered for configuration on a layer 3 (core) switch. In my template I evaluate the data coming from Nautobot in the below order. Again using the interface Labels in Nautobot to tell my templates the type of interface it should be (access, trunk, or layer3).
+#### pod_l3_switch: 
+In our pods network design we have 7 types of interfaces that will be considered for configuration on a layer 3 (core) switch. In my template I evaluate the data coming from Nautobot in the below order. Again using the interface Labels in Nautobot to tell my templates the type of interface it should be (access, trunk, or layer3).
   1. Access interface:  if the port is has a label of access and enabled, and has GigabitEthernet in the interface name, then configure it as an access port.
   2. Trunk interface: else, if the port is has a label of trunk and is enabled, and has GigabitEthernet in the interface name, then configure it as a trunk port. We are also looking for if the interface is a part of a port channel. Nautobot lists this in the query under the interface as ```lag["name"]```.
   3. Port-Channel Trunk interface: else, if the port is has a label of trunk and is enabled, and has Port-Channel in the interface name, then configure it as a trunk port.
@@ -559,7 +562,8 @@ interface {{ interface["name"] }}
 ```
 {% endraw %}
 
-#### pod_router: In our pods network design we have 3 types of interfaces that will be considered for configuration on a router. In my template I evaluate the data coming from Nautobot in the below order. Again using the interface Labels in Nautobot to tell my templates the type of interface it should be (layer3, MGMT, not in use).
+#### pod_router: 
+In our pods network design we have 3 types of interfaces that will be considered for configuration on a router. In my template I evaluate the data coming from Nautobot in the below order. Again using the interface Labels in Nautobot to tell my templates the type of interface it should be (layer3, MGMT, not in use).
   1. Layer3 physical interface: if the port has a label of layer3 and enabled, and has GigabitEthernet in the interface name. We are also elvaluating if the interface should be a part of the OSPF instance, as well we are looking for ACLs, and vrrp details.
   2. Management interface: else, if the port has a label mgmt, then configure it as a management port.
   3. Not used interface: else, if nothing matches above, then configure the put as an unused port and shut it down. 
@@ -964,7 +968,6 @@ We will re-use the following
 ```./ios/ospf.j2```
 ```./ios/bgp.j2```
 ```./ios/console_vty.j2```
--->
 
 We will also re-use the static route and management jinja blocks from the switch template
 
