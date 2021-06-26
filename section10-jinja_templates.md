@@ -18,6 +18,7 @@ The first step will be to create a new playbook, and I've called mine ```pb.naut
   roles:
   - { role: nautobot_query }
   - { role: full_configuration/build }
+  - { role: full_configuration/push }
 ```
 
 ### nautobot_query role
@@ -944,7 +945,7 @@ end
 ```
 {% endraw %}
 
-#### dhcp_server
+#### dhcp_server:
 Our router is acting as the DHCP server is the pod so we will need to write a template to set this up. This information is stored in the config_context of the router in Nautobot.
 
 {% raw %}
@@ -969,7 +970,22 @@ We will re-use the following
 ```./ios/bgp.j2```
 ```./ios/console_vty.j2```
 
-We will also re-use the static route and management jinja blocks from the switch template
+We will also re-use the static route and management jinja blocks from the switch template. This wraps up our templates for building full configuration files, now we just need to push this to our devices.
+
+### Pushing full configuration
+create a new folder and file {% raw %}```roles/full_configuration/push/tasks/main.yaml```{% endraw %}
+
+{% raw %}
+```
+---
+- name: Pushing Full configuration to {{ inventory_hostname }}
+  cisco.ios.ios_config:
+    src: "configs/{{ inventory_hostname }}.conf"
+    replace: line
+    save_when: modified
+```
+{% endraw %}
+
 
 [Installing Ansible - Section 1](installing_ansible.md)
 
