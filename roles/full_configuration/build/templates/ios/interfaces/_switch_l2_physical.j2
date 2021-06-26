@@ -1,4 +1,4 @@
-{% if interface["label"] == "access" and interface["enabled"] == true %}
+{% if interface["label"] == "access" and interface["enabled"] == true and 'GigabitEthernet' in interface["name"] %}
 interface {{ interface["name"] }}
 {% if interface["description"] is defined %}
  description {{ interface["description"] }}    
@@ -9,7 +9,7 @@ interface {{ interface["name"] }}
  no cdp enable
  no shut 
  !
-{% elif interface["label"] == "trunk" and interface["enabled"] == true %}
+{% elif interface["label"] == "trunk" and interface["enabled"] == true and 'GigabitEthernet' in interface["name"] %}
 interface {{ interface["name"] }}
 {% if interface["description"] is defined %}
  description {{ interface["description"] }}
