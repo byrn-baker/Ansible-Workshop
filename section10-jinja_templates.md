@@ -128,6 +128,7 @@ We will use several different Jinja templates, and these templates will be calle
 {% endraw %}
 To help keep our variable names short I have included a set command that takes ```nb_devices["data"]["devices"]``` and shortens it to ```devices```. 
 
+### full_configuration/build/templates/ios/platform_templates/vios_switch.j2
 Create a new folder ```full_configuration/build/templates/ios/platform_templates``` this will store two different templates, vios_router.j2 and vios_switch.j2. This template will be used for all switches in the pod.
 {% raw %}
 ```
@@ -651,10 +652,79 @@ router ospf {{ devices[0]["config_context"]["ospf"]["id"] }}
 {% endraw %}
 
 #### full_configuration/build/templates/ios/bgp.j2
+The BGP template is broken down into five parts:
+ 1. route-reflector
+ {% raw %}
+ ```
+ ### full_configuration/build/templates/ios/bgp/bgp_route_reflector.j2
+ {% for peer in devices[0]["config_context"]["bgp"]["ibgp"]["neighbors"] %}
+ neighbor {{ peer }} remote-as {{ devices[0]["config_context"]["bgp"]["ibgp"]["l_asn"] }}
+ neighbor {{ peer }} update-source Loopback0
+ neighbor {{ peer }} route-reflector-client
+{% endfor %}
+ ```
+ {% endraw %}
 
+ 2. ibgp neighbors
+  {% raw %}
+ ```
+ ### full_configuration/build/templates/ios/bgp.j2
+{% for peer in devices[0]["config_context"]["bgp"]["ibgp"]["neighbors"] %}
+ neighbor {{ peer }} remote-as {{ devices[0]["config_context"]["bgp"]["ibgp"]["l_asn"] }}
+ neighbor {{ peer }} update-source Loopback0
+{% endfor %}
+ ```
+ {% endraw %}
+
+ 3. ebgp neighbors
+   {% raw %}
+ ```
+ ### full_configuration/build/templates/ios/bgp/ebgp_neighbor.j2
+{% for rpeer,rpeer_attr in devices[0]["config_context"]["bgp"]["ebgp"]["neighbors"].items()%}
+ neighbor {{ rpeer }} remote-as {{ rpeer_attr["r_asn"] }}
+{% endfor%}
+ ```
+ {% endraw %}
+
+ 4. address family ipv4
+    {% raw %}
+ ```
+ ### full_configuration/build/templates/ios/bgp/address_family_ipv4.j2
+address-family ipv4
+  {% if devices[0]["config_context"]["bgp"]["address_family_ipv4"]["advertised_networks"] is defined %}
+    {% for adv_nets in devices[0]["config_context"]["bgp"]["address_family_ipv4"]["advertised_networks"] %}
+  network {{ adv_nets | ipaddr('network') }} mask {{ adv_nets | ipaddr('netmask') }} 
+    {% endfor %}
+    {% if devices[0]["config_context"]["bgp"]["address_family_ipv4"]["agg_network"] is defined %}
+    {% for agg in devices[0]["config_context"]["bgp"]["address_family_ipv4"]["agg_network"] %}
+  aggregate-address {{ agg | ipaddr('network') }} {{ agg | ipaddr('netmask') }} summary-only
+    {% endfor %}
+    {% endif %}
+  {% endif %}
+  {% for peer in devices[0]["config_context"]["bgp"]["ibgp"]["neighbors"] %}
+  neighbor {{ peer }} activate
+  neighbor {{ peer }} next-hop-self
+  {% endfor %}
+ ```
+ {% endraw %}
+
+ 5. ebgp address family ipv4
+{% raw %}
+ ```
+ ### full_configuration/build/templates/ios/bgp/ebgp_address_family_ipv4.j2
+{% for rpeer,rpeer_attr in devices[0]["config_context"]["bgp"]["ebgp"]["neighbors"]["items"]() %}
+  neighbor {{rpeer}} activate
+{% if rpeer_attr["default_orig"] is defined and rpeer_attr["default_orig"] == True %}
+  neighbor {{ rpeer }} default-originate
+{% else %}
+{% endif %}
+{% endfor %}
+ ```
+ {% endraw %}
 
 {% raw %}
 ```
+### full_configuration/build/templates/ios/bgp.j2
 router bgp {{ devices[0]["config_context"]["bgp"]["ibgp"]["l_asn"] }}
  bgp log-neighbor-changes
 {% for interface in devices[0]["interfaces"] %}
@@ -681,21 +751,7 @@ router bgp {{ devices[0]["config_context"]["bgp"]["ibgp"]["l_asn"] }}
 {% endif %}
  !
 {% if devices[0]["config_context"]["bgp"]["address_family_ipv4"] is defined %}
- address-family ipv4
-  {% if devices[0]["config_context"]["bgp"]["address_family_ipv4"]["advertised_networks"] is defined %}
-    {% for adv_nets in devices[0]["config_context"]["bgp"]["address_family_ipv4"]["advertised_networks"] %}
-  network {{ adv_nets | ipaddr('network') }} mask {{ adv_nets | ipaddr('netmask') }} 
-    {% endfor %}
-    {% if devices[0]["config_context"]["bgp"]["address_family_ipv4"]["agg_network"] is defined %}
-    {% for agg in devices[0]["config_context"]["bgp"]["address_family_ipv4"]["agg_network"] %}
-  aggregate-address {{ agg | ipaddr('network') }} {{ agg | ipaddr('netmask') }} summary-only
-    {% endfor %}
-    {% endif %}
-  {% endif %}
-  {% for peer in devices[0]["config_context"]["bgp"]["ibgp"]["neighbors"] %}
-  neighbor {{ peer }} activate
-  neighbor {{ peer }} next-hop-self
-  {% endfor %}
+{% include './ios/bgp/address_family_ipv4.j2' %}
 {% endif %}
 {% if devices[0]["config_context"]["bgp"]["ebgp"] is defined %}
 {% include './ios/bgp/ebgp_address_family_ipv4.j2' %}
@@ -703,25 +759,206 @@ router bgp {{ devices[0]["config_context"]["bgp"]["ibgp"]["l_asn"] }}
 {% endif %}
  exit-address-family
  !
-{% if devices[0]["config_context"]["bgp"]["address_family_vpnv4"] is defined %}
- address-family vpnv4
-  {% for peer in devices[0]["config_context"]["bgp"]["ibgp"]["neighbors"] %}
-  neighbor {{ peer }} activate
-  neighbor {{ peer }} send-community extended
-  neighbor {{ peer }} next-hop-self
-  {% endfor %}
- exit-address-family
-{% else %}
-{% endif %}
 ```
 {% endraw %}
 
+Next on the switch template is static routes, ssh source interface, and console/vty settings. These are all placed in the ```full_configuration/build/templates/ios/platform_templates/vios_switch.j2``` template. This takes care of the vios_switch template.
 
+### full_configuration/build/templates/ios/platform_templates/vios_router.j2
+The router template will look very similar to our switch template with a few differences, we will re-use as many templates as we can from the above switch template. 
 
+{% raw %}
+```
+### full_configuration/build/templates/ios/platform_templates/vios_router.j2
+!
+version 15.6
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+{% include './ios/hostname.j2' %}
 
+boot-start-marker
+boot-end-marker
+!
+!
+vrf definition MGMT
+ !
+ address-family ipv4
+ exit-address-family
+!
+!
+{% if devices[0]["config_context"]["aaa-new-model"] is defined %}
+{% include './ios/aaa.j2' %}
+{% else %}
+no aaa new-model
+{% endif %}
 
+ethernet lmi ce
+!
+!
+!
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+{% if devices[0]["config_context"]["dhcp_pool"] is defined %}
+{% include './ios/dhcp_server.j2' %}
+{% endif %}
+!
+!
+{% include './ios/dns.j2' %}
 
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+file prompt quiet
+{% include './ios/local_user.j2' %}
 
+!
+redundancy
+!
+{% if devices[0]["config_context"]["lldp"] == true %}
+lldp run
+{% endif %}
+{% if devices[0]["config_context"]["cdp"] == true %}
+cdp run
+{% endif %}
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+{% include './ios/interfaces.j2' %}
+
+!
+{% if devices[0]["config_context"]["ospf"] is defined %}
+{% include './ios/ospf.j2' %}
+{% endif %}
+
+!
+{% if devices[0]["config_context"]["bgp"] is defined %}
+{% include './ios/bgp.j2' %}
+{% endif %}
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+{% if devices[0]["config_context"]["routes"] is defined %}
+{% if devices[0]["config_context"]["routes"]["static"] is defined %}
+{% for static in devices[0]["config_context"]["routes"]["static"] %}
+{{ static }}
+{% endfor %}
+{% endif %}
+{% endif %}
+{% if devices[0]["config_context"]["routes"]["mgmt_gateway"] is defined %}
+ip route vrf MGMT 0.0.0.0 0.0.0.0 {{ devices[0]["config_context"]["routes"]["mgmt_gateway"] }}
+{% endif %}
+{% if devices[0]["device_role"]["slug"] == "pod_l2_switch" %}
+ip ssh source-interface GigabitEthernet1/3
+{% elif devices[0]["device_role"]["slug"] == "pod_l3_switch" %}
+ip ssh source-interface GigabitEthernet1/3
+{% elif devices[0]["device_role"]["slug"] == "pod_router" %}
+ip ssh source-interface GigabitEthernet0/7
+{% endif %}
+ip ssh version 2
+ip scp server enable
+!
+!
+!
+!
+control-plane
+!
+banner exec ^C
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************
+^C
+banner incoming ^C
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************
+^C
+banner login ^C
+**************************************************************************
+* IOSv is strictly limited to use for evaluation, demonstration and IOS  *
+* education. IOSv is provided as-is and is not supported by Cisco's      *
+* Technical Advisory Center. Any use or disclosure, in whole or in part, *
+* of the IOSv Software or Documentation to any third party for any       *
+* purposes is expressly prohibited except as otherwise authorized by     *
+* Cisco in writing.                                                      *
+**************************************************************************
+^C
+!
+{% include './ios/console_vty.j2' %}
+
+no scheduler allocate
+!
+end
+```
+{% endraw %}
+
+#### dhcp_server
+Our router is acting as the DHCP server is the pod so we will need to write a template to set this up. This information is stored in the config_context of the router in Nautobot.
+
+{% raw %}
+```
+### full_configuration/build/templates/ios/dhcp_server.j2
+{% for address in devices[0]["config_context"]["dhcp_pool"] %}
+ip dhcp excluded-address {{ address["excluded_address"] }}
+{% endfor %}
+{% for pool in devices[0]["config_context"]["dhcp_pool"] %}
+ip dhcp pool {{ pool["name"] }}
+ network {{ pool["network"] | replace("/"," /") }}
+ default-router {{ pool["default_router"] }}
+ lease {{ pool["lease"] }}
+!
+{% endfor %}
+```
+{% endraw %}
+
+We will re-use the following
+{% raw %}```./ios/interfaces.j2```{% endraw %}
+{% raw %}```./ios/ospf.j2```{% endraw %}
+{% raw %}```./ios/bgp.j2```{% endraw %}
+{% raw %}```./ios/console_vty.j2```{% endraw %}
+
+We will also re-use the static route and management jinja blocks from the switch template
 
 [Installing Ansible - Section 1](installing_ansible.md)
 
@@ -740,4 +977,3 @@ router bgp {{ devices[0]["config_context"]["bgp"]["ibgp"]["l_asn"] }}
 [Introducing PyNautobot - Section 8](section8-pynautobot.md)
 
 [Querying your device data from nautobot - Section 9](section9-querynautobot.md)
-
