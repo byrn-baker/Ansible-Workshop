@@ -292,6 +292,7 @@ I have split my interfaces into 4 different groupings which have their own templ
 {% endif %}
 {% endfor %}
 ```
+{% endraw %}
 
 - Loopback: In our pod design, the loopback has one purpose: to facilitate iBGP peering between the router and 2 L3 switches. So there is only one way to configure it in our design which keeps our options small. We can expand this, of course, and continue evaluating inside the loopback template if a new use case is designed. In this case, we are using tags to determine if this interface will be included in OSPF and the type of interface in OSPF it should be (Point to Point or broadcast). This will be common across all L3 interfaces in our templates.
 
