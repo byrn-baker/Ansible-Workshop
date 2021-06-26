@@ -277,7 +277,7 @@ end
 When creating these templates, I will pull a running configuration and, starting from the top, replace the text for things I will want to include as their own Jinja templates. For example, at the start of this file, we have an ```{% include './ios/hostname.j2' %}``` that references a template for formating the cli text that would appear like this ```hostname pod1sw3```. Each section is pretty self-explanatory. So let's look down at the interface templates and walk through developing these.
 
 I have split my interfaces into 4 different groupings which have their own templates. Loopback, and interfaces that are specific to the devices role in our pods network. 
-{% raw %}
+<!-- {% raw %}
 ```
 ### full_configuration/build/templates/ios/interfaces.j2
 {% for interface in devices[0]["interfaces"] %}
@@ -959,22 +959,11 @@ ip dhcp pool {{ pool["name"] }}
 {% endraw %}
 
 We will re-use the following
-
-{% raw %}
 ```./ios/interfaces.j2```
-{% endraw %}
-
-{% raw %}
 ```./ios/ospf.j2```
-{% endraw %}
-
-{% raw %}
 ```./ios/bgp.j2```
-{% endraw %}
-
-{% raw %}
 ```./ios/console_vty.j2```
-{% endraw %}
+-->
 
 We will also re-use the static route and management jinja blocks from the switch template
 
