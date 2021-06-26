@@ -954,10 +954,18 @@ ip dhcp pool {{ pool["name"] }}
 {% endraw %}
 
 We will re-use the following
-{% raw %}```./ios/interfaces.j2```{% endraw %}
-{% raw %}```./ios/ospf.j2```{% endraw %}
-{% raw %}```./ios/bgp.j2```{% endraw %}
-{% raw %}```./ios/console_vty.j2```{% endraw %}
+{% raw %}
+```./ios/interfaces.j2```
+{% endraw %}
+{% raw %}
+```./ios/ospf.j2```
+{% endraw %}
+{% raw %}
+```./ios/bgp.j2```
+{% endraw %}
+{% raw %}
+```./ios/console_vty.j2```
+{% endraw %}
 
 We will also re-use the static route and management jinja blocks from the switch template
 
