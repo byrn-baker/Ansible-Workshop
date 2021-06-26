@@ -1,0 +1,7 @@
+ address-family vpnv4
+  {% for peer in devices[0]["config_context"]["bgp"]["ibgp"]["neighbors"] %}
+  neighbor {{ peer }} activate
+  neighbor {{ peer }} send-community extended
+  neighbor {{ peer }} next-hop-self
+  {% endfor %}
+ exit-address-family

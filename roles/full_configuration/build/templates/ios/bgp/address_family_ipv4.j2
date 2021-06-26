@@ -1,0 +1,15 @@
+ address-family ipv4
+  {% if devices[0]["config_context"]["bgp"]["address_family_ipv4"]["advertised_networks"] is defined %}
+    {% for adv_nets in devices[0]["config_context"]["bgp"]["address_family_ipv4"]["advertised_networks"] %}
+  network {{ adv_nets | ipaddr('network') }} mask {{ adv_nets | ipaddr('netmask') }} 
+    {% endfor %}
+    {% if devices[0]["config_context"]["bgp"]["address_family_ipv4"]["agg_network"] is defined %}
+    {% for agg in devices[0]["config_context"]["bgp"]["address_family_ipv4"]["agg_network"] %}
+  aggregate-address {{ agg | ipaddr('network') }} {{ agg | ipaddr('netmask') }} summary-only
+    {% endfor %}
+    {% endif %}
+  {% endif %}
+  {% for peer in devices[0]["config_context"]["bgp"]["ibgp"]["neighbors"] %}
+  neighbor {{ peer }} activate
+  neighbor {{ peer }} next-hop-self
+  {% endfor %}
