@@ -337,7 +337,7 @@ interface {{ interface["name"] }}
 {% raw %}
 ```
 ### full_configuration/build/templates/ios/interfaces/_switch_l2_physical.j2
-{% if interface["label"] == "access" and interface["enabled"] == true %}
+{% if interface["label"] == "access" and interface["enabled"] == true and 'GigabitEthernet' in interface["name"] %}
 interface {{ interface["name"] }}
 {% if interface["description"] is defined %}
  description {{ interface["description"] }}    
@@ -348,7 +348,7 @@ interface {{ interface["name"] }}
  no cdp enable
  no shut 
  !
-{% elif interface["label"] == "trunk" and interface["enabled"] == true %}
+{% elif interface["label"] == "trunk" and interface["enabled"] == true and 'GigabitEthernet' in interface["name"] %}
 interface {{ interface["name"] }}
 {% if interface["description"] is defined %}
  description {{ interface["description"] }}
@@ -393,14 +393,13 @@ interface {{ interface["name"] }}
 {% endraw %}
 
 - pod_l3_switch: In our pods network design we have 7 types of interfaces that will be considered for configuration on a layer 3 (core) switch. In my template I evaluate the data coming from Nautobot in the below order. Again using the interface Labels in Nautobot to tell my templates the type of interface it should be (access, trunk, or layer3).
-  1. Access interface:  if the port is has a label of access and enabled, then configure it as an access port.
-  2. Trunk interface: else, if the port is has a label of trunk and is enabled, then configure it as a trunk port. 
-     For allowed VLANs on trunks ports, we do not want to loop through each one because we will not be able to cleanly place them in the format cisco required (switch trunk allowed vlan 1,4,6). Instead, we need to join these different VLANs to match the correct cli structure. What is cool with Jinja is you can do this with a join statement and pulling a specific attribute from the list of tagged VLANs in the nautobot query.
-  3. Management interface: else, if the port has a label mgmt, then configure it as a management port.
-     Nothing special here, just including the port in the MGMT vrf and supplying it with an IP address. 
-  4. Not used interface: else, if nothing matches above, then configure the put as an unused port and shut it down. 
-
-
+  1. Access interface:  if the port is has a label of access and enabled, and has GigabitEthernet in the interface name, then configure it as an access port.
+  2. Trunk interface: else, if the port is has a label of trunk and is enabled, and has GigabitEthernet in the interface name, then configure it as a trunk port. We are also looking for if the interface is a part of a port channel. Nautobot lists this in the query under the interface as ```lag["name"]```.
+  3. Port-Channel Trunk interface: else, if the port is has a label of trunk and is enabled, and has Port-Channel in the interface name, then configure it as a trunk port.
+  4. Layer3 physical interface: else, if the port has a label of layer3 and enabled, and has GigabitEthernet in the interface name, then configure it as a none switchport. We are also elvaluating if the interface should be a part of the OSPF instance, as well we are looking for ACLs, ip helpers, and vrrp details.
+  5. Layer3 vlan interface: else, if the port has a label of layer3 and enabled, and has vlan in the interface name, then configure it as a none switchport. We are also elvaluating if the interface should be a part of the OSPF instance, as well we are looking for ACLs, ip helpers, and vrrp details.
+  6. Management interface: else, if the port has a label mgmt, then configure it as a management port.
+  7. Not used interface: else, if nothing matches above, then configure the put as an unused port and shut it down. 
 
 {% raw %}
 ```
@@ -557,10 +556,165 @@ interface {{ interface["name"] }}
 ```
 {% endraw %}
 
+- pod_router: In our pods network design we have 3 types of interfaces that will be considered for configuration on a router. In my template I evaluate the data coming from Nautobot in the below order. Again using the interface Labels in Nautobot to tell my templates the type of interface it should be (layer3, MGMT, not in use).
+  1. Layer3 physical interface: if the port has a label of layer3 and enabled, and has GigabitEthernet in the interface name. We are also elvaluating if the interface should be a part of the OSPF instance, as well we are looking for ACLs, and vrrp details.
+  2. Management interface: else, if the port has a label mgmt, then configure it as a management port.
+  3. Not used interface: else, if nothing matches above, then configure the put as an unused port and shut it down. 
+  Try as much as possible to write your templates in a way that makes them reusable. You can see looking at these 4 different templates there are several elements that are a copy and paste of the previous. The purpose of writing in a kind of code block is so that you can make changes to them without having to dig through hundreds of lines to find them. Also you will be able to swap blocks in and out as needed down the road. 
+
+{% raw %}
+```
+### full_configuration/build/templates/ios/interfaces/_router_physical.j2
+{% if interface["label"] == "layer3" and interface["enabled"] == true and 'GigabitEthernet' in interface["name"] %}
+interface {{ interface["name"]["split"]('.')[0] }}
+{% if interface["description"] is defined %}
+ description {{ interface.description }}
+{% endif %}
+{% if interface["ip_addresses"] | length > 0 %}
+{% for addr in interface["ip_addresses"] %}
+{% if addr["address"] is defined %}
+ ip address {{ addr["address"] | ipaddr('address') }} {{ addr["address"] | ipaddr('netmask') }}
+{% for tags in interface["ip_addresses"][0]["tags"] %}
+{% if tags["slug"] is defined %}
+{% if 'ospf' in tags["slug"] %}
+ ip ospf {{ devices[0]["config_context"]["ospf"]["id"] }} area {{ tags["slug"]|replace("ospf_area_","") }}
+{% endif %}
+{% if 'p2p' in tags["slug"] %}
+ ip ospf network point-to-point
+{% endif %}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% else %}
+{% endif %}
+{% if devices[0]["config_context"]["acl"] is defined %}
+{% if devices[0]["config_context"]["acl"]["interfaces"][interface["name"]] is defined %}
+ip access-group {{ devices[0]["config_context"]["acl"]["interfaces"][interface["name"]]["acl"] }} {{ devices[0]["config_context"]["acl"]["interfaces"][interface["name"]]["direction"] }}
+{% endif %}
+{% endif %}
+{% if interface["vrrp_group"] is defined %}
+ vrrp {{ interface["vrrp_group"] }} ip {{ interface["vrrp_primary_ip"] }}
+ vrrp {{ interface["vrrp_group"] }} description {{ interface["vrrp_description"] }}
+ vrrp {{ interface["vrrp_group"] }} priority {{ interface["vrrp_priority"] }}
+ vrrp {{ interface["vrrp_group"] }} timers learn
+{% endif %}
+ no shut
+!
+{% elif interface["label"] == "mgmt" %}
+interface {{ interface["name"] }}
+{% if interface["description"] is defined %}
+ description {{ interface["description"] }}    
+{% endif %}
+ vrf forwarding MGMT
+{% if interface["ip_addresses"] | length > 0 %}
+{% for addr in interface["ip_addresses"] %}
+{% if addr["address"] is defined %}
+ ip address {{ addr["address"] | ipaddr('address') }} {{ addr.address | ipaddr('netmask') }}
+ duplex auto
+ speed auto
+ no cdp enable
+ no shutdown
+!
+{% endif %}
+{% endfor %}
+{% endif %}
+{% else %}
+interface {{ interface["name"] }}
+ description NOT IN USE
+ duplex auto
+ speed auto
+ shutdown
+!
+{% endif %}
+```
+{% endraw %}
+
+#### full_configuration/build/templates/ios/ospf.j2
+On our switch template the next item after interfaces are the routing protocols. We are using OSPF and because IOS best practicies places the interface level OSPF configurations at the interface we only need a few lines under the OSPF section. We only need to set the OPSF instance, RID, and the loopback interface to passive. We placed the instance number in our config_context. We will loop through the interfaces looking for "loop" and its address. Ansible has jinja filters that allow us to extract just the address from the address/mask that is pulled from Nautobot. We set that address as a new variable called "rid" and use that variable in the ```router-id``` OSPF cli command. Lastly we set the passive interface which has been standardized on Loopback0.
+
+{% raw %}
+```
+router ospf {{ devices[0]["config_context"]["ospf"]["id"] }}
+{% for interface in devices[0]["interfaces"] %}
+{% if 'Loop' in interface["name"] %}
+{% for addr in interface.ip_addresses %}
+{% if addr.address is defined %}
+{% set rid = addr.address | ipaddr('address') %}
+ router-id {{ rid }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+ passive-interface Loopback0
+```
+{% endraw %}
+
+#### full_configuration/build/templates/ios/bgp.j2
 
 
-
-
+{% raw %}
+```
+router bgp {{ devices[0]["config_context"]["bgp"]["ibgp"]["l_asn"] }}
+ bgp log-neighbor-changes
+{% for interface in devices[0]["interfaces"] %}
+{% if 'Loop' in interface["name"] %}
+{% for addr in interface.ip_addresses %}
+{% if addr.address is defined %}
+{% set rid = addr.address | ipaddr('address') %}
+ bgp router-id {{ rid }}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% if devices[0]["config_context"]["bgp"]["ibgp"]["rr"] is defined %}
+{% include './ios/bgp/bgp_route_reflector.j2' %}
+{% else %}
+  {% for peer in devices[0]["config_context"]["bgp"]["ibgp"]["neighbors"] %}
+ neighbor {{ peer }} remote-as {{ devices[0]["config_context"]["bgp"]["ibgp"]["l_asn"] }}
+ neighbor {{ peer }} update-source Loopback0
+  {% endfor %}
+{% endif %}
+{% if devices[0]["config_context"]["bgp"]["ebgp"] is defined %}
+{% include './ios/bgp/ebgp_neighbor.j2' %}
+{% else %}
+{% endif %}
+ !
+{% if devices[0]["config_context"]["bgp"]["address_family_ipv4"] is defined %}
+ address-family ipv4
+  {% if devices[0]["config_context"]["bgp"]["address_family_ipv4"]["advertised_networks"] is defined %}
+    {% for adv_nets in devices[0]["config_context"]["bgp"]["address_family_ipv4"]["advertised_networks"] %}
+  network {{ adv_nets | ipaddr('network') }} mask {{ adv_nets | ipaddr('netmask') }} 
+    {% endfor %}
+    {% if devices[0]["config_context"]["bgp"]["address_family_ipv4"]["agg_network"] is defined %}
+    {% for agg in devices[0]["config_context"]["bgp"]["address_family_ipv4"]["agg_network"] %}
+  aggregate-address {{ agg | ipaddr('network') }} {{ agg | ipaddr('netmask') }} summary-only
+    {% endfor %}
+    {% endif %}
+  {% endif %}
+  {% for peer in devices[0]["config_context"]["bgp"]["ibgp"]["neighbors"] %}
+  neighbor {{ peer }} activate
+  neighbor {{ peer }} next-hop-self
+  {% endfor %}
+{% endif %}
+{% if devices[0]["config_context"]["bgp"]["ebgp"] is defined %}
+{% include './ios/bgp/ebgp_address_family_ipv4.j2' %}
+{% else %}
+{% endif %}
+ exit-address-family
+ !
+{% if devices[0]["config_context"]["bgp"]["address_family_vpnv4"] is defined %}
+ address-family vpnv4
+  {% for peer in devices[0]["config_context"]["bgp"]["ibgp"]["neighbors"] %}
+  neighbor {{ peer }} activate
+  neighbor {{ peer }} send-community extended
+  neighbor {{ peer }} next-hop-self
+  {% endfor %}
+ exit-address-family
+{% else %}
+{% endif %}
+```
+{% endraw %}
 
 
 
