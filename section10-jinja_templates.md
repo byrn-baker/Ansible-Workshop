@@ -965,10 +965,10 @@ ip dhcp pool {{ pool["name"] }}
 {% endraw %}
 
 We will re-use the following
-```./ios/interfaces.j2```
-```./ios/ospf.j2```
-```./ios/bgp.j2```
-```./ios/console_vty.j2```
+```./ios/interfaces.j2
+./ios/ospf.j2
+./ios/bgp.j2
+./ios/console_vty.j2```
 
 We will also re-use the static route and management jinja blocks from the switch template. This wraps up our templates for building full configuration files, now we just need to push this to our devices.
 
