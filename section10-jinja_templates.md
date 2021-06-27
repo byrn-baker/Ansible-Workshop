@@ -97,7 +97,7 @@ Notice that the rendered output will be in Alphabetical order as well.
 
 
 ## Section 10: Building configuration Jinja templates
-{% include section9.html %}
+<!--{% include section9.html %}-->
 
 If you have been following along, we just finished building out the graphQL query that will pull the data we want back to Ansible. Now we will take that data and run it through Jinja templates that will create a complete device configuration. We will be using very similar approaches as sections 4, 5, and 6. The only difference is that a single playbook will be used to generate a complete configuration that should look as if you did a ```show run``` on your switch or router.
 
