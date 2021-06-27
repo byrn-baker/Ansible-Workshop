@@ -1086,6 +1086,7 @@ create a new folder and file ```roles/full_configuration/push/tasks/main.yaml```
 ```
 {% endraw %}
 
+Now we should be able to run our playbook ```pb.nautobot_build_full_config.yaml```
 
 [Installing Ansible - Section 1](installing_ansible.md)
 
