@@ -86,6 +86,15 @@ dhcp_pool:
 Once Nautobot syncs the repo you should see all of your config_contexts populated under Extensibility and Config Contexts
 <img src="/assets/images/section10.2.jpg" alt="">
 
+We should also see that these are also populating at the device level as well. These should show on the right side under source context. The left side will render both the source and local context together into a single JSON or YAML output. Because of this indentation is important to ensure it is rendered correctly. 
+<img src="/assets/images/section10.3.jpg" alt="">
+
+If you click the edit button at the device level and scroll down to the local context section you can also place device specific configuration there. These will need to be formated as JSON only. I am using this to store each devices BGP configuration. 
+<img src="/assets/images/section10.4.jpg" alt="">
+<img src="/assets/images/section10.5.jpg" alt="">
+Notice that the rendered output will be in Alphabetical order as well. 
+
+
 
 ## Section 10: Building configuration Jinja templates
 {% include section9.html %}
