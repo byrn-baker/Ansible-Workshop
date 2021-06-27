@@ -581,10 +581,10 @@ interface {{ interface["name"]["split"]('.')[0] }}
 ip access-group {{ devices[0]["config_context"]["acl"]["interfaces"][interface["name"]]["acl"] }} {{ devices[0]["config_context"]["acl"]["interfaces"][interface["name"]]["direction"] }}
             {% endif %}
         {% endif %}
-        {% if interface["dhcp_helper"] %}
+        {% if interface["dhcp_helper"] is defined %}
  ip helper-address {{ interface["dhcp_helper"] }}
         {% endif %}
-        {% if interface["dhcp_helper"] %}
+        {% if interface["dhcp_helper"] is defined %}
  vrrp {{ interface.vrrp_group }} ip {{ interface.vrrp_primary_ip }}
  vrrp {{ interface.vrrp_group }} description {{ interface.vrrp_description }}
  vrrp {{ interface.vrrp_group }} priority {{ interface.vrrp_priority }}
@@ -621,10 +621,10 @@ interface {{ interface.name.split('.')[0] }}
 ip access-group {{ devices[0]["config_context"]["acl"]["interfaces"][interface["name"]]["acl"] }} {{ devices[0]["config_context"]["acl"]["interfaces"][interface["name"]]["direction"] }}
             {% endif %}
         {% endif %}
-        {% if interface.dhcp_helper %}
+        {% if interface.dhcp_helper is defined %}
  ip helper-address {{ interface.dhcp_helper }}
         {% endif %}
-        {% if interface["vrrp_group"] %}
+        {% if interface["vrrp_group"] is defined %}
  vrrp {{ interface["vrrp_group"] }} ip {{ interface["vrrp_primary_ip"] }}
  vrrp {{ interface["vrrp_group"] }} description {{ interface["vrrp_description"] }}
  vrrp {{ interface["vrrp_group"] }} priority {{ interface["vrrp_priority"] }}
