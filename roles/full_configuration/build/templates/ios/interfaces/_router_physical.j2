@@ -26,7 +26,7 @@ interface {{ interface["name"]["split"]('.')[0] }}
 ip access-group {{ devices[0]["config_context"]["acl"]["interfaces"][interface["name"]]["acl"] }} {{ devices[0]["config_context"]["acl"]["interfaces"][interface["name"]]["direction"] }}
 {% endif %}
 {% endif %}
-{% if interface["vrrp_group"] is defined %}
+{% if interface["vrrp_group"] %}
  vrrp {{ interface["vrrp_group"] }} ip {{ interface["vrrp_primary_ip"] }}
  vrrp {{ interface["vrrp_group"] }} description {{ interface["vrrp_description"] }}
  vrrp {{ interface["vrrp_group"] }} priority {{ interface["vrrp_priority"] }}
