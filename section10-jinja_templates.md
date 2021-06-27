@@ -1,3 +1,92 @@
+## Nautobot Config_Context
+With nautobot, we can manage what is called "config_context." We can use this to store specific or generic configuration elements that are hard to find inside the available fields in the nautobot device or interface sections. We will be using config_context to keep a few different configuration elements. Where Nautobot differentiates itself from Netbox is the ability to manage the config_context with a git repo.
+
+Under the Extensibility menu, clock on "Git Repositories" and click the "Add" button on the top right. 
+<img src="/assets/images/section10.1.jpg" alt="">
+Next, fill out the name, remote URL, branch, token, and username. Select "config contexts" from the provides selection box. Click create, and Nautobot should sync successfully to the git repo. You can use the same git repo for the other available "Provides" selection but require folders for each in the repo you set up. 
+
+Now that we have the repo setup with Nautobot, we can create config_context files that will be matched with our pod devices.
+- lldp & cdp: _metadata stores the data that will be used to populate this as a config_context object once synced. We can use different criteria to match the config_context to the device or devices. The configuration elements will be below _metadata. For LLDP and CDP, we will use device roles to match against.
+
+```
+_metadata:
+  name: LLDP AND CDP
+  weight: 1000
+  description: LLDP AND CDP CONFIGURATION 
+  is_active: true
+  roles:
+  - slug: pod_router
+  - slug: pod_l3_switch
+  - slug: pod_l2_switch
+lldp: true
+cdp: false
+```
+
+- mgmt gateway: we will use the same roles as this is common among all devices in the pod.
+
+```
+_metadata:
+  name: MGMT_GATEWAY
+  weight: 1000
+  description: Default route for the MGMT VRF
+  is_active: true
+  roles:
+    - slug: pod_router
+    - slug: pod_l3_switch
+    - slug: pod_l2_switch
+routes:  
+  mgmt_gateway: 192.168.4.254
+```
+
+- pod ospf instance: We will use roles again, but only match to the device roles for the router and l3 switch. 
+
+```
+_metadata:
+  name: POD_OSPF
+  weight: 1000
+  description: POD ospf configuration
+  is_active: true
+  roles:
+    - slug: pod_router
+    - slug: pod_l3_switch
+ospf:
+  id: 1
+```
+
+- pod dhcp pool settings: In this case, we will use a tag to match this context with the correct device. We could use the role as well, but because it would be specific to a single device, tagging will work better, especially if we had more than one pod managed in Nautobot. Another option could be simply building this at the devices config_context level and not handle it with a git repo. 
+
+```
+_metadata:
+  name: POD1_DHCP_SERVER
+  weight: 1000
+  description: POD1 DHCP Server configuration
+  is_active: true
+  tags:
+    - slug: pod1_dhcp_server
+dhcp_pool:
+  - name: USERS_POOL
+    network: "155.1.1.0/26"
+    default_router: 155.1.1.1
+    lease: 30
+    excluded_address: "155.1.1.1 155.1.1.3"
+
+  - name: SERVERS_POOL
+    network: "155.1.1.64/26"
+    default_router: 155.1.1.65
+    lease: 30
+    excluded_address: "155.1.1.65 155.1.1.67"
+
+  - name: GUEST_POOL
+    network: "155.1.1.128/26"
+    default_router: 155.1.1.129
+    lease: 30
+    excluded_address: "155.1.1.129 155.1.1.131"
+```
+
+Once Nautobot syncs the repo you should see all of your config_contexts populated under Extensibility and Config Contexts
+<img src="/assets/images/section10.2.jpg" alt="">
+
+
 ## Section 10: Building configuration Jinja templates
 {% include section9.html %}
 
