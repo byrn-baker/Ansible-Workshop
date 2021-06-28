@@ -43,3 +43,5 @@ ansible-galaxy collection install cisco.ios clay584.genie
 [Querying your device data from nautobot - Section 9](section9-querynautobot.md)
 
 [Full configuration Jinja Templates - Section 10](section10-jinja_templates.md)
+
+[Using the Nautobot Inventory module as your inventory source - Section 11](section11-nautobot-inventory.md)

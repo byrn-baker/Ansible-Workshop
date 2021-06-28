@@ -83,3 +83,5 @@ The Lab diagram above consists of the IP addressing for each POD. The (x) will b
 
 [Full configuration Jinja Templates - Section 10](section10-jinja_templates.md)
 
+[Using the Nautobot Inventory module as your inventory source - Section 11](section11-nautobot-inventory.md)
+

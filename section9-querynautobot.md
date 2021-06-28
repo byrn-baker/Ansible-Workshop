@@ -1134,3 +1134,5 @@ If you use VS CODE, you can use an extension to prettify the JSON output as it m
 [Introducing PyNautobot - Section 8](section8-pynautobot.md)
 
 [Full configuration Jinja Templates - Section 10](section10-jinja_templates.md)
+
+[Using the Nautobot Inventory module as your inventory source - Section 11](section11-nautobot-inventory.md)
