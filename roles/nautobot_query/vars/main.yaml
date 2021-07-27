@@ -15,6 +15,7 @@ query_string: |
         }
         interfaces {
                 name
+                mac_address
                 description
                 enabled
                 label
