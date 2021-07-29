@@ -438,3 +438,26 @@ interface {{ interface_id }}
 {% endraw %}
 
 This is just one small way you can use Webhooks with Ansible AWX/Tower and hopefully this opens up some ideas for you to try and move your automation journey forward. Go forth and Automate those simple things.  
+
+
+[Installing Ansible - Section 1](installing_ansible.md)
+
+[Creating an Inventory File - Section 2](inventory_file.md)
+
+[Creating a playbook - Section 3](first_play.md)
+
+[Building Roles - Section 4](building_roles.md)
+
+[Building the core switch Roles - Section 5](section5-coreswitch.md)
+
+[Building the router Roles - Section 6](section6-router.md)
+
+[Introducing Nautobot - Section 7](section7-nautobot.md)
+
+[Introducing PyNautobot - Section 8](section8-pynautobot.md)
+
+[Querying your device data from nautobot - Section 9](section9-querynautobot.md)
+
+[Full configuration Jinja Templates - Section 10](section10-jinja_templates.md)
+
+[Using the Nautobot Inventory module as your inventory source - Section 11](section11-nautobot-inventory.md)
