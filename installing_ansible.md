@@ -45,3 +45,5 @@ ansible-galaxy collection install cisco.ios clay584.genie
 [Full configuration Jinja Templates - Section 10](section10-jinja_templates.md)
 
 [Using the Nautobot Inventory module as your inventory source - Section 11](section11-nautobot-inventory.md)
+
+[Nautobot Webhooks - Section 12](section12-nautobot-webhooks.md)
