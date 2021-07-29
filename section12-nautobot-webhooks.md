@@ -59,4 +59,22 @@ This will kick off a job to sync the repo and you can watch that under the Jobs 
 
 ### Ansible Playbooks
 So now that we have AWX mostly setup lets focus on the playbooks we will need to change a device ports physical attributes. In this example we will focus on making changes to the following:
-1. 
+
+1. Update physical attributes like description, mtu, and shut or no shut.
+2. Update the type of interface, access, trunk, and what vlan is assigned
+3. adding or updating layer3 information like and ip address, dhcp helper, vrrp information.
+
+#### Playbook and Tasks
+Playbooks for AWX/Tower look the same for the most part, however because we are going to kicking these off from a Webhook in Nautobot we need to build into our Playbooks and tasks variables.
+
+```
+---
+- name: Nautobot Webhook interface update
+  hosts: "{{ device_id }}"
+  gather_facts: no
+  connection: network_cli
+  
+  roles:
+  - { role: updates_from_nautobot/physical_port_update }
+```
+
