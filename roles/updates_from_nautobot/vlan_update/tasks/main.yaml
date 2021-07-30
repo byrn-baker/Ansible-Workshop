@@ -1,0 +1,21 @@
+---
+- name: update access vlan
+  cisco.ios.ios_l2_interfaces:
+    config:
+    - name: "{{ interface_id }}"
+      mode: "{{ mode }}"
+      access:
+        vlan: "{{ untagged_vlan }}"
+    state: replaced  
+  when: mode == "access"
+
+- name: udpate trunk vlans
+  cisco.ios.ios_l2_interfaces:
+    config:
+    - name: "{{ interface_id }}"
+      mode: "{{ mode | replace('tagged', 'trunk') }}"
+      trunk:
+        allowed_vlans: "{{ tagged_vlans }}"
+        native_vlan: "{{ untagged_vlan }}"
+    state: replaced
+  when: mode == "tagged"

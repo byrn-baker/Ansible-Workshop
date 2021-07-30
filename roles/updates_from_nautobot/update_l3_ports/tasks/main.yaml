@@ -1,0 +1,4 @@
+- name: updating L3 configuration
+  cisco.ios.ios_config:
+    src: l3_interface.j2
+    save_when: always

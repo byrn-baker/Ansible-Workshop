@@ -1,0 +1,15 @@
+#jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
+interface {{ interface_id }}
+ {% if dhcp_helper %}
+ no ip helper-address
+ ip helper-address {{ dhcp_helper }}
+ {% else %}
+ no ip helper-address
+ {% endif %}
+ {% if vrrp_group != "None"%}
+ vrrp {{ vrrp_group }} description {{ vrrp_description }}
+ vrrp {{ vrrp_group }} ip {{ vrrp_primary_ip }}
+ vrrp {{ vrrp_group }} timers learn
+ vrrp {{ vrrp_group }} priority {{ vrrp_priority }}
+ {% endif %}
+ 

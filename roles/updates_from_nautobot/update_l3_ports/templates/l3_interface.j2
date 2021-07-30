@@ -1,0 +1,8 @@
+#jinja2: lstrip_blocks: "True (or False)", trim_blocks: "True (or False)"
+interface {{ interface }}
+ {% if dhcp_helper == null %}
+ no ip helper-address
+ {% elif dhcp_helper != null %}
+ ip helper-address {{ dhcp_helper }}
+ {% endif %}
+ 
