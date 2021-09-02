@@ -1,0 +1,17 @@
+- name: Get Mac from Nautobot
+  networktocode.nautobot.query_graphql:
+    url: "{{ nb_url }}"
+    token: "{{ nb_token }}"
+    validate_certs: False
+    query: "{{ query_string }}"
+  register: "nb_device_mac"
+
+- name: register variable
+  set_fact:
+    mac: "{{ nb_device_mac.data.devices }}"
+  with_items: interfaces['mac_address']
+
+
+- name: debug
+  debug:
+    msg: "{{ mac }}" 

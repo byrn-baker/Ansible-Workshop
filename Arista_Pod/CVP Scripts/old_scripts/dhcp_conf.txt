@@ -1,0 +1,216 @@
+subnet 10.255.0.0 netmask 255.255.255.0 {
+    range 10.255.0.200 10.255.0.250;
+    option routers 10.255.0.1;
+    option domain-name-servers 192.168.130.253;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host SW1-ISP1 {
+    option host-name "SW1-ISP1";
+    hardware ethernet 50:00:00:01:00:00;
+    fixed-address 10.255.0.11;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host SW2-ISP1 {
+    option host-name "SW2-ISP1";
+    hardware ethernet 50:00:00:02:00:00;
+    fixed-address 10.255.0.12;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host SW1-ISP3 {
+    option host-name "SW1-ISP3";
+    hardware ethernet 50:00:00:03:00:00;
+    fixed-address 10.255.0.13;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host SW1-ISP2 {
+    option host-name "SW1-ISP2";
+    hardware ethernet 50:00:00:04:00:00;
+    fixed-address 10.255.0.14;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host SW2-ISP2 {
+    option host-name "SW2-ISP2";
+    hardware ethernet 50:00:00:05:00:00;
+    fixed-address 10.255.0.15;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host Host-DC3 {
+    option host-name "Host-DC3";
+    hardware ethernet 50:00:00:06:00:00;
+    fixed-address 10.255.0.16;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host SW1-DC3 {
+    option host-name "SW1-DC3";
+    hardware ethernet 50:00:00:07:00:00;
+    fixed-address 10.255.0.17;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host DCI {
+    option host-name "DCI";
+    hardware ethernet 50:00:00:08:00:00;
+    fixed-address 10.255.0.18;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host borderleaf1-DC1 {
+    option host-name "borderleaf1-DC1";
+    hardware ethernet 50:00:00:09:00:00;
+    fixed-address 10.255.0.19;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host borderleaf2-DC1 {
+    option host-name "borderleaf2-DC1";
+    hardware ethernet 50:00:00:0a:00:00;
+    fixed-address 10.255.0.20;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host spine1-DC1 {
+    option host-name "spine1-DC1";
+    hardware ethernet 50:00:00:0b:00:00;
+    fixed-address 10.255.0.21;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host spine2-DC1 {
+    option host-name "spine2-DC1";
+    hardware ethernet 50:00:00:0c:00:00;
+    fixed-address 10.255.0.22;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host spine3-DC1 {
+    option host-name "spine3-DC1";
+    hardware ethernet 50:00:00:0d:00:00;
+    fixed-address 10.255.0.23;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host leaf1-DC1 {
+    option host-name "leaf1-DC1";
+    hardware ethernet 50:00:00:0e:00:00;
+    fixed-address 10.255.0.24;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host leaf2-DC1 {
+    option host-name "leaf2-DC1";
+    hardware ethernet 50:00:00:0f:00:00;
+    fixed-address 10.255.0.25;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host leaf3-DC1 {
+    option host-name "leaf3-DC1";
+    hardware ethernet 50:00:00:10:00:00;
+    fixed-address 10.255.0.26;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host leaf4-DC1 {
+    option host-name "leaf4-DC1";
+    hardware ethernet 50:00:00:11:00:00;
+    fixed-address 10.255.0.27;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host host1-DC1 {
+    option host-name "host1-DC1";
+    hardware ethernet 50:00:00:12:00:00;
+    fixed-address 10.255.0.28;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host host2-DC1 {
+    option host-name "host2-DC1";
+    hardware ethernet 50:00:00:13:00:00;
+    fixed-address 10.255.0.29;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host borderleaf1-DC2 {
+    option host-name "borderleaf1-DC2";
+    hardware ethernet 50:00:00:14:00:00;
+    fixed-address 10.255.0.30;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host borderleaf2-DC2 {
+    option host-name "borderleaf2-DC2";
+    hardware ethernet 50:00:00:15:00:00;
+    fixed-address 10.255.0.31;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host spine1-DC2 {
+    option host-name "spine1-DC2";
+    hardware ethernet 50:00:00:16:00:00;
+    fixed-address 10.255.0.32;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host spine2-DC2 {
+    option host-name "spine2-DC2";
+    hardware ethernet 50:00:00:17:00:00;
+    fixed-address 10.255.0.33;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host spine3-DC2 {
+    option host-name "spine3-DC2";
+    hardware ethernet 50:00:00:18:00:00;
+    fixed-address 10.255.0.34;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host leaf1-DC2 {
+    option host-name "leaf1-DC2";
+    hardware ethernet 50:00:00:19:00:00;
+    fixed-address 10.255.0.35;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host leaf2-DC2 {
+    option host-name "leaf2-DC2";
+    hardware ethernet 50:00:00:1a:00:00;
+    fixed-address 10.255.0.36;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host leaf3-DC2 {
+    option host-name "leaf3-DC2";
+    hardware ethernet 50:00:00:1b:00:00;
+    fixed-address 10.255.0.37;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host leaf4-DC2 {
+    option host-name "leaf4-DC2";
+    hardware ethernet 50:00:00:1c:00:00;
+    fixed-address 10.255.0.38;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host host1-DC2 {
+    option host-name "host1-DC2";
+    hardware ethernet 50:00:00:1d:00:00;
+    fixed-address 10.255.0.39;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}
+
+host host2-DC2 {
+    option host-name "host2-DC2";
+    hardware ethernet 50:00:00:1e:00:00;
+    fixed-address 10.255.0.40;
+    option bootfile-name "http://10.255.0.1/ztp/bootstrap";
+}

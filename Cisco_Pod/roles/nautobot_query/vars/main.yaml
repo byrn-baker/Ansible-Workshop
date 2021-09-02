@@ -1,0 +1,56 @@
+query_string: |
+        query {
+        devices(name: "{{device}}") {
+        inventory_hostname:name
+        config_context
+        device_role {
+                slug
+                }
+        site{
+        slug
+        vlans{
+            name
+            vid
+        }
+        }
+        interfaces {
+                name
+                mac_address
+                description
+                enabled
+                label
+                ip_addresses {
+                    address
+                    tags {
+                    slug
+                    }
+                }
+                vrrp_group: cf_vrrp_group
+                vrrp_description: cf_vrrp_description
+                vrrp_priority: cf_vrrp_priority
+                vrrp_primary_ip: cf_vrrp_primary_ip
+                dhcp_helper: cf_dhcp_helper
+                lag {
+                    name
+                }
+                tagged_vlans {
+                    vid
+                }
+                untagged_vlan {
+                    vid
+                }
+                tagged_vlans {
+                    vid
+                }
+                tags {
+                    slug
+                }
+        connected_interface{
+            device {
+            name
+            }
+            name
+        }
+                }
+            }
+        }
