@@ -2,20 +2,20 @@ import json
 import requests
 from netaddr import *
 from operator import itemgetter
-# from cvplibrary import CVPGlobalVariables, GlobalVariableNames
+from cvplibrary import CVPGlobalVariables, GlobalVariableNames
 
 # GraphQL query for Device data
 def nautobot_device():
-#   device_name = CVPGlobalVariables.getValue(GlobalVariableNames.CVP_SYSTEM_LABELS)
-#   for item in device_name:
-    # if item.startswith('hostname'):
-        # device = item.strip('hostname')
-        url = "http://192.168.130.50:8000/api/graphql/"
-        # hostname = device.replace(":","")
+  device_name = CVPGlobalVariables.getValue(GlobalVariableNames.CVP_SYSTEM_LABELS)
+  for item in device_name:
+    if item.startswith('hostname'):
+        device = item.strip('hostname')
+        url = "http://192.168.130.109:8000/api/graphql/"
+        hostname = device.replace(":","")
         payload = json.dumps({
         "query": "query ($device: [String]) { devices(name__isw: $device){name config_context local_asn: cf_device_bgp viritual_router_mac: cf_virtual_router_mac tags {slug} site {vlans {name vid vxlan_rt: cf_vxlan_vlan_rt role {slug}}} interfaces {name role: cf_role virtual_router: cf_virtual_router_ipv4 vlan_vni: cf_vxlan_vlan_vni label description enabled mode tagged_vlans{vid} lag {name} ip_addresses {address vrf {name rd}} connected_interface{device{name}name ip_addresses{address}}}}}",
         "variables": {
-        "device": 'leaf1-dc1'
+        "device": hostname
         }
         })
         headers = {

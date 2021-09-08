@@ -9,7 +9,7 @@ def nautobot_device():
   for item in device_name:
     if item.startswith('hostname'):
         device = item.strip('hostname')
-  url = "http://192.168.130.50:8000/api/graphql/"
+  url = "http://192.168.130.109:8000/api/graphql/"
   hostname = device.replace(":","")
   payload = json.dumps({
   "query": "query ($device: [String]) { devices(name__isw: $device){name config_context local_asn: cf_device_bgp viritual_router_mac: cf_virtual_router_mac tags {slug} site {vlans {name vid vxlan_rt: cf_vxlan_vlan_rt role {slug}}} interfaces {name role: cf_role virtual_router: cf_virtual_router_ipv4 vlan_vni: cf_vxlan_vlan_vni label description enabled mode lag {name} ip_addresses {address vrf {name rd}} connected_interface{device{name}name ip_addresses{address}}}}}",
@@ -34,9 +34,9 @@ def nautobot_device():
 
 # GraphQL query for VRF data
 def conf_vrf():
-  url = "http://192.168.130.50:8000/api/graphql/"
+  url = "http://192.168.130.109:8000/api/graphql/"
   payload = json.dumps({
-  "query": "query {vrfs {name rd vni: cf_vrf_vni import_targets {name} export_targets {name}}}"
+  "query": "query {vrfs {name rd tenant{name} vni: cf_vrf_vni import_targets {name} export_targets {name}}}"
   })
   headers = {
   'Content-Type': 'application/json',
@@ -61,10 +61,15 @@ device = nautobot_device.device
 # VRF Configuration
 if 'leaf' in device[0]['name']:
   for vrf in conf_vrf.vrfs:
-    print("vrf instance %s" % (vrf['name']))
-    print("!")
-    print("ip routing vrf %s" % (vrf['name']))
-    print("!")
+    for tenant in device[0]['config_context']['vrfs']:
+      try:
+        if tenant['name'] == vrf['tenant']['name']:
+            print("vrf instance %s" % (vrf['name']))
+            print("!")
+            print("ip routing vrf %s" % (vrf['name']))
+            print("!")
+      except Exception:
+          pass
 
    # VLAN Configuration
   for vlan in device[0]['site']['vlans']:
@@ -93,7 +98,12 @@ if 'leaf' in device[0]['name']:
           "  vxlan source-interface Loopback1\n"
           "  vxlan udp-port 4789")
     for vrf in conf_vrf.vrfs:
-      print("  vxlan vrf %s vni %s" % (vrf['name'], vrf['rd']))
+      for tenant in device[0]['config_context']['vrfs']:
+        try:
+            if tenant['name'] == vrf['tenant']['name']:
+                print("  vxlan vrf %s vni %s" % (vrf['name'], vrf['rd']))
+        except Exception:
+            pass
     for iface in device[0]['interfaces']:
       if 'Vlan' in iface['name']:
         if iface['role'] == 'vxlan':
@@ -105,16 +115,21 @@ if 'leaf' in device[0]['name']:
     print("router bgp %s" % (device[0]['local_asn']))
     if conf_vrf.vrfs:
       for vrf in conf_vrf.vrfs:
-          print("  vrf %s" % (vrf['name']))
-          for iface in device[0]['interfaces']:
-            if iface['name'] == 'Loopback1':
-              for ip in iface['ip_addresses']:
-                lo1 = IPNetwork(ip['address'])
-                print("    rd %s:%s" % (lo1.ip, vrf['rd']))
-                for rt in vrf['import_targets']:
-                  print("    route-target import evpn %s" % (rt['name']))
-                for rt in vrf['export_targets']:
-                  print("    route-target export evpn %s" % (rt['name']))
+        for tenant in device[0]['config_context']['vrfs']:
+          try:
+            if tenant['name'] == vrf['tenant']['name']:
+              print("  vrf %s" % (vrf['name']))
+              for iface in device[0]['interfaces']:
+                if iface['name'] == 'Loopback1':
+                  for ip in iface['ip_addresses']:
+                    lo1 = IPNetwork(ip['address'])
+                    print("    rd %s:%s" % (lo1.ip, vrf['rd']))
+                    for rt in vrf['import_targets']:
+                      print("    route-target import evpn %s" % (rt['name']))
+                    for rt in vrf['export_targets']:
+                      print("    route-target export evpn %s" % (rt['name']))
+          except Exception:
+            pass
 
     # BGP VLAN Config
     for vlan in device[0]['site']['vlans']:

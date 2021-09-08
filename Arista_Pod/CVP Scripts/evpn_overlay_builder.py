@@ -1,20 +1,20 @@
 import json
 import requests
 from netaddr import *
-# from cvplibrary import CVPGlobalVariables, GlobalVariableNames
+from cvplibrary import CVPGlobalVariables, GlobalVariableNames
 
 # GraphQL query for Device data
 def nautobot_device():
-  # device_name = CVPGlobalVariables.getValue(GlobalVariableNames.CVP_SYSTEM_LABELS)
-  # for item in device_name:
-    # if item.startswith('hostname'):
-    #     device = item.strip('hostname')
-  url = "http://192.168.130.50:8000/api/graphql/"
-  # hostname = device.replace(":","")
+  device_name = CVPGlobalVariables.getValue(GlobalVariableNames.CVP_SYSTEM_LABELS)
+  for item in device_name:
+    if item.startswith('hostname'):
+        device = item.strip('hostname')
+  url = "http://192.168.130.109:8000/api/graphql/"
+  hostname = device.replace(":","")
   payload = json.dumps({
   "query": "query ($device: [String]) { devices(name__isw: $device){name config_context local_asn: cf_device_bgp viritual_router_mac: cf_virtual_router_mac tags {slug} site {vlans {name vid vxlan_rt: cf_vxlan_vlan_rt role {slug}}} interfaces {name role: cf_role virtual_router: cf_virtual_router_ipv4 vlan_vni: cf_vxlan_vlan_vni label description enabled mode lag {name} ip_addresses {address vrf {name rd}} connected_interface{device{name}name ip_addresses{address}}}}}",
   "variables": {
-  "device": "borderleaf1-dc1"
+  "device": hostname
   }
   })
   headers = {
@@ -37,7 +37,7 @@ def spine_devices():
   # for item in device_name:
   #   if item.startswith('hostname'):
   #     device = item.strip('hostname')
-    url = "http://192.168.130.50:8000/api/graphql/"
+    url = "http://192.168.130.109:8000/api/graphql/"
     # query = device.replace(":","")
     query = nautobot_device.device[0]['name']
     ltr1 = query[-3]
@@ -76,7 +76,7 @@ def leaf_devices():
   # for item in device_name:
   #   if item.startswith('hostname'):
   #     device = item.strip('hostname')
-    url = "http://192.168.130.50:8000/api/graphql/"
+    url = "http://192.168.130.109:8000/api/graphql/"
     # query = device.replace(":","")
     query = nautobot_device.device[0]['name']
     ltr1 = query[-3]
@@ -115,7 +115,7 @@ def borderleaf_devices():
   # for item in device_name:
   #   if item.startswith('hostname'):
   #     device = item.strip('hostname')
-    url = "http://192.168.130.50:8000/api/graphql/"
+    url = "http://192.168.130.109:8000/api/graphql/"
     # query = device.replace(":","")
     query = nautobot_device.device[0]['name']
     ltr1 = query[-3]
@@ -155,7 +155,7 @@ def dci_devices():
   # for item in device_name:
   #   if item.startswith('hostname'):
   #       device = item.strip('hostname')
-        url = "http://192.168.130.50:8000/api/graphql/"
+        url = "http://192.168.130.109:8000/api/graphql/"
         # hostname = device.replace(":","")
         payload = json.dumps({
          "query": "query ($device: [String]) { devices(name__isw: $device) { name local_asn: cf_device_bgp interfaces {name role: cf_role virtual_router: cf_virtual_router_ipv4 vlan_vni: cf_vxlan_vlan_vni label description enabled mode lag {name} ip_addresses {address vrf {name rd}} connected_interface{device{name}name ip_addresses{address}}}}}",
@@ -180,7 +180,7 @@ def dci_devices():
         
 # GraphQL query for VRF data
 def conf_vrf():
-  url = "http://192.168.130.50:8000/api/graphql/"
+  url = "http://192.168.130.109:8000/api/graphql/"
   payload = json.dumps({
   "query": "query {vrfs {name rd vni: cf_vrf_vni import_targets {name} export_targets {name}}}"
   })
@@ -204,7 +204,7 @@ def dci_borderleaf_devices():
   # for item in device_name:
   #   if item.startswith('hostname'):
   #     device = item.strip('hostname')
-    url = "http://192.168.130.50:8000/api/graphql/"
+    url = "http://192.168.130.109:8000/api/graphql/"
     # query = device.replace(":","")
     query = nautobot_device.device[0]['name']
     ltr1 = query[-3]
