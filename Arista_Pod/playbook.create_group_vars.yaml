@@ -1,0 +1,11 @@
+---
+- name: Create Fabric Group Vars
+  hosts: DC1
+  connection: local
+  gather_facts: false
+
+  vars:
+    device: "{{inventory_hostname}}"
+
+  roles:
+  - { role: dc_group_var_create }

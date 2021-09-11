@@ -1,0 +1,27 @@
+interface_var:
+    name: "Management1"
+query_mgmt_interfaces: |
+        query ($name: [String]) {
+        interfaces(name: $name) {
+          device {
+            name
+          }
+          name
+          mac_address
+          ip_addresses {
+            address
+          }
+        }
+        }
+
+dhcp_var:
+    name: "ARISTA_MGMT"
+query_dhcp_prefix: |
+        query ($name: [String]) {
+        vrfs(name: $name) {
+            name
+            prefixes {
+            prefix
+            }
+        }
+        }

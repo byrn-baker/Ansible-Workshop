@@ -1,0 +1,86 @@
+ztp:
+  default:
+    registration: 'http://10.42.0.1/ztp/bootstrap'
+    gateway: 10.42.0.2
+    nameservers:
+        - '192.168.130.253'
+  general:
+    subnets:
+    - network: 10.42.0.0
+      netmask: 255.255.255.0
+      gateway: 10.42.0.2
+      nameservers:
+        - '192.168.130.253'
+      start: 10.42.0.200
+      end: 10.42.0.250
+      lease_time: 300
+  clients:
+      - name: borderleaf1-dc1
+        mac: '50:00:00:09:00:00'
+        ip4: 10.42.0.19
+      - name: borderleaf1-dc2
+        mac: '50:00:00:14:00:00'
+        ip4: 10.42.0.30
+      - name: borderleaf2-dc1
+        mac: '50:00:00:0A:00:00'
+        ip4: 10.42.0.20
+      - name: borderleaf2-dc2
+        mac: '50:00:00:15:00:00'
+        ip4: 10.42.0.31
+      - name: dci1-dc1
+        mac: '50:00:00:08:00:00'
+        ip4: 10.42.0.18
+      - name: host1-dc1
+        mac: '50:00:00:12:00:00'
+        ip4: 10.42.0.28
+      - name: host1-dc2
+        mac: '50:00:00:1D:00:00'
+        ip4: 10.42.0.39
+      - name: host2-dc1
+        mac: '50:00:00:13:00:00'
+        ip4: 10.42.0.29
+      - name: host2-dc2
+        mac: '50:00:00:1E:00:00'
+        ip4: 10.42.0.40
+      - name: leaf1-dc1
+        mac: '50:00:00:0E:00:00'
+        ip4: 10.42.0.24
+      - name: leaf1-dc2
+        mac: '50:00:00:19:00:00'
+        ip4: 10.42.0.35
+      - name: leaf2-dc1
+        mac: '50:00:00:0F:00:00'
+        ip4: 10.42.0.25
+      - name: leaf2-dc2
+        mac: '50:00:00:1A:00:00'
+        ip4: 10.42.0.36
+      - name: leaf3-dc1
+        mac: '50:00:00:10:00:00'
+        ip4: 10.42.0.26
+      - name: leaf3-dc2
+        mac: '50:00:00:1B:00:00'
+        ip4: 10.42.0.37
+      - name: leaf4-dc1
+        mac: '50:00:00:11:00:00'
+        ip4: 10.42.0.27
+      - name: leaf4-dc2
+        mac: '50:00:00:1C:00:00'
+        ip4: 10.42.0.38
+      - name: spine1-dc1
+        mac: '50:00:00:0B:00:00'
+        ip4: 10.42.0.21
+      - name: spine1-dc2
+        mac: '50:00:00:16:00:00'
+        ip4: 10.42.0.32
+      - name: spine2-dc1
+        mac: '50:00:00:0C:00:00'
+        ip4: 10.42.0.22
+      - name: spine2-dc2
+        mac: '50:00:00:17:00:00'
+        ip4: 10.42.0.33
+      - name: spine3-dc1
+        mac: '50:00:00:0D:00:00'
+        ip4: 10.42.0.23
+      - name: spine3-dc2
+        mac: '50:00:00:18:00:00'
+        ip4: 10.42.0.34

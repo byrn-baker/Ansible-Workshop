@@ -1,0 +1,17 @@
+- name: Get MGMT Prefix from Nautobot
+  set_fact:
+    mgmt_prefix: "{{ query('networktocode.nautobot.lookup_graphql', query_dhcp_prefix, graph_variables=dhcp_var, url=nb_url, token=nb_token) }}"
+
+- name: Get MGMT interfaces from Nautobot
+  set_fact:
+    mgmt_interfaces: "{{ query('networktocode.nautobot.lookup_graphql', query_mgmt_interfaces, graph_variables=interface_var, url=nb_url, token=nb_token) }}"
+
+# - name: Create directory if none exist
+#   file:
+#     path: querys
+#     state: directory
+
+# - name: Print device json to file
+#   copy:
+#     content: "{{ mgmt_interfaces | to_json }}"
+#     dest: "querys/mgmt_interfaces.json"

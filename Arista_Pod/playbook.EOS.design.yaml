@@ -1,0 +1,11 @@
+# Play to build EOS configuration from EOS_DESIGNS
+- hosts: DC1_FABRIC
+  tasks:
+
+    # BUILD EOS configuration
+    - name: generate intended variables
+      import_role:
+         name: arista.avd.eos_designs
+    - name: generate device intended config and documentation
+      import_role:
+         name: arista.avd.eos_cli_config_gen

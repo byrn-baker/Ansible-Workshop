@@ -1,0 +1,8 @@
+- name: Create Output Folders
+  file:
+    path: "{{item}}"
+    state: directory
+  loop:
+    - intended
+    - intended/structured_configs
+    - intended/configs

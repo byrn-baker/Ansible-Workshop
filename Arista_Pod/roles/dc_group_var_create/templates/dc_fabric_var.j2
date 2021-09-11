@@ -1,0 +1,160 @@
+#jinja2: lstrip_blocks: "True", trim_blocks: "True"
+{% set devices = nb_devices[0]["data"]["devices"] %}
+{% set site = nb_sites[0]['data']['sites'] %}
+{% set spines = nb_spines[0]['data']['devices'] %}
+{% set l3leafs = nb_l3leafs[0]['data']['devices'] %}
+---
+# L3LS Fabric Values - update these values with caution,
+# SOME CHANGES COULD BE DISRUPTIVE.
+
+fabric_name: {{ devices[0]['site']['name'] }}_FABRIC
+
+# Point to Point Network Summary range, assigned as /31 for each
+# uplink interfaces
+# Assign range larger then total [spines * total potential leafs * 2]
+{% for prefix in site[0]['prefixes'] %}
+{%  if 'underlay_p2p' in prefix['role']['name']%}
+underlay_p2p_network_summary: {{ prefix['prefix'] }}
+{%  endif %}
+{% endfor %}
+
+# IP address range for evpn loopback for all switches in fabric,
+# assigned as /32s
+# Assign range larger then total spines + total leafs switches
+{% for prefix in site[0]['prefixes'] %}
+{%  if 'overlay' in prefix['role']['name']%}
+overlay_loopback_network_summary: {{ prefix['prefix'] }}
+{%  endif %}
+{% endfor %}
+
+# VTEP VXLAN Tunnel source loopback IP for leaf switches, assigned in /32s
+# Assign range larger then total leaf switches
+{% for prefix in site[0]['prefixes'] %}
+{%  if 'vtep' in prefix['role']['name']%}
+vtep_loopback_network_summary: {{ prefix['prefix'] }}
+{%  endif %}
+{% endfor %}
+
+# mlag pair IP assignment - assign blocks - Assign range larger then
+# total leafs switches
+mlag_ips:
+{% for prefix in site[0]['prefixes'] %}
+{%  if 'leaf_peer_p2p' in prefix['role']['name']%}
+  leaf_peer_l3: {{ prefix['prefix'] }}
+{%  endif %}
+{% endfor %}
+{% for prefix in site[0]['prefixes'] %}
+{%  if 'mlag_peer_p2p' in prefix['role']['name']%}
+  mlag_peer: {{ prefix['prefix'] }}
+{%  endif %}
+{% endfor %}
+
+# Enable vlan aware bundles
+vxlan_vlan_aware_bundles: true
+
+# bgp peer groups passwords
+bgp_peer_groups:
+  IPv4_UNDERLAY_PEERS:
+    password: "AQQvKeimxJu+uGQ/yYvv9w=="
+  EVPN_OVERLAY_PEERS:
+    password: "q+VNViP5i4rVjW1cxFv2wA=="
+  MLAG_IPv4_UNDERLAY_PEER:
+    password: "vnEaG8gMeQf3d3cN6PktXQ=="
+
+# Spine Switches
+spine:
+  defaults:
+{% for prefix in site[0]['prefixes'] %}
+{%  if 'overlay' in prefix['role']['name']%}
+    loopback_ipv4_pool: {{ prefix['prefix'] }}
+{%  endif %}
+{% endfor %}
+{% for prefix in site[0]['prefixes'] %}
+{%  if 'vtep' in prefix['role']['name']%}
+    vtep_loopback_ipv4_pool: {{ prefix['prefix'] }}
+{%  endif %}
+{% endfor %}
+{% for spine in spines %}
+{%  if 'spine1' in spine['name'] %}
+    bgp_as: {{ spine['local_asn'] }}
+  platform: {{ spine['platform']['name'] }}
+  bgp_as: {{ spine['local_asn'] }}
+{%   endif %}
+{% endfor %}
+  # defines the range of acceptable remote ASNs from leaf switches
+  leaf_as_range: 65101-65132
+  nodes:
+{% for spine in spines %}
+{% set dc = spine['site']['name'].lower %}
+    {{ spine['name'] }}:
+      id: {{ spine['name'] | regex_replace ('dc[1-9]-spine', '') }}
+{%   for iface in spine['interfaces'] %}
+{%     if iface['name'] == 'Management1' %}
+{%       for addr in iface['ip_addresses'] %}
+      mgmt_ip: {{ addr['address'] }}
+{%       endfor %}      
+{%     endif %}
+{%   endfor %}
+{% endfor %}
+
+# Leaf switch groups
+# A maximum of two nodes can form a leaf group
+# When two nodes are in a leaf group this will automatically form mlag pair
+
+l3leaf:
+  defaults:
+    # virtual router mac for VNIs assigned to Leaf switches
+    # format: xx:xx:xx:xx:xx:xx
+{% for leaf in l3leafs %}
+{%   if 'leaf1' in leaf['name']%}
+    virtual_router_mac_address: {{ leaf["viritual_router_mac"]}}
+    platform: {{ leaf['platform']['name'] }}
+{%   endif %}
+{% endfor %}
+    spines: [{{ spines | join(', ', attribute='name')}}]
+    uplink_to_spine_interfaces:
+{% for interface in l3leafs[0]['interfaces'] %}
+{%   if interface['role'] == 'spine' %}
+      - {{ interface['name'] }}
+{%   endif %}
+{% endfor %}
+    mlag_interfaces:
+{% for interface in l3leafs[0]['interfaces'] %}
+{%   if interface['role'] == 'mlag' %}
+      - {{ interface['name'] }}
+{%   endif %}
+{% endfor %}
+    spanning_tree_priority: 4096
+    spanning_tree_mode: mstp
+{% for prefix in site[0]['prefixes'] %}
+{%  if 'overlay' in prefix['role']['name']%}
+    loopback_ipv4_pool: {{ prefix['prefix'] }}
+{%   endif %}
+{% endfor %}
+{% for prefix in site[0]['prefixes'] %}
+{%  if 'vtep' in prefix['role']['name']%}
+    vtep_loopback_ipv4_pool: {{ prefix['prefix'] }}
+{%   endif %}
+{% endfor %}
+{% for prefix in site[0]['prefixes'] %}
+{%   if 'mlag_peer_p2p' in prefix['role']['name']%}
+    mlag_peer_ipv4_pool: {{ prefix['prefix'] }}
+{%   endif %}
+{% endfor %}
+{% for prefix in site[0]['prefixes'] %}
+{%   if 'leaf_peer_p2p' in prefix['role']['name']%}
+    mlag_peer_l3_ipv4_pool: {{ prefix['prefix'] }}
+{%   endif %}
+{% endfor %}
+  node_groups:
+    DC1_LEAF1:
+      bgp_as: 65101
+      nodes:
+        DC1-LEAF1A:
+          id: 1
+          mgmt_ip: 192.168.0.12/24
+          spine_interfaces: [Ethernet2, Ethernet2]
+        DC1-LEAF1B:
+          id: 2
+          mgmt_ip: 192.168.0.13/24
+          spine_interfaces: [Ethernet3, Ethernet3]

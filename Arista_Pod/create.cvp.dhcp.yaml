@@ -1,0 +1,32 @@
+---
+- name: Pull Address and MAC data from Nautobot
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  collections:
+    - networktocode.nautobot
+  vars:
+    device: "{{inventory_hostname}}"
+
+  roles:
+  - { role: create_folders }
+  - { role: query_nautobot_dhcp }
+  - { role: build_dhcp_file }
+
+- name: Configure DHCP service on CloudVision
+  hosts: dhcp_server
+  gather_facts: true
+  collections:
+    - arista.cvp
+  tasks:
+  - name: 'Execute DHCP configuration role'
+    import_role:
+      name: arista.cvp.dhcp_configuration
+      
+  ### Offline dhcpd.conf
+  # - name: 'Execute DHCP configuration role'
+  #   import_role:
+  #     name: arista.cvp.dhcp_configuration
+  #   vars:
+  #     mode: offline
+  #     output_dir: 'intended/structured_configs'

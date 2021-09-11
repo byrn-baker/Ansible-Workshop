@@ -1,0 +1,4 @@
+- name: Configuration Assembly
+  template:
+    src: "structured_dhcp.j2"
+    dest: "inventory/host_vars/dhcp_server/cvp_dhcp.yaml"

@@ -1,0 +1,15 @@
+- name: Get device data from Nautobot
+  set_fact:
+    nb_devices: "{{ query('networktocode.nautobot.lookup_graphql', query_string, graph_variables=graph_variables, url=nb_url, token=nb_token) }}"
+
+- name: Get vrf data from Nautobot
+  set_fact:
+    nb_vrfs: "{{ query('networktocode.nautobot.lookup_graphql', query_vrf, url=nb_url, token=nb_token) }}"
+
+- name: Get all Spine devices data from Nautobot
+  set_fact:
+    nb_spines: "{{ query('networktocode.nautobot.lookup_graphql', query_spine, graph_variables=spine_var, url=nb_url, token=nb_token) }}"
+
+- name: Get all Spine devices data from Nautobot
+  set_fact:
+    nb_leafs: "{{ query('networktocode.nautobot.lookup_graphql', query_leaf, graph_variables=leaf_var, url=nb_url, token=nb_token) }}"

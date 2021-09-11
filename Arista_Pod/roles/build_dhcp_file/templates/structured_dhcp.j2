@@ -1,0 +1,27 @@
+{% set devices = mgmt_interfaces[0]['data'] %}
+ztp:
+  default:
+    registration: 'http://10.42.0.1/ztp/bootstrap'
+    gateway: 10.42.0.2
+    nameservers:
+        - '192.168.130.253'
+  general:
+    subnets:
+    - network: 10.42.0.0
+      netmask: 255.255.255.0
+      gateway: 10.42.0.2
+      nameservers:
+        - '192.168.130.253'
+      start: 10.42.0.200
+      end: 10.42.0.250
+      lease_time: 300
+  clients:
+{% for iface in devices['interfaces'] %}
+{%     for addr in iface["ip_addresses"] %}
+{%       if iface['mac_address'] != None %}
+      - name: {{ iface['device']['name'] }}
+        mac: '{{ iface['mac_address'] }}'
+        ip4: {{ addr['address'] | ipaddr ('address') }}
+{%        endif %}
+{%      endfor %}
+{% endfor %}

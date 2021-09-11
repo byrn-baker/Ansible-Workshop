@@ -1,0 +1,136 @@
+CVP_CONFIGLETS:
+
+
+CVP_DEVICES:
+  leaf1-DC1:
+    name: 'leaf1-DC1'
+    parentContainerName: Leaf-DC1
+    configlets:
+        - 'BASE_CONFIG'
+
+  leaf2-DC1:
+    name: 'leaf2-DC1'
+    parentContainerName: Leaf-DC1
+    configlets:
+        - 'BASE_CONFIG'
+
+  leaf3-DC1:
+    name: 'leaf3-DC1'
+    parentContainerName: Leaf-DC1
+    configlets:
+        - 'BASE_CONFIG'
+
+  leaf4-DC1:
+    name: 'leaf4-DC1'
+    parentContainerName: Leaf-DC1
+    configlets:
+        - 'BASE_CONFIG'
+
+  borderleaf1-DC1:
+    name: 'borderleaf1-DC1'
+    parentContainerName: Border-Leaf-DC1
+    configlets:
+        - 'BASE_CONFIG'
+
+  borderleaf2-DC1:
+    name: 'borderleaf2-DC1'
+    parentContainerName: Border-Leaf-DC1
+    configlets:
+        - 'BASE_CONFIG'
+   
+  spine1-DC1:
+    name: 'spine1-DC1'
+    parentContainerName: Spine-DC1
+    configlets:
+        - 'BASE_CONFIG'
+
+
+  spine2-DC1:
+    name: 'spine2-DC1'
+    parentContainerName: Spine-DC1
+    configlets:
+        - 'BASE_CONFIG'
+
+ 
+  spine3-DC1:
+    name: 'spine3-DC1'
+    parentContainerName: Spine-DC1
+    configlets:
+        - 'BASE_CONFIG'
+
+
+  # leaf1-DC2:
+  #   name: 'leaf1-DC2'
+  #   parentContainerName: Leaf-DC2
+  #   configlets:
+  #       - 'BASE_CONFIG'
+  #       - 'leaf1-DC2-BASE'
+  #       - 'Ansible-MLAG-Left'
+
+  # leaf2-DC2:
+  #   name: 'leaf2-DC2'
+  #   parentContainerName: Leaf-DC2
+  #   configlets:
+  #       - 'BASE_CONFIG'
+  #       - 'leaf2-DC2-BASE'
+  #       - 'Ansible-MLAG-Right'
+
+  # leaf3-DC2:
+  #   name: 'leaf3-DC2'
+  #   parentContainerName: Leaf-DC2
+  #   configlets:
+  #       - 'BASE_CONFIG'
+  #       - 'leaf3-DC2-BASE'
+  #       - 'Ansible-MLAG-Left'
+
+  # leaf4-DC2:
+  #   name: 'leaf4-DC2'
+  #   parentContainerName: Leaf-DC2
+  #   configlets:
+  #       - 'BASE_CONFIG'
+  #       - 'leaf4-DC2-BASE'
+  #       - 'Ansible-MLAG-Right'
+
+  # borderleaf1-DC2:
+  #   name: 'borderleaf1-DC2'
+  #   parentContainerName: Leaf-DC2
+  #   configlets:
+  #       - 'BASE_CONFIG'
+  #       - 'borderleaf1-DC2-BASE'
+  #       - 'Ansible-MLAG-Left'
+
+  # borderleaf2-DC2:
+  #   name: 'borderleaf2-DC2'
+  #   parentContainerName: Leaf-DC2
+  #   configlets:
+  #       - 'BASE_CONFIG'
+  #       - 'borderleaf2-DC2-BASE'
+  #       - 'Ansible-MLAG-Right'
+ 
+  # spine1-DC2:
+  #   name: 'spine1-DC2'
+  #   parentContainerName: Spine-DC2
+  #   configlets:
+  #       - 'BASE_CONFIG'
+  #       - 'spine1-DC2-BASE'
+
+  # spine2-DC2:
+  #   name: 'spine2-DC2'
+  #   parentContainerName: Spine-DC2
+  #   configlets:
+  #       - 'BASE_CONFIG'
+  #       - 'spine2-DC2-BASE'
+
+  # spine3-DC2:
+  #   name: 'spine3-DC2'
+  #   parentContainerName: Spine-DC2
+  #   configlets:
+  #       - 'BASE_CONFIG'
+  #       - 'spine3-DC2-BASE'
+
+  # DCI:
+  #   name: 'DCI'
+  #   parentContainerName: DCI
+  #   configlets:
+  #       - 'BASE_CONFIG'
+  #       - 'DCI-BASE'

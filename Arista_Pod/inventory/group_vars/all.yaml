@@ -1,0 +1,13 @@
+# login
+ansible_user: arista
+ansible_password: arista123
+ansible_connection: httpapi
+ansible_network_os: eos
+ansible_become: true
+ansible_become_method: enable
+ansible_httpapi_use_ssl: true
+ansible_httpapi_validate_certs: false
+
+# Nautobot API
+nb_url: "http://192.168.130.109:8001"
+nb_token: "c7fdc6be609a244bb1e851c5e47b3ccd9d990b58"
