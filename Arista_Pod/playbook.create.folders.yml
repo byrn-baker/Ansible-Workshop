@@ -1,0 +1,20 @@
+---
+- name: Create Output Folders
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: Create Output Folders
+      file:
+        path: "{{item}}"
+        state: directory
+      loop:
+        - documentation
+        - documentation/DC1_FABRIC
+        - documentation/devices
+        - documentation/fabric
+        - intended
+        - intended/structured_configs
+        - intended/structured_configs/cvp
+        - intended/configs

@@ -1,0 +1,34 @@
+---
+# Validation lab
+# local users
+local_users:
+  admin:
+    privilege: 15
+    role: network-admin
+    sha512_password: "$6$ZrUR9Ryw6oocY9wD$2V99a9yvz/yK66KpyzQTSOfccNCiJT3cIVSKnXEIr9L1X8CVbSJdpWJ7iLZskV5yamYXs4AypSar1Uvy6tv5P1"
+
+  cvpadmin:
+    privilege: 15
+    role: network-admin
+    sha512_password: "$6$Fdyhzjx0eSwH/PuE$R6r30IPAYaTMLW4iJ17I3rIFTU8ah.CS4RRNtKcFAMCM3VaNCoZY.DSxXoYStrr059jc9nLZGBOX2.aoTrXRB0"
+
+  arista:
+    privilege: 15
+    role: network-admin
+    sha512_password: "$6$BTve3BGeYZZta.Wh$Q4bKHY3zqRqrU9sIhifHh/TSMIKWfrJjvooKK0B5Jp5HzoJ79AXLJQ9rcH4D6orlmO/r3PFnkH/vxxoINdcmY/"
+
+# Cloud Vision server information
+cvp_instance_ip: 10.42.0.1
+cvp_ingestauth_key: 'arista123'
+# cvp_ingestauth_key: telarista
+
+# OOB Management network default gateway.
+mgmt_gateway: 10.42.0.2
+
+# dns servers.
+name_servers:
+  - 192.168.130.253
+
+# NTP Servers IP or DNS name, first NTP server will be prefered, and sourced from Managment VRF
+ntp_servers:
+ - 10.42.0.2

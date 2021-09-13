@@ -34,19 +34,25 @@ all:
                 dc1-spine3:
                   ansible_host: 10.42.0.23
             DC1_L3LEAFS:
-              hosts:
-                dc1-l3leaf1:
-                  ansible_host: 10.42.0.24
-                dc1-l3leaf2:
-                  ansible_host: 10.42.0.25
-                dc1-l3leaf3:
-                  ansible_host: 10.42.0.26
-                dc1-l3leaf4:
-                  ansible_host: 10.42.0.27
-                dc1-borderleaf1:
-                  ansible_host: 10.42.0.19
-                dc1-borderleaf2:
-                  ansible_host: 10.42.0.20
+              children:
+                DC1_LEAF1:
+                  hosts:
+                    dc1-leaf1:
+                      ansible_host: 10.42.0.24
+                    dc1-leaf2:
+                      ansible_host: 10.42.0.25
+                DC1_LEAF2:
+                  hosts:
+                    dc1-leaf3:
+                      ansible_host: 10.42.0.26
+                    dc1-leaf4:
+                      ansible_host: 10.42.0.27
+                DC1_BORDERLEAF1:
+                  hosts:
+                    dc1-borderleaf1:
+                      ansible_host: 10.42.0.19
+                    dc1-borderleaf2:
+                      ansible_host: 10.42.0.20
             DC1_L2LEAFS:
               hosts:
                 dc1-l2leaf1:

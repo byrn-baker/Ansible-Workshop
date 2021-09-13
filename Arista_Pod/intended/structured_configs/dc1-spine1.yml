@@ -1,0 +1,191 @@
+router_bgp:
+  as: 65001
+  router_id: 192.168.0.1
+  bgp_defaults:
+  - no bgp default ipv4-unicast
+  - distance bgp 20 200 200
+  - graceful-restart restart-time 300
+  - graceful-restart
+  - maximum-paths 4 ecmp 4
+  peer_groups:
+    IPv4-UNDERLAY-PEERS:
+      type: ipv4
+      password: AQQvKeimxJu+uGQ/yYvv9w==
+      maximum_routes: 12000
+      send_community: all
+    EVPN-OVERLAY-PEERS:
+      type: evpn
+      update_source: Loopback0
+      bfd: true
+      ebgp_multihop: '3'
+      password: q+VNViP5i4rVjW1cxFv2wA==
+      send_community: all
+      maximum_routes: 0
+      next_hop_unchanged: true
+  address_family_ipv4:
+    peer_groups:
+      IPv4-UNDERLAY-PEERS:
+        activate: true
+      EVPN-OVERLAY-PEERS:
+        activate: false
+  redistribute_routes:
+    connected:
+      route_map: RM-CONN-2-BGP
+  neighbors:
+    172.31.0.1:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: 65002
+      description: dc1-leaf1_Ethernet3
+    172.31.0.7:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: 65002
+      description: dc1-leaf2_Ethernet3
+    172.31.0.13:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: 65003
+      description: dc1-leaf3_Ethernet3
+    172.31.0.19:
+      peer_group: IPv4-UNDERLAY-PEERS
+      remote_as: 65003
+      description: dc1-leaf4_Ethernet3
+    192.168.0.4:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: dc1-leaf1
+      remote_as: 65002
+    192.168.0.5:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: dc1-leaf2
+      remote_as: 65002
+    192.168.0.6:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: dc1-leaf3
+      remote_as: 65003
+    192.168.0.7:
+      peer_group: EVPN-OVERLAY-PEERS
+      description: dc1-leaf4
+      remote_as: 65003
+  address_family_evpn:
+    peer_groups:
+      EVPN-OVERLAY-PEERS:
+        activate: true
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 10.42.0.2
+service_routing_protocols_model: multi-agent
+ip_routing: true
+daemon_terminattr:
+  ingestgrpcurl:
+    ips:
+    - 10.42.0.1
+    port: 9910
+  ingestauth_key: arista123
+  ingestvrf: MGMT
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  disable_aaa: false
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+name_server:
+  source:
+    vrf: MGMT
+  nodes:
+  - 192.168.130.253
+ntp_server:
+  local_interface:
+    vrf: MGMT
+    interface: Management1
+  nodes:
+  - 10.42.0.2
+spanning_tree:
+  mode: none
+local_users:
+  admin:
+    privilege: 15
+    role: network-admin
+    sha512_password: $6$ZrUR9Ryw6oocY9wD$2V99a9yvz/yK66KpyzQTSOfccNCiJT3cIVSKnXEIr9L1X8CVbSJdpWJ7iLZskV5yamYXs4AypSar1Uvy6tv5P1
+  arista:
+    privilege: 15
+    role: network-admin
+    sha512_password: $6$BTve3BGeYZZta.Wh$Q4bKHY3zqRqrU9sIhifHh/TSMIKWfrJjvooKK0B5Jp5HzoJ79AXLJQ9rcH4D6orlmO/r3PFnkH/vxxoINdcmY/
+  cvpadmin:
+    privilege: 15
+    role: network-admin
+    sha512_password: $6$Fdyhzjx0eSwH/PuE$R6r30IPAYaTMLW4iJ17I3rIFTU8ah.CS4RRNtKcFAMCM3VaNCoZY.DSxXoYStrr059jc9nLZGBOX2.aoTrXRB0
+vrfs:
+  MGMT:
+    ip_routing: false
+management_interfaces:
+  Management1:
+    description: oob_management
+    shutdown: false
+    vrf: MGMT
+    ip_address: 10.42.0.21/24
+    gateway: 10.42.0.2
+    type: oob
+management_api_http:
+  enable_vrfs:
+    MGMT: {}
+  enable_https: true
+loopback_interfaces:
+  Loopback0:
+    description: EVPN_Overlay_Peering
+    shutdown: false
+    ip_address: 192.168.0.1/32
+ethernet_interfaces:
+  Ethernet2:
+    peer: dc1-leaf1
+    peer_interface: Ethernet3
+    peer_type: l3leaf
+    description: P2P_LINK_TO_DC1-LEAF1_Ethernet3
+    mtu: 9000
+    type: routed
+    shutdown: false
+    ip_address: 172.31.0.0/31
+  Ethernet3:
+    peer: dc1-leaf2
+    peer_interface: Ethernet3
+    peer_type: l3leaf
+    description: P2P_LINK_TO_DC1-LEAF2_Ethernet3
+    mtu: 9000
+    type: routed
+    shutdown: false
+    ip_address: 172.31.0.6/31
+  Ethernet4:
+    peer: dc1-leaf3
+    peer_interface: Ethernet3
+    peer_type: l3leaf
+    description: P2P_LINK_TO_DC1-LEAF3_Ethernet3
+    mtu: 9000
+    type: routed
+    shutdown: false
+    ip_address: 172.31.0.12/31
+  Ethernet5:
+    peer: dc1-leaf4
+    peer_interface: Ethernet3
+    peer_type: l3leaf
+    description: P2P_LINK_TO_DC1-LEAF4_Ethernet3
+    mtu: 9000
+    type: routed
+    shutdown: false
+    ip_address: 172.31.0.18/31
+prefix_lists:
+  PL-LOOPBACKS-EVPN-OVERLAY:
+    sequence_numbers:
+      10:
+        action: permit 192.168.0.0/24 eq 32
+route_maps:
+  RM-CONN-2-BGP:
+    sequence_numbers:
+      10:
+        type: permit
+        match:
+        - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 1200
+    min_rx: 1200
+    multiplier: 3
