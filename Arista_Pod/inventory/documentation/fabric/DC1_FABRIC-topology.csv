@@ -1,0 +1,17 @@
+Node Type,Node,Node Interface,Peer Type,Peer,Peer Interface
+l2leaf,dc1-l2leaf1,Ethernet1,l3leaf,dc1-leaf1,Ethernet6
+l2leaf,dc1-l2leaf1,Ethernet2,l3leaf,dc1-leaf2,Ethernet6
+l2leaf,dc1-l2leaf2,Ethernet1,l3leaf,dc1-leaf3,Ethernet6
+l2leaf,dc1-l2leaf2,Ethernet2,l3leaf,dc1-leaf4,Ethernet6
+l3leaf,dc1-leaf1,Ethernet1,mlag_peer,dc1-leaf2,Ethernet1
+l3leaf,dc1-leaf1,Ethernet2,mlag_peer,dc1-leaf2,Ethernet2
+l3leaf,dc1-leaf1,Ethernet6,l2leaf,dc1-l2leaf1,Ethernet1
+l3leaf,dc1-leaf2,Ethernet1,mlag_peer,dc1-leaf1,Ethernet1
+l3leaf,dc1-leaf2,Ethernet2,mlag_peer,dc1-leaf1,Ethernet2
+l3leaf,dc1-leaf2,Ethernet6,l2leaf,dc1-l2leaf1,Ethernet2
+l3leaf,dc1-leaf3,Ethernet1,mlag_peer,dc1-leaf4,Ethernet1
+l3leaf,dc1-leaf3,Ethernet2,mlag_peer,dc1-leaf4,Ethernet2
+l3leaf,dc1-leaf3,Ethernet6,l2leaf,dc1-l2leaf2,Ethernet1
+l3leaf,dc1-leaf4,Ethernet1,mlag_peer,dc1-leaf3,Ethernet1
+l3leaf,dc1-leaf4,Ethernet2,mlag_peer,dc1-leaf3,Ethernet2
+l3leaf,dc1-leaf4,Ethernet6,l2leaf,dc1-l2leaf2,Ethernet2

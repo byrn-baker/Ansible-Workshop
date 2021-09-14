@@ -115,7 +115,7 @@ l3leaf:
 {%   endif %}
 {% endfor %}
     spines: [{{ spines | join(', ', attribute='name')}}]
-    uplink_to_spine_interfaces:
+    uplink_interfaces:
 {% for interface in l3leafs[0]['interfaces'] %}
 {%   if interface['role'] == 'spine' %}
       - {{ interface['name'] }}
@@ -205,8 +205,8 @@ l3leaf:
 {%   endif %}
 {% endfor %}
 {% endif %}
-{% if 'borderleaf' in borderleafs[0]['device_role']['name']%}
-borderleaf:
+{#{% if 'borderleaf' in borderleafs[0]['device_role']['name']%}
+ borderleaf:
   defaults:
     # virtual router mac for VNIs assigned to Leaf switches
     # format: xx:xx:xx:xx:xx:xx
@@ -217,7 +217,7 @@ borderleaf:
 {%   endif %}
 {% endfor %}
     spines: [{{ spines | join(', ', attribute='name')}}]
-    uplink_to_spine_interfaces:
+    uplink_interfaces:
 {% for interface in borderleafs[0]['interfaces'] %}
 {%   if interface['role'] == 'spine' %}
       - {{ interface['name'] }}
@@ -310,7 +310,7 @@ borderleaf:
 {%     endfor %}
 {%   endif %}
 {% endfor %}
-{% endif %}
+{% endif %} #}
 {% if 'l2leaf' in l2leafs[0]['device_role']['name']%}
 l2leaf:
   defaults:

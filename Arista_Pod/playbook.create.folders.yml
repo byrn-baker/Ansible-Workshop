@@ -1,20 +1,10 @@
 ---
-- name: Create Output Folders
-  hosts: localhost
+- name: Build Switch configuration
+  hosts: DC1_FABRIC
   connection: local
-  gather_facts: false
-
+  gather_facts: no
   tasks:
-    - name: Create Output Folders
-      file:
-        path: "{{item}}"
-        state: directory
-      loop:
-        - documentation
-        - documentation/DC1_FABRIC
-        - documentation/devices
-        - documentation/fabric
-        - intended
-        - intended/structured_configs
-        - intended/structured_configs/cvp
-        - intended/configs
+    - name: 'build local folders for output'
+      tags: [build]
+      import_role:
+        name: arista.avd.build_output_folders
