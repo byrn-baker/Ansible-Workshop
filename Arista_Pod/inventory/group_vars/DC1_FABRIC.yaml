@@ -70,11 +70,15 @@ l3leaf:
     # format: xx:xx:xx:xx:xx:xx
     virtual_router_mac_address: 00:1c:73:00:dc:01
     platform: vEOS-LAB
+    uplink_ipv4_pool: 172.31.0.0/24
     spines: [dc1-spine1, dc1-spine2, dc1-spine3]
     uplink_interfaces:
       - Ethernet3
       - Ethernet4
       - Ethernet5
+    uplink_ptp:
+      enabled: true
+    uplink_interface_speed: 9000
     mlag_interfaces:
       - Ethernet1
       - Ethernet2

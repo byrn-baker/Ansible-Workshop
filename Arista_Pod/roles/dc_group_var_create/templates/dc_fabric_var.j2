@@ -114,6 +114,11 @@ l3leaf:
     platform: {{ leaf['platform']['name'] }}
 {%   endif %}
 {% endfor %}
+{% for prefix in site[0]['prefixes'] %}
+{%  if 'underlay_p2p' in prefix['role']['name']%}
+    uplink_ipv4_pool: {{ prefix['prefix'] }}
+{%  endif %}
+{% endfor %}
     spines: [{{ spines | join(', ', attribute='name')}}]
     uplink_interfaces:
 {% for interface in l3leafs[0]['interfaces'] %}
@@ -121,6 +126,9 @@ l3leaf:
       - {{ interface['name'] }}
 {%   endif %}
 {% endfor %}
+    uplink_ptp:
+      enabled: true
+    uplink_interface_speed: 9000
     mlag_interfaces:
 {% for interface in l3leafs[0]['interfaces'] %}
 {%   if interface['role'] == 'mlag' %}
