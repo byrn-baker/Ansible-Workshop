@@ -18,6 +18,7 @@
   - [Internal VLAN Allocation Policy Summary](#internal-vlan-allocation-policy-summary)
   - [Internal VLAN Allocation Policy Configuration](#internal-vlan-allocation-policy-configuration)
 - [Interfaces](#interfaces)
+  - [Ethernet Interfaces](#ethernet-interfaces)
   - [Loopback Interfaces](#loopback-interfaces)
 - [Routing](#routing)
   - [Service Routing Protocols Model](#service-routing-protocols-model)
@@ -201,6 +202,43 @@ vlan internal order ascending range 1006 1199
 
 # Interfaces
 
+## Ethernet Interfaces
+
+### Ethernet Interfaces Summary
+
+#### L2
+
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
+| --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
+
+*Inherited from Port-Channel Interface
+
+#### IPv4
+
+| Interface | Description | Type | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
+| --------- | ----------- | -----| ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
+| Ethernet2 | P2P_LINK_TO_DC1-LEAF1_Ethernet4 | routed | - | 172.31.0.2/31 | default | 1500 | false | - | - |
+| Ethernet3 | P2P_LINK_TO_DC1-LEAF2_Ethernet4 | routed | - | 172.31.0.10/31 | default | 1500 | false | - | - |
+
+### Ethernet Interfaces Device Configuration
+
+```eos
+!
+interface Ethernet2
+   description P2P_LINK_TO_DC1-LEAF1_Ethernet4
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.31.0.2/31
+!
+interface Ethernet3
+   description P2P_LINK_TO_DC1-LEAF2_Ethernet4
+   no shutdown
+   mtu 1500
+   no switchport
+   ip address 172.31.0.10/31
+```
+
 ## Loopback Interfaces
 
 ### Loopback Interfaces Summary
@@ -289,8 +327,6 @@ ip route vrf MGMT 0.0.0.0/0 10.42.0.2
 | ---------- |
 | no bgp default ipv4-unicast |
 | distance bgp 20 200 200 |
-| graceful-restart restart-time 300 |
-| graceful-restart |
 | maximum-paths 4 ecmp 4 |
 
 ### Router BGP Peer Groups
@@ -319,10 +355,10 @@ ip route vrf MGMT 0.0.0.0/0 10.42.0.2
 
 | Neighbor | Remote AS | VRF |
 | -------- | --------- | --- |
-| 192.168.0.4 | 65002 | default |
+| 172.31.0.3 | 65002 | default |
+| 172.31.0.11 | 65002 | default |
 | 192.168.0.5 | 65002 | default |
-| 192.168.0.6 | 65003 | default |
-| 192.168.0.7 | 65003 | default |
+| 192.168.0.6 | 65002 | default |
 
 ### Router BGP EVPN Address Family
 
@@ -338,8 +374,6 @@ router bgp 65001
    router-id 192.168.0.2
    no bgp default ipv4-unicast
    distance bgp 20 200 200
-   graceful-restart restart-time 300
-   graceful-restart
    maximum-paths 4 ecmp 4
    neighbor EVPN-OVERLAY-PEERS peer group
    neighbor EVPN-OVERLAY-PEERS next-hop-unchanged
@@ -353,18 +387,18 @@ router bgp 65001
    neighbor IPv4-UNDERLAY-PEERS password 7 AQQvKeimxJu+uGQ/yYvv9w==
    neighbor IPv4-UNDERLAY-PEERS send-community
    neighbor IPv4-UNDERLAY-PEERS maximum-routes 12000
-   neighbor 192.168.0.4 peer group EVPN-OVERLAY-PEERS
-   neighbor 192.168.0.4 remote-as 65002
-   neighbor 192.168.0.4 description dc1-leaf1
+   neighbor 172.31.0.3 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.31.0.3 remote-as 65002
+   neighbor 172.31.0.3 description dc1-leaf1_Ethernet4
+   neighbor 172.31.0.11 peer group IPv4-UNDERLAY-PEERS
+   neighbor 172.31.0.11 remote-as 65002
+   neighbor 172.31.0.11 description dc1-leaf2_Ethernet4
    neighbor 192.168.0.5 peer group EVPN-OVERLAY-PEERS
    neighbor 192.168.0.5 remote-as 65002
-   neighbor 192.168.0.5 description dc1-leaf2
+   neighbor 192.168.0.5 description dc1-leaf1
    neighbor 192.168.0.6 peer group EVPN-OVERLAY-PEERS
-   neighbor 192.168.0.6 remote-as 65003
-   neighbor 192.168.0.6 description dc1-leaf3
-   neighbor 192.168.0.7 peer group EVPN-OVERLAY-PEERS
-   neighbor 192.168.0.7 remote-as 65003
-   neighbor 192.168.0.7 description dc1-leaf4
+   neighbor 192.168.0.6 remote-as 65002
+   neighbor 192.168.0.6 description dc1-leaf2
    redistribute connected route-map RM-CONN-2-BGP
    !
    address-family evpn

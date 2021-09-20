@@ -11,6 +11,9 @@
 
 fabric_name: {{ devices[0]['site']['name'] }}_FABRIC
 
+# Set Maximum spines to allow growth to 8 spines
+max_spines: 4
+
 # Point to Point Network Summary range, assigned as /31 for each
 # uplink interfaces
 # Assign range larger then total [spines * total potential leafs * 2]
@@ -54,6 +57,14 @@ mlag_ips:
 # Enable vlan aware bundles
 vxlan_vlan_aware_bundles: true
 
+# Disable EVPN host-flap protection
+evpn_hostflap_detection:
+  enabled: false
+  threshold: 30
+
+# Set short_esi prefix to non-default value
+evpn_short_esi_prefix: "0000:1234:"
+
 # bgp peer groups passwords
 bgp_peer_groups:
   IPv4_UNDERLAY_PEERS:
@@ -65,7 +76,7 @@ bgp_peer_groups:
 
 # Spine Switches
 spine:
-  defaults:
+  {# defaults:
 {% for prefix in site[0]['prefixes'] %}
 {%  if 'overlay' in prefix['role']['name']%}
     loopback_ipv4_pool: {{ prefix['prefix'] }}
@@ -75,10 +86,9 @@ spine:
 {%  if 'vtep' in prefix['role']['name']%}
     vtep_loopback_ipv4_pool: {{ prefix['prefix'] }}
 {%  endif %}
-{% endfor %}
+{% endfor %} #}
 {% for spine in spines %}
 {%  if 'spine1' in spine['name'] %}
-    bgp_as: {{ spine['local_asn'] }}
   platform: {{ spine['platform']['name'] }}
   bgp_as: {{ spine['local_asn'] }}
 {%   endif %}
@@ -94,6 +104,7 @@ spine:
 {%     if iface['name'] == 'Management1' %}
 {%       for addr in iface['ip_addresses'] %}
       mgmt_ip: {{ addr['address'] }}
+      mac_address: {{ iface['mac_address']}}
 {%       endfor %}      
 {%     endif %}
 {%   endfor %}
@@ -106,38 +117,30 @@ spine:
 {% if 'l3leaf' in l3leafs[0]['device_role']['name']%}
 l3leaf:
   defaults:
-    # virtual router mac for VNIs assigned to Leaf switches
-    # format: xx:xx:xx:xx:xx:xx
 {% for leaf in l3leafs %}
 {%   if 'leaf1' in leaf['name']%}
     virtual_router_mac_address: {{ leaf["viritual_router_mac"]}}
     platform: {{ leaf['platform']['name'] }}
 {%   endif %}
 {% endfor %}
-{% for prefix in site[0]['prefixes'] %}
-{%  if 'underlay_p2p' in prefix['role']['name']%}
-    uplink_ipv4_pool: {{ prefix['prefix'] }}
-{%  endif %}
-{% endfor %}
     spines: [{{ spines | join(', ', attribute='name')}}]
-    uplink_interfaces:
+    uplink_to_spine_interfaces:
 {% for interface in l3leafs[0]['interfaces'] %}
 {%   if interface['role'] == 'spine' %}
       - {{ interface['name'] }}
 {%   endif %}
 {% endfor %}
-    uplink_ptp:
-      enabled: true
-    uplink_interface_speed: 9000
     mlag_interfaces:
 {% for interface in l3leafs[0]['interfaces'] %}
 {%   if interface['role'] == 'mlag' %}
       - {{ interface['name'] }}
 {%   endif %}
 {% endfor %}
+    mlag_peer_l3_vlan: 4093
+    mlag_peer_vlan: 4094
     spanning_tree_priority: 4096
     spanning_tree_mode: mstp
-{% for prefix in site[0]['prefixes'] %}
+{# {% for prefix in site[0]['prefixes'] %}
 {%  if 'overlay' in prefix['role']['name']%}
     loopback_ipv4_pool: {{ prefix['prefix'] }}
 {%   endif %}
@@ -156,11 +159,12 @@ l3leaf:
 {%   if 'leaf_peer_p2p' in prefix['role']['name']%}
     mlag_peer_l3_ipv4_pool: {{ prefix['prefix'] }}
 {%   endif %}
-{% endfor %}
+{% endfor %} #}
   node_groups:
 {% for leaf in l3leafs %}
 {%   if 'leaf1' in leaf['name'] %}
     {{ leaf['site']['name'] }}_LEAF1:
+      platform: {{ leaf['platform']['name'] }}
       bgp_as: {{ leaf['local_asn'] }}
 {%   endif %}
 {% endfor %}
@@ -170,17 +174,25 @@ l3leaf:
 {%     set dc = leaf['site']['name'].lower %}
         {{ leaf['name'] }}:
           id: {{ leaf['name'] | regex_replace ('dc[1-9]-leaf', '') }}
+          rack: {{ leaf['rack']['name'] }}
 {%     for iface in leaf['interfaces'] %}
 {%       if iface['name'] == 'Management1' %}
 {%         for addr in iface['ip_addresses'] %}
           mgmt_ip: {{ addr['address'] }}
+          mac_address: {{ iface['mac_address'] }}
 {%         endfor %}
 {%       endif %}
 {%     endfor %}
           spine_interfaces:
 {%     for iface in leaf['interfaces'] %}
-{%       if iface['role'] == 'spine' %}
+{%       if iface['role'] != None and iface['role'] == 'spine' %}
             - {{ iface['connected_interface']['name'] }}
+{%       endif %}
+{%     endfor %}
+          uplink_to_spine_interfaces:
+{%     for iface in leaf['interfaces'] %}
+{%       if iface['role'] != None and iface['role'] == 'spine' %}
+            - {{ iface['name'] }}
 {%       endif %}
 {%     endfor %}
 {%    endif %}
@@ -189,10 +201,10 @@ l3leaf:
 {%   if 'leaf3' in leaf['name'] %}
     {{ leaf['site']['name'] }}_LEAF2:
       bgp_as: {{ leaf['local_asn'] }}
+      nodes:
 {%   endif %}
 {% endfor %}
-      nodes:
-{% for leaf in l3leafs %}
+{%  for leaf in l3leafs %}
 {%   if 'leaf3' in leaf['name'] or 'leaf4' in leaf['name'] %}
 {%     set dc = leaf['site']['name'].lower %}
         {{ leaf['name'] }}:
@@ -210,115 +222,15 @@ l3leaf:
             - {{ iface['connected_interface']['name'] }}
 {%       endif %}
 {%     endfor %}
+          uplink_to_spine_interfaces:
+{%     for iface in leaf['interfaces'] %}
+{%       if iface['role'] != None and iface['role'] == 'spine' %}
+            - {{ iface['name'] }}
+{%       endif %}
+{%     endfor %}
 {%   endif %}
-{% endfor %}
+{%  endfor %}
 {% endif %}
-{#{% if 'borderleaf' in borderleafs[0]['device_role']['name']%}
- borderleaf:
-  defaults:
-    # virtual router mac for VNIs assigned to Leaf switches
-    # format: xx:xx:xx:xx:xx:xx
-{% for leaf in borderleafs %}
-{%   if 'leaf1' in leaf['name']%}
-    virtual_router_mac_address: {{ leaf["viritual_router_mac"]}}
-    platform: {{ leaf['platform']['name'] }}
-{%   endif %}
-{% endfor %}
-    spines: [{{ spines | join(', ', attribute='name')}}]
-    uplink_interfaces:
-{% for interface in borderleafs[0]['interfaces'] %}
-{%   if interface['role'] == 'spine' %}
-      - {{ interface['name'] }}
-{%   endif %}
-{% endfor %}
-    mlag_interfaces:
-{% for interface in borderleafs[0]['interfaces'] %}
-{%   if interface['role'] == 'mlag' %}
-      - {{ interface['name'] }}
-{%   endif %}
-{% endfor %}
-    spanning_tree_priority: 4096
-    spanning_tree_mode: mstp
-{% for prefix in site[0]['prefixes'] %}
-{%  if 'overlay' in prefix['role']['name']%}
-    loopback_ipv4_pool: {{ prefix['prefix'] }}
-{%   endif %}
-{% endfor %}
-{% for prefix in site[0]['prefixes'] %}
-{%  if 'vtep' in prefix['role']['name']%}
-    vtep_loopback_ipv4_pool: {{ prefix['prefix'] }}
-{%   endif %}
-{% endfor %}
-{% for prefix in site[0]['prefixes'] %}
-{%   if 'mlag_peer_p2p' in prefix['role']['name']%}
-    mlag_peer_ipv4_pool: {{ prefix['prefix'] }}
-{%   endif %}
-{% endfor %}
-{% for prefix in site[0]['prefixes'] %}
-{%   if 'leaf_peer_p2p' in prefix['role']['name']%}
-    mlag_peer_l3_ipv4_pool: {{ prefix['prefix'] }}
-{%   endif %}
-{% endfor %}
-  node_groups:
-{% for leaf in borderleafs %}
-{%   if 'leaf1' in leaf['name'] %}
-    {{ leaf['site']['name'] }}_BORDERLEAF1:
-      bgp_as: {{ leaf['local_asn'] }}
-{%   endif %}
-{% endfor %}
-{%   if 'leaf1' in borderleafs[0]['name'] %}
-      nodes:
-{% for leaf in borderleafs %}
-{%   if 'leaf1' in leaf['name'] or 'leaf2' in leaf['name'] %}
-{%     set dc = leaf['site']['name'].lower %}
-        {{ leaf['name'] }}:
-          id: {{ leaf['name'] | regex_replace ('dc[1-9]-borderleaf', '') }}
-{%     for iface in leaf['interfaces'] %}
-{%       if iface['name'] == 'Management1' %}
-{%         for addr in iface['ip_addresses'] %}
-          mgmt_ip: {{ addr['address'] }}
-{%         endfor %}
-{%       endif %}
-{%     endfor %}
-          spine_interfaces:
-{%     for iface in leaf['interfaces'] %}
-{%       if iface['role'] == 'spine' %}
-            - {{ iface['connected_interface']['name'] }}
-{%       endif %}
-{%     endfor %}
-{%    endif %}
-{% endfor %}
-{% endif %}
-{% for leaf in borderleafs %}
-{%   if 'leaf3' in leaf['name'] %}
-    {{ leaf['site']['name'] }}_LEAF2:
-      bgp_as: {{ leaf['local_asn'] }}
-{%   endif %}
-{% endfor %}
-{%   if 'leaf3' in borderleafs[0]['name'] %}
-      nodes:
-{% endif %}
-{% for leaf in borderleafs %}
-{%   if 'leaf3' in leaf['name'] or 'leaf4' in leaf['name'] %}
-{%     set dc = leaf['site']['name'].lower %}
-        {{ leaf['name'] }}:
-          id: {{ leaf['name'] | regex_replace ('dc[1-9]-borderleaf', '') }}
-{%     for iface in leaf['interfaces'] %}
-{%       if iface['name'] == 'Management1' %}
-{%         for addr in iface['ip_addresses'] %}
-          mgmt_ip: {{ addr['address'] }}
-{%         endfor %}
-{%       endif %}
-{%     endfor %}
-          spine_interfaces:
-{%     for iface in leaf['interfaces'] %}
-{%       if iface['role'] == 'spine' %}
-            - {{ iface['connected_interface']['name'] }}
-{%       endif %}
-{%     endfor %}
-{%   endif %}
-{% endfor %}
-{% endif %} #}
 {% if 'l2leaf' in l2leafs[0]['device_role']['name']%}
 l2leaf:
   defaults:
@@ -343,19 +255,19 @@ l2leaf:
     spanning_tree_mode: mstp
     spanning_tree_priority: 16384
   node_groups:
-{%   for leaf in l2leafs %}
-{%     if 'leaf1' in leaf['name'] %}
+{% for leaf in l2leafs %}
+{%   if 'leaf1' in leaf['name'] %}
     {{ leaf['site']['name'] }}_L2LEAF1:
       parent_l3leafs:
-{%       for iface in leaf['interfaces'] %}
-{%         if iface['name'] == 'Ethernet1' or iface['name'] == 'Ethernet2' %}
+{%     for iface in leaf['interfaces'] %}
+{%       if iface['role'] == 'l3leaf' %}
         - {{ iface['connected_interface']['device']['name'] }}
-{%         endif %}
-{%       endfor %}
-{%     endif %}
-{%   endfor%}
+{%       endif %}
+{%     endfor %}
+{%   endif %}
+{% endfor%}
       nodes:
-{%   for leaf in l2leafs %}
+{%  for leaf in l2leafs %}
 {%     if 'leaf1' in leaf['name'] %}
 {%     set dc = leaf['site']['name'].lower %}
         {{ leaf['name'] }}:
@@ -364,6 +276,7 @@ l2leaf:
 {%         if iface['name'] == 'Management1' %}
 {%           for addr in iface['ip_addresses'] %}
           mgmt_ip: {{ addr['address'] }}
+          mac_address: {{ iface['mac_address'] }}
 {%           endfor %}
 {%         endif %}
 {%       endfor %}
@@ -378,15 +291,15 @@ l2leaf:
     {{ leaf['site']['name'] }}_L2LEAF2:
       parent_l3leafs:
 {%       for iface in leaf['interfaces'] %}
-{%         if iface['name'] == 'Ethernet1' or iface['name'] == 'Ethernet2' %}
+{%         if iface['role'] == 'l3leaf' %}
         - {{ iface['connected_interface']['device']['name'] }}
 {%         endif %}
 {%       endfor %}
 {%     endif %}
 {%   endfor%}
-      nodes:
 {%   for leaf in l2leafs %}
 {%     if 'leaf2' in leaf['name'] %}
+      nodes:
 {%     set dc = leaf['site']['name'].lower %}
         {{ leaf['name'] }}:
           id: {{ leaf['name'] | regex_replace ('dc[1-9]-l2leaf', '') }}
@@ -406,32 +319,36 @@ l2leaf:
 {%     endif %}
 {%   endfor %}
 {% endif %}
+
+
 #### Override for vEOS Lab Caveats ####
 
-# Disable update wait-for-convergence and update wait-for-install,
-# which is not supported in vEOS-LAB.
-# Refer to design guide
+# Disable update wait-for-convergence and update wait-for-install, which is not supported in vEOS-LAB.
 
 spine_bgp_defaults:
-  #  - update wait-for-convergence
-  #  - update wait-install
+#  - update wait-for-convergence
+#  - update wait-install
   - no bgp default ipv4-unicast
   - distance bgp 20 200 200
-  - graceful-restart restart-time 300
-  - graceful-restart
 
 leaf_bgp_defaults:
-  #  - update wait-install
+#  - update wait-install
   - no bgp default ipv4-unicast
   - distance bgp 20 200 200
-  - graceful-restart restart-time 300
-  - graceful-restart
 
-# Update p2p mtu 9000 -> 1500
-p2p_uplinks_mtu: 9000
+# Upodate p2p mtu 9000 -> 1500
+p2p_uplinks_mtu: 1500
 
 # Adjust default bfd values
 bfd_multihop:
   interval: 1200
   min_rx: 1200
   multiplier: 3
+
+custom_structured_configuration_prefix: [ 'my_dci_', 'my_special_dci_', 'override_' ]
+
+# Set Hardware Speed Groups per platform
+platform_speed_groups:
+  7280R:             # Only setting speed-groups on 7280R platform, so only L3leaf should get this setting.
+    25G: [ 3, 2 ]    # Unsorted order, but we should sort output correctly.
+    10G: [ 1, 2, 4 ] # Duplicate speed-group 2. Since we sort on key first the result will be 25G for group 2

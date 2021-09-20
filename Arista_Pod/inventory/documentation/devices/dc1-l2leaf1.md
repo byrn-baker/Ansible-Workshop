@@ -213,8 +213,8 @@ vlan internal order ascending range 1006 1199
 
 | Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | Channel-Group |
 | --------- | ----------- | ---- | ----- | ----------- | ----------- | ------------- |
-| Ethernet1 | DC1-LEAF1_Ethernet6 | *trunk | *- | *- | *- | 1 |
-| Ethernet2 | DC1-LEAF2_Ethernet6 | *trunk | *- | *- | *- | 1 |
+| Ethernet3 | DC1-LEAF1_Ethernet7 | *trunk | *- | *- | *- | 3 |
+| Ethernet4 | DC1-LEAF2_Ethernet7 | *trunk | *- | *- | *- | 3 |
 
 *Inherited from Port-Channel Interface
 
@@ -222,15 +222,15 @@ vlan internal order ascending range 1006 1199
 
 ```eos
 !
-interface Ethernet1
-   description DC1-LEAF1_Ethernet6
+interface Ethernet3
+   description DC1-LEAF1_Ethernet7
    no shutdown
-   channel-group 1 mode active
+   channel-group 3 mode active
 !
-interface Ethernet2
-   description DC1-LEAF2_Ethernet6
+interface Ethernet4
+   description DC1-LEAF2_Ethernet7
    no shutdown
-   channel-group 1 mode active
+   channel-group 3 mode active
 ```
 
 ## Port-Channel Interfaces
@@ -241,14 +241,14 @@ interface Ethernet2
 
 | Interface | Description | Type | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
 | --------- | ----------- | ---- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
-| Port-Channel1 | DC1_LEAF1_Po6 | switched | trunk | - | - | - | - | - | - | - |
+| Port-Channel3 | DC1_LEAF1_Po7 | switched | trunk | - | - | - | - | - | - | - |
 
 ### Port-Channel Interfaces Device Configuration
 
 ```eos
 !
-interface Port-Channel1
-   description DC1_LEAF1_Po6
+interface Port-Channel3
+   description DC1_LEAF1_Po7
    no shutdown
    switchport
    switchport mode trunk
