@@ -1,0 +1,222 @@
+ansible_user: arista
+ansible_password: arista123
+ansible_connection: httpapi
+ansible_network_os: eos
+ansible_become: true
+ansible_become_method: enable
+ansible_httpapi_use_ssl: true
+ansible_httpapi_validate_certs: false
+nb_url: http://192.168.130.109:8001
+nb_token: c7fdc6be609a244bb1e851c5e47b3ccd9d990b58
+local_users:
+  admin:
+    privilege: 15
+    role: network-admin
+    sha512_password: $6$ZrUR9Ryw6oocY9wD$2V99a9yvz/yK66KpyzQTSOfccNCiJT3cIVSKnXEIr9L1X8CVbSJdpWJ7iLZskV5yamYXs4AypSar1Uvy6tv5P1
+  cvpadmin:
+    privilege: 15
+    role: network-admin
+    sha512_password: $6$Fdyhzjx0eSwH/PuE$R6r30IPAYaTMLW4iJ17I3rIFTU8ah.CS4RRNtKcFAMCM3VaNCoZY.DSxXoYStrr059jc9nLZGBOX2.aoTrXRB0
+  arista:
+    privilege: 15
+    role: network-admin
+    sha512_password: $6$BTve3BGeYZZta.Wh$Q4bKHY3zqRqrU9sIhifHh/TSMIKWfrJjvooKK0B5Jp5HzoJ79AXLJQ9rcH4D6orlmO/r3PFnkH/vxxoINdcmY/
+cvp_instance_ip: 10.42.0.1
+cvp_ingestauth_key: arista123
+mgmt_gateway: 10.42.0.2
+name_servers:
+- 192.168.130.253
+ntp_servers:
+- 10.42.0.2
+fabric_name: DC1_FABRIC
+max_spines: 4
+underlay_p2p_network_summary: 172.31.0.0/24
+overlay_loopback_network_summary: 192.168.0.0/24
+vtep_loopback_network_summary: 192.168.1.0/24
+mlag_ips:
+  leaf_peer_l3: 10.255.254.0/27
+  mlag_peer: 10.255.252.0/27
+vxlan_vlan_aware_bundles: true
+evpn_hostflap_detection:
+  enabled: false
+  threshold: 30
+evpn_short_esi_prefix: '0000:1234:'
+bgp_peer_groups:
+  IPv4_UNDERLAY_PEERS:
+    password: AQQvKeimxJu+uGQ/yYvv9w==
+  EVPN_OVERLAY_PEERS:
+    password: q+VNViP5i4rVjW1cxFv2wA==
+  MLAG_IPv4_UNDERLAY_PEER:
+    password: vnEaG8gMeQf3d3cN6PktXQ==
+spine:
+  platform: vEOS-LAB
+  bgp_as: 65001
+  leaf_as_range: 65101-65132
+  nodes:
+    dc1-spine1:
+      id: 1
+      mgmt_ip: 10.42.0.21/24
+      mac_address: 50:00:00:0B:00:00
+    dc1-spine2:
+      id: 2
+      mgmt_ip: 10.42.0.22/24
+      mac_address: 50:00:00:0C:00:00
+l3leaf:
+  defaults:
+    virtual_router_mac_address: 00:dc:00:00:00:0a
+    platform: vEOS-LAB
+    spines:
+    - dc1-spine1
+    - dc1-spine2
+    uplink_to_spine_interfaces:
+    - Ethernet3
+    - Ethernet4
+    mlag_interfaces:
+    - Ethernet1
+    - Ethernet2
+    mlag_peer_l3_vlan: 4093
+    mlag_peer_vlan: 4094
+    spanning_tree_priority: 4096
+    spanning_tree_mode: mstp
+  node_groups:
+    DC1_LEAF1:
+      platform: vEOS-LAB
+      bgp_as: 65002
+      nodes:
+        dc1-leaf1:
+          id: 1
+          rack: dc1-leaf-rr-1
+          mgmt_ip: 10.42.0.24/24
+          mac_address: 50:00:00:0E:00:00
+          spine_interfaces:
+          - Ethernet2
+          - Ethernet2
+          uplink_to_spine_interfaces:
+          - Ethernet3
+          - Ethernet4
+        dc1-leaf2:
+          id: 2
+          rack: dc1-leaf-rr-2
+          mgmt_ip: 10.42.0.25/24
+          mac_address: 50:00:00:0F:00:00
+          spine_interfaces:
+          - Ethernet3
+          - Ethernet3
+          uplink_to_spine_interfaces:
+          - Ethernet3
+          - Ethernet4
+l2leaf:
+  defaults:
+    platform: vEOS-LAB
+    parent_l3leafs:
+    - dc1-leaf1
+    - dc1-leaf2
+    uplink_interfaces:
+    - Ethernet3
+    - Ethernet4
+    mlag_interfaces: null
+    spanning_tree_mode: mstp
+    spanning_tree_priority: 16384
+  node_groups:
+    DC1_L2LEAF1:
+      parent_l3leafs:
+      - dc1-leaf1
+      - dc1-leaf2
+      nodes:
+        dc1-l2leaf1:
+          id: 1
+          mgmt_ip: 10.42.0.28/24
+          mac_address: 38880043200
+          l3leaf_interfaces:
+          - Ethernet7
+          - Ethernet7
+spine_bgp_defaults:
+- no bgp default ipv4-unicast
+- distance bgp 20 200 200
+leaf_bgp_defaults:
+- no bgp default ipv4-unicast
+- distance bgp 20 200 200
+p2p_uplinks_mtu: 1500
+bfd_multihop:
+  interval: 1200
+  min_rx: 1200
+  multiplier: 3
+custom_structured_configuration_prefix:
+- my_dci_
+- my_special_dci_
+- override_
+platform_speed_groups:
+  7280R:
+    25G:
+    - 3
+    - 2
+    10G:
+    - 1
+    - 2
+    - 4
+type: spine
+inventory_file: /home/Ansible-Workshop/Arista_Pod/inventory/inventory.yaml
+inventory_dir: /home/Ansible-Workshop/Arista_Pod/inventory
+ansible_host: 10.42.0.22
+inventory_hostname: dc1-spine2
+inventory_hostname_short: dc1-spine2
+group_names:
+- DC1
+- DC1_FABRIC
+- DC1_SPINES
+ansible_facts: {}
+playbook_dir: /home/Ansible-Workshop/Arista_Pod
+ansible_playbook_python: /home/Ansible-Workshop/.venv/bin/python
+ansible_config_file: /home/Ansible-Workshop/Arista_Pod/ansible.cfg
+groups:
+  all:
+  - cvp
+  - dhcp_server
+  - dc1-spine1
+  - dc1-spine2
+  - dc1-l2leaf1
+  - dc1-leaf1
+  - dc1-leaf2
+  ungrouped: []
+  CVP:
+  - cvp
+  - dhcp_server
+  DC1:
+  - dc1-spine1
+  - dc1-spine2
+  - dc1-l2leaf1
+  - dc1-leaf1
+  - dc1-leaf2
+  DC1_FABRIC:
+  - dc1-spine1
+  - dc1-spine2
+  - dc1-l2leaf1
+  - dc1-leaf1
+  - dc1-leaf2
+  DC1_SPINES:
+  - dc1-spine1
+  - dc1-spine2
+  DC1_L3LEAFS:
+  - dc1-leaf1
+  - dc1-leaf2
+  DC1_LEAF1:
+  - dc1-leaf1
+  - dc1-leaf2
+  DC1_L2LEAFS:
+  - dc1-l2leaf1
+omit: __omit_place_holder__cfc9d64335c5d196b2f88066155d432379837392
+ansible_version:
+  string: 2.11.1
+  full: 2.11.1
+  major: 2
+  minor: 11
+  revision: 1
+ansible_check_mode: false
+ansible_diff_mode: false
+ansible_forks: 5
+ansible_inventory_sources:
+- /home/Ansible-Workshop/Arista_Pod/inventory/inventory.yaml
+ansible_skip_tags: []
+ansible_run_tags:
+- debug
+ansible_verbosity: 0

@@ -1,15 +1,8 @@
-#jinja2: lstrip_blocks: "True", trim_blocks: "True"
-{% set devices = nb_devices[0]["data"]["devices"] %}
-{% set site = nb_sites[0]['data']['sites'] %}
-{% set spines = nb_spines[0]['data']['devices'] %}
-{% set l3leafs = nb_l3leafs[0]['data']['devices'] %}
-{% set l2leafs = nb_l2leafs[0]['data']['devices'] %}
-{% set vrfs = nb_vrfs[0]['data']['vrfs'] %}
 {% set ns = namespace() %}
-{% if devices[0]['local_asn'] != None %}
+{% if device['local_asn'] != None %}
 router_bgp:
-  as: {{ devices[0]['local_asn'] }}
-{%   for iface in devices[0]['interfaces'] %}
+  as: {{ device['local_asn'] }}
+{%   for iface in device['interfaces'] %}
 {%     if iface['name'] == 'Loopback0' %}
 {%       for addr in iface['ip_addresses'] %}
 {%         set ns.rid = addr['address'] | ipaddr('address') %}
@@ -17,19 +10,19 @@ router_bgp:
 {%       endfor %}
 {%     endif %}
 {%   endfor %}
-{%   if devices[0]['config_context']['bgp_defaults'] is defined %}
+{%   if device['config_context']['bgp_defaults'] is defined %}
   bgp_defaults:
-{%     for defaults in devices[0]['config_context']['bgp_defaults'] %}
+{%     for defaults in device['config_context']['bgp_defaults'] %}
   - {{ defaults }}
 {%     endfor %}
 {%   endif %}
   peer_groups:
-{%     for peer_group in devices[0]['config_context']['bgp']['peer_groups'] %}
+{%     for peer_group in device['config_context']['bgp']['peer_groups'] %}
     {{ peer_group['name'] }}:
       type: {{ peer_group['type'] }}
 {%       if peer_group['name'] == 'MLAG-IPv4-UNDERLAY-PEER' %}
-      remote_as: {{ devices[0]['local_asn'] }}
-{%       elif peer_group['name'] == 'IPv4-UNDERLAY-PEERS' and devices[0]['device_role']['slug'] == 'l3leaf' %}
+      remote_as: {{ device['local_asn'] }}
+{%       elif peer_group['name'] == 'IPv4-UNDERLAY-PEERS' and device['device_role']['slug'] == 'l3leaf' %}
       remote_as: {{ spines[0]['local_asn'] }}
 {%       endif %}
 {%       if peer_group['next_hop_self'] is defined %}
@@ -63,26 +56,26 @@ router_bgp:
       route_map_in: {{ peer_group['route_map_out'] }}
 {%       endif %}
 {%     endfor %}
-{%   if devices[0]['config_context']['bgp']['address_family']['ipv4'] is defined %}
+{%   if device['config_context']['bgp']['address_family']['ipv4'] is defined %}
   address_family_ipv4:
-{%     if devices[0]['config_context']['bgp']['address_family']['ipv4']['peer_groups'] is defined %}
+{%     if device['config_context']['bgp']['address_family']['ipv4']['peer_groups'] is defined %}
     peer_groups:
-{%       for peer_group in devices[0]['config_context']['bgp']['address_family']['ipv4']['peer_groups'] %}
+{%       for peer_group in device['config_context']['bgp']['address_family']['ipv4']['peer_groups'] %}
       {{ peer_group['name'] }}:
         activate: {{ peer_group['activate'] }}
 {%       endfor %}
 {%     endif %}
 {%   endif %}
-{%   if devices[0]['config_context']['redistribute_routes'] is defined %}
+{%   if device['config_context']['redistribute_routes'] is defined %}
   redistribute_routes:
     connected:
-      route_map: {{ devices[0]['config_context']['redistribute_routes']['connected']['route_map'] }}
+      route_map: {{ device['config_context']['redistribute_routes']['connected']['route_map'] }}
 {%   endif %}
   neighbors:
-{%   for iface in devices[0]['interfaces'] %}
+{%   for iface in device['interfaces'] %}
 {%     if iface['role'] == 'leaf_peer' %}
 {%       for leaf in l3leafs %}
-{%         if devices[0]['local_asn'] == leaf['local_asn'] and leaf['name'] != devices[0]['name'] %}
+{%         if device['local_asn'] == leaf['local_asn'] and leaf['name'] != device['name'] %}
 {%           for iface_leaf in leaf['interfaces'] %}
 {%             if iface_leaf['role'] == 'leaf_peer' %}
 {%               for addr in iface_leaf['ip_addresses'] %}
@@ -111,7 +104,7 @@ router_bgp:
       description: {{ iface['connected_interface']['device']['name'] }}_{{ iface['connected_interface']['name'] }}
 {%     endif %}
 {%   endfor %}
-{%  if devices[0]['device_role']['slug'] == 'spine' %}
+{%  if device['device_role']['slug'] == 'spine' %}
 {%   for leaf in l3leafs %}
 {%     for iface in leaf['interfaces'] %}
 {%       if iface['name'] == 'Loopback0' %}
@@ -124,7 +117,7 @@ router_bgp:
 {%       endif %}
 {%     endfor %}
 {%   endfor %}
-{%  elif devices[0]['device_role']['slug'] == 'l3leaf' %}
+{%  elif device['device_role']['slug'] == 'l3leaf' %}
 {%   for spine in spines %}
 {%     for iface in spine['interfaces'] %}
 {%       if iface['name'] == 'Loopback0' %}
@@ -138,11 +131,11 @@ router_bgp:
 {%     endfor %}
 {%   endfor %}
 {%  endif %}
-{%   if devices[0]['config_context']['bgp']['address_family']['evpn'] is defined %}
+{%   if device['config_context']['bgp']['address_family']['evpn'] is defined %}
   address_family_evpn:
-{%     if devices[0]['config_context']['bgp']['address_family']['evpn']['peer_groups'] is defined %}
+{%     if device['config_context']['bgp']['address_family']['evpn']['peer_groups'] is defined %}
     peer_groups:
-{%       for peer_group in devices[0]['config_context']['bgp']['address_family']['evpn']['peer_groups'] %}
+{%       for peer_group in device['config_context']['bgp']['address_family']['evpn']['peer_groups'] %}
       {{ peer_group['name'] }}:
 {%         if peer_group['activate'] is defined %}
         activate: {{ peer_group['activate'] }}
@@ -156,7 +149,7 @@ router_bgp:
 {%     endif %}
 {%   endif %}
 {% endif %}
-{% if devices[0]['device_role']['slug'] == 'l3leaf' %}
+{% if device['device_role']['slug'] == 'l3leaf' %}
   vrfs:
 {%   for vrf in vrfs %}
 {%     if vrf['name'] != 'MGMT' %}
@@ -179,7 +172,7 @@ router_bgp:
 {%     endif %}
 {%   endfor %}
 {% endif %}
-{% if devices[0]['config_context']['vxlan_vlan_aware_bundles'] is defined and devices[0]['config_context']['vxlan_vlan_aware_bundles'] == 'true' %}
+{% if device['config_context']['vxlan_vlan_aware_bundles'] is defined and device['config_context']['vxlan_vlan_aware_bundles'] == 'true' %}
   vlan_aware_bundles:
 {%   for vrf in vrfs %}
 {%     if vrf['name'] != 'MGMT' %}
@@ -191,13 +184,13 @@ router_bgp:
 {%       endfor %}
     redistribute_routes:
     - learned
-    vlan: {{ devices[0]['site']['vlans'] | selectattr('name', 'match', vrf['name']) | join(',', attribute='vid') }}
+    vlan: {{ device['site']['vlans'] | selectattr('name', 'match', vrf['name']) | join(',', attribute='vid') }}
 {%     endif %}
 {%   endfor %}
 {% endif %}
-{% if devices[0]['config_context']['static_routes'] is defined %}
+{% if device['config_context']['static_routes'] is defined %}
 static_routes:
-{%   for static in devices[0]['config_context']['static_routes'] %}
+{%   for static in device['config_context']['static_routes'] %}
 {%     if static['vrf'] is defined %}
 - vrf: {{ static['vrf'] }}
   destination_address_prefix: {{ static['destination_address_prefix'] }}
@@ -205,86 +198,86 @@ static_routes:
 {%     endif %}
 {%   endfor %}
 {% endif %}
-{% if devices[0]['config_context']['service_routing_protocols_model'] is defined %}
-service_routing_protocols_model: {{ devices[0]['config_context']['service_routing_protocols_model'] }}
+{% if device['config_context']['service_routing_protocols_model'] is defined %}
+service_routing_protocols_model: {{ device['config_context']['service_routing_protocols_model'] }}
 {% endif %}
-{% if devices[0]['device_role']['slug'] == 'spine' or devices[0]['device_role']['slug'] == 'l3leaf' or devices[0]['device_role']['slug'] == 'superspine' %}
+{% if device['device_role']['slug'] == 'spine' or device['device_role']['slug'] == 'l3leaf' or device['device_role']['slug'] == 'superspine' %}
 ip_routing: true
 {% else %}
 ip_routing: false
 {% endif %}
-{% if devices[0]['config_context']['daemon_terminattr'] is defined %}
+{% if device['config_context']['daemon_terminattr'] is defined %}
 daemon_terminattr:
   ingestgrpcurl:
     ips:
-{%   for ip in devices[0]['config_context']['daemon_terminattr']['ingestgrpcurl']['ips'] %}
+{%   for ip in device['config_context']['daemon_terminattr']['ingestgrpcurl']['ips'] %}
     - {{ ip }}
 {%   endfor %}
-  port: {{ devices[0]['config_context']['daemon_terminattr']['ingestgrpcurl']['port'] }}
-  ingestauth_key: {{ devices[0]['config_context']['daemon_terminattr']['ingestauth_key'] }}
-  ingestvrf: {{ devices[0]['config_context']['daemon_terminattr']['ingestvrf'] }}
-  smashexcludes: {{ devices[0]['config_context']['daemon_terminattr']['smashexcludes'] }}
-  ingestexclude: {{ devices[0]['config_context']['daemon_terminattr']['ingestexclude']}}
-  disable_aaa: {{ devices[0]['config_context']['daemon_terminattr']['disable_aaa']}}
+  port: {{ device['config_context']['daemon_terminattr']['ingestgrpcurl']['port'] }}
+  ingestauth_key: {{ device['config_context']['daemon_terminattr']['ingestauth_key'] }}
+  ingestvrf: {{ device['config_context']['daemon_terminattr']['ingestvrf'] }}
+  smashexcludes: {{ device['config_context']['daemon_terminattr']['smashexcludes'] }}
+  ingestexclude: {{ device['config_context']['daemon_terminattr']['ingestexclude']}}
+  disable_aaa: {{ device['config_context']['daemon_terminattr']['disable_aaa']}}
 {% endif %}
-{% if devices[0]['config_context']['vlan_internal_order'] is defined %}
+{% if device['config_context']['vlan_internal_order'] is defined %}
 vlan_internal_order:
-  allocation: {{ devices[0]['config_context']['vlan_internal_order']['allocation'] }}
+  allocation: {{ device['config_context']['vlan_internal_order']['allocation'] }}
   range:
-    beginning: {{ devices[0]['config_context']['vlan_internal_order']['range']['beginning'] }}
-    ending: {{ devices[0]['config_context']['vlan_internal_order']['range']['ending'] }}
+    beginning: {{ device['config_context']['vlan_internal_order']['range']['beginning'] }}
+    ending: {{ device['config_context']['vlan_internal_order']['range']['ending'] }}
 {% endif %}
-{% if devices[0]['config_context']['name_server'] is defined %}
+{% if device['config_context']['name_server'] is defined %}
 name_server:
   source:
-    vrf: {{ devices[0]['config_context']['name_server']['source']['vrf'] }}
+    vrf: {{ device['config_context']['name_server']['source']['vrf'] }}
   nodes:
-{% for node in devices[0]['config_context']['name_server']['nodes'] %}
+{% for node in device['config_context']['name_server']['nodes'] %}
   - {{ node }}
 {% endfor %}
 {% endif %}
-{% if devices[0]['config_context']['ntp_server'] is defined %}
+{% if device['config_context']['ntp_server'] is defined %}
 ntp_server:
   local_interface:
-    vrf: {{ devices[0]['config_context']['ntp_server']['local_interface']['vrf'] }}
-    interface: {{ devices[0]['config_context']['ntp_server']['local_interface']['interface'] }}
+    vrf: {{ device['config_context']['ntp_server']['local_interface']['vrf'] }}
+    interface: {{ device['config_context']['ntp_server']['local_interface']['interface'] }}
   nodes:
-{% for node in devices[0]['config_context']['ntp_server']['nodes'] %}
+{% for node in device['config_context']['ntp_server']['nodes'] %}
   - {{ node }}
 {% endfor %}
 {% endif %}
-{% if devices[0]['config_context']['spanning_tree'] is defined %}
+{% if device['config_context']['spanning_tree'] is defined %}
 spanning_tree:
-  mode: {{ devices[0]['config_context']['spanning_tree']['mode'] }}
-{%   if devices[0]['config_context']['spanning_tree']['mst_instances'] is defined %}
+  mode: {{ device['config_context']['spanning_tree']['mode'] }}
+{%   if device['config_context']['spanning_tree']['mst_instances'] is defined %}
   mst_instances:
-{%     for mst in devices[0]['config_context']['spanning_tree']['mst_instances'] %}
+{%     for mst in device['config_context']['spanning_tree']['mst_instances'] %}
     '{{ mst['number'] }}':
       priority: {{ mst['priority'] }}
 {%     endfor %}
-{%     if devices[0]['config_context']['spanning_tree']['no_spanning_tree_vlan'] is defined %}
-  no_spanning_tree_vlan: {{ devices[0]['config_context']['spanning_tree']['no_spanning_tree_vlan'] }}
+{%     if device['config_context']['spanning_tree']['no_spanning_tree_vlan'] is defined %}
+  no_spanning_tree_vlan: {{ device['config_context']['spanning_tree']['no_spanning_tree_vlan'] }}
 {%     endif %}
 {%   endif %}
 {% endif %}
-{% if devices[0]['config_context']['local_users'] is defined %}
+{% if device['config_context']['local_users'] is defined %}
 local_users:
-{%   for users in devices[0]['config_context']['local_users'] %}
+{%   for users in device['config_context']['local_users'] %}
   {{ users['name'] }}:
     privilege: {{ users['privilege'] }}
     role: {{ users['role'] }}
     sha512_password: {{ users['sha512_password'] }}
 {%   endfor %}
 {% endif %}
-{# {% if devices[0]['config_context']['vrfs'] %}
+{# {% if device['config_context']['vrfs'] %}
 vrfs:
-{%   for vrf in devices[0]['config_context']['vrfs'] %}
+{%   for vrf in device['config_context']['vrfs'] %}
   {{ vrf['name'] }}:
     ip_routing: {{ vrf['ip_routing'] }}
 {%   endfor %}
 {% endif %} #}
 {% for address in nb_ip_addresses[0]['data']['ip_addresses'] %}
-{%   if address['interface']['device']['name'] == devices[0]['name'] %}
+{%   if address['interface']['device']['name'] == device['name'] %}
 {%     if address['vrf'] != None and address['vrf']['name'] == 'MGMT' %}
 vrfs:
   {{ address['vrf']['name'] }}:
@@ -295,22 +288,22 @@ vrfs:
 {%   endif %}
 {% endfor %}
 {% for address in nb_ip_addresses[0]['data']['ip_addresses'] %}
-{%   if address['interface']['device']['name'] == devices[0]['name'] %}
+{%   if address['interface']['device']['name'] == device['name'] %}
 {%     if address['vrf'] != None and address['vrf']['name'] != 'MGMT' %}
   {{ address['vrf']['name'] }}:
     ip_routing: true
 {%     endif %}
 {%   endif %}
 {% endfor %}
-{% if devices[0]['config_context']['management_api_http'] is defined %}
+{% if device['config_context']['management_api_http'] is defined %}
 management_api_http:
-  enable_https: {{ devices[0]['config_context']['management_api_http']['enable_https'] }}
+  enable_https: {{ device['config_context']['management_api_http']['enable_https'] }}
   enable_vrfs:
-{%  for vrf in devices[0]['config_context']['management_api_http']['enable_vrfs'] %}
+{%  for vrf in device['config_context']['management_api_http']['enable_vrfs'] %}
     {{ vrf['name'] }}: {}
 {%  endfor %}
 {% endif %}
-{% for iface in devices[0]['interfaces'] %}
+{% for iface in device['interfaces'] %}
 {%   if iface['name'] == 'Management1' %}
 management_interfaces:
   {{ iface['name'] }}:
@@ -328,9 +321,9 @@ management_interfaces:
 {%     endfor %}
 {%   endif %}
 {% endfor %}
- {% if devices[0]['device_role']['slug'] == 'l3leaf' or devices[0]['device_role']['slug'] == 'l2leaf' and devices[0]['site']['vlans'] != None %}
+ {% if device['device_role']['slug'] == 'l3leaf' or device['device_role']['slug'] == 'l2leaf' and device['site']['vlans'] != None %}
 vlans:
-{%   for vlan in devices[0]['site']['vlans'] %}
+{%   for vlan in device['site']['vlans'] %}
   {{ vlan['vid'] }}:
 {%     if vlan['tenant'] == None %}
     tenant: system
@@ -344,14 +337,14 @@ vlans:
 {%     endif %}
 {%   endfor %}
 {% endif %}
-{% if 'vxlan' in devices[0]['tags'][0]['slug'] %}
+{% if 'vxlan' in device['tags'][0]['slug'] %}
 vxlan_interface:
   Vxlan1:
-    description: {{devices[0]['name']}}_VTEP
+    description: {{device['name']}}_VTEP
     vxlan:
       source_interface: Loopback1
       udp_port: 4789
-{%   for vlan in devices[0]['site']['vlans'] %}
+{%   for vlan in device['site']['vlans'] %}
 {%     if vlan['role'] != None and vlan['role']['slug'] == 'vxlan' %}
       vlans:
         {{vlan['vid']}}:
@@ -368,7 +361,7 @@ vxlan_interface:
 {% endif %}
 {% if l3leaf['defaults']['mlag_peer_l3_vlan'] is defined %}
 vlan_interfaces:
-{%   for iface in devices[0]['interfaces'] %}
+{%   for iface in device['interfaces'] %}
 {%     if 'Vlan' in iface['name'] %}
   {{ iface['name'] }}:
     description: {{ iface['description'] }}
@@ -396,7 +389,7 @@ vlan_interfaces:
 {%   endfor %}
 {% endif %}
 port_channel_interfaces:
-{% for iface in devices[0]['interfaces'] %}
+{% for iface in device['interfaces'] %}
 {%   if 'Port-Channel' in iface['name'] %}
   {{ iface['name'] }}:
     description: {{ iface['description'] }}
@@ -423,7 +416,7 @@ port_channel_interfaces:
 {%     endif %}
 {%   endif %}
 {% endfor %}
-{% for iface in devices[0]['interfaces'] %}
+{% for iface in device['interfaces'] %}
 {%   if iface['name'] == 'Loopback0' %}
 loopback_interfaces:
   {{ iface['name'] }}:
@@ -438,7 +431,7 @@ loopback_interfaces:
 {%     endfor %}
 {%   endif %}
 {% endfor %}
-{% for iface in devices[0]['interfaces'] %}
+{% for iface in device['interfaces'] %}
 {%   if iface['name'] == 'Loopback1' %}
   {{ iface['name'] }}:
     description: {{ iface['description'] }}
@@ -453,7 +446,7 @@ loopback_interfaces:
 {%   endif %}
 {% endfor %}
 ethernet_interfaces:
-{% for iface in devices[0]['interfaces'] %}
+{% for iface in device['interfaces'] %}
 {%   if 'Ethernet' in iface['name'] and iface['label'] == 'Layer3' or 'Ethernet' in iface['name'] and iface['label'] == 'trunk'%}
   {{ iface['name'] }}:
     peer: {{ iface['connected_interface']['device']['name'] }}
@@ -497,18 +490,18 @@ ethernet_interfaces:
 {%     endfor %}
 {%   endif %}
 {% endfor %}
-{% for iface in devices[0]['interfaces'] %}
+{% for iface in device['interfaces'] %}
 {%   if iface['name'] == 'Vlan4094' %}
 mlag_configuration:
 {%   endif %}
 {% endfor%}
-{% if 'leaf1' in devices[0]['name'] or 'leaf2' in devices[0]['name'] and devices[0]['device_role']['slug'] == 'l3leaf' %}
+{% if 'leaf1' in device['name'] or 'leaf2' in device['name'] and device['device_role']['slug'] == 'l3leaf' %}
   domain_id: DC1_LEAF1
-{% for iface in devices[0]['interfaces'] %}
+{% for iface in device['interfaces'] %}
 {%   if iface['name'] == 'Vlan4094' %}
   local_interface: {{ iface['name'] }}
 {%     for leaf in l3leafs %}
-{%       if devices[0]['local_asn'] == leaf['local_asn'] and leaf['name'] != devices[0]['name'] %}
+{%       if device['local_asn'] == leaf['local_asn'] and leaf['name'] != device['name'] %}
 {%         for iface_leaf in leaf['interfaces'] %}
 {%           if iface_leaf['name'] == 'Vlan4094' %}
 {%             for addr in iface_leaf['ip_addresses'] %}
@@ -520,20 +513,20 @@ mlag_configuration:
 {%     endfor %}
 {%   endif %}
 {% endfor %}
-{% for iface in devices[0]['interfaces'] %}
+{% for iface in device['interfaces'] %}
 {%   if 'Port-Channel' in iface['name'] and iface['role'] == 'mlag' %}
   peer_link: {{ iface['name'] }}
   reload_delay_mlag: 300
   reload_delay_non_mlag: 330
 {%   endif %}
 {% endfor %}
-{% elif 'leaf3' in devices[0]['name'] or 'leaf4' in devices[0]['name'] and devices[0]['device_roles']['slug'] == 'l3leaf' %}
+{% elif 'leaf3' in device['name'] or 'leaf4' in device['name'] and device['device_roles']['slug'] == 'l3leaf' %}
   domain_id: DC1_LEAF2
-{% for iface in devices[0]['interfaces'] %}
+{% for iface in device['interfaces'] %}
 {%   if iface['name'] == 'Vlan4094' %}
   local_interface: {{ iface['name'] }}
 {%     for leaf in l3leafs %}
-{%       if devices[0]['local_asn'] == leaf['local_asn'] and leaf['name'] != devices[0]['name'] %}
+{%       if device['local_asn'] == leaf['local_asn'] and leaf['name'] != device['name'] %}
 {%         for iface_leaf in leaf['interfaces'] %}
 {%           if iface_leaf['name'] == 'Vlan4094' %}
 {%             for addr in iface_leaf['ip_addresses'] %}
@@ -545,7 +538,7 @@ mlag_configuration:
 {%     endfor %}
 {%   endif %}
 {% endfor %}
-{% for iface in devices[0]['interfaces'] %}
+{% for iface in device['interfaces'] %}
 {%   if 'Port-Channel' in iface['name'] and iface['role'] == 'mlag' %}
   peer_link: {{ iface['name'] }}
   reload_delay_mlag: 300
@@ -553,9 +546,9 @@ mlag_configuration:
 {%   endif %}
 {% endfor %}
 {% endif %}
-{% if devices[0]['config_context']['prefix_lists'] is defined %}
+{% if device['config_context']['prefix_lists'] is defined %}
 prefix_lists:
-{% for prefix_list in devices[0]['config_context']['prefix_lists'] %}
+{% for prefix_list in device['config_context']['prefix_lists'] %}
   {{ prefix_list['name'] }}:
     sequence_numbers:
 {%    for sequence in prefix_list['sequence_numbers'] %}
@@ -564,9 +557,9 @@ prefix_lists:
 {%    endfor %}
 {% endfor %}
 {% endif %}
-{% if devices[0]['config_context']['route_maps'] is defined %}
+{% if device['config_context']['route_maps'] is defined %}
 route_maps:
-{%   for rm in devices[0]['config_context']['route_maps'] %}
+{%   for rm in device['config_context']['route_maps'] %}
   {{ rm['name'] }}:
     sequence_numbers:
 {%     for sequence in rm['sequence_numbers'] %}
@@ -590,14 +583,14 @@ route_maps:
 {%     endfor %}
 {%   endfor %}
 {% endif %}
-{% if devices[0]['config_context']['router_bfd'] is defined %}
+{% if device['config_context']['router_bfd'] is defined %}
 router_bfd:
   multihop:
-    interval: {{ devices[0]['config_context']['router_bfd']['multihop']['interval'] }}
-    min_rx: {{ devices[0]['config_context']['router_bfd']['multihop']['min_rx'] }}
-    multiplier: {{ devices[0]['config_context']['router_bfd']['multihop']['multiplier'] }}
+    interval: {{ device['config_context']['router_bfd']['multihop']['interval'] }}
+    min_rx: {{ device['config_context']['router_bfd']['multihop']['min_rx'] }}
+    multiplier: {{ device['config_context']['router_bfd']['multihop']['multiplier'] }}
 {% endif %}
-{% if devices[0]['device_role']['slug'] == 'l3leaf' %}
+{% if device['device_role']['slug'] == 'l3leaf' %}
 ip_igmp_snooping:
   globally_enabled: true
-{% endif %} 
+{% endif %}
