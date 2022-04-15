@@ -1,4 +1,4 @@
-theme: jekyll-theme-architect
+theme: jekyll-theme-hacker
 defaults:
   - scope:
       path: "assets/images"
