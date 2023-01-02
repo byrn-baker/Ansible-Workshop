@@ -603,21 +603,20 @@ Create a new file roles/load_nautobot/create_site/tasks/main.yaml
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      name: "{{ item.name }}"
-      status: "{{ item.status }}"
-      asn: "{{ item.asn }}"
-      time_zone: "{{ item.time_zone }}"
-      description: "{{ item.description }}"
-      physical_address: "{{ item.physical_address }}"
-      shipping_address: "{{ item.shipping_address }}"
-      latitude: "{{ item.latitude }}"
-      longitude: "{{ item.longitude }}"
-      contact_name: "{{ item.contact_name }}"
-      contact_phone: "{{ item.contact_phone }}"
-      contact_email: "{{ item.contact_email }}"
-      slug: "{{ item.slug }}"
-      comments: "{{ item.comments }}"
+    name: "{{ item.name }}"
+    status: "{{ item.status }}"
+    asn: "{{ item.asn }}"
+    time_zone: "{{ item.time_zone }}"
+    description: "{{ item.description }}"
+    physical_address: "{{ item.physical_address }}"
+    shipping_address: "{{ item.shipping_address }}"
+    latitude: "{{ item.latitude }}"
+    longitude: "{{ item.longitude }}"
+    contact_name: "{{ item.contact_name }}"
+    contact_phone: "{{ item.contact_phone }}"
+    contact_email: "{{ item.contact_email }}"
+    slug: "{{ item.slug }}"
+    comments: "{{ item.comments }}"
     state: present
   loop: "{{ sites }}"
 ```
@@ -639,10 +638,9 @@ Add a new file roles/load_nautobot/create_rack/tasks.main.yaml
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      name: "{{ item.1.name }}"
-      site: "{{ item.0.slug }}"
-      status: "{{ item.1.status }}"
+    name: "{{ item.1.name }}"
+    site: "{{ item.0.slug }}"
+    status: "{{ item.1.status }}"
     state: present
   loop: "{{ sites | subelements('racks', 'skip_missing=True') }}"  
 ```
@@ -663,11 +661,10 @@ In our next task we will start creating the vlans. Make a new file roles/load_na
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      name: "{{ item.1.name }}"
-      vid: "{{ item.1.vid }}"
-      site: "{{ item.0.slug }}"
-      status: "{{ item.1.status }}"
+    name: "{{ item.1.name }}"
+    vid: "{{ item.1.vid }}"
+    site: "{{ item.0.slug }}"
+    status: "{{ item.1.status }}"
     state: present
   loop: "{{ sites | subelements('vlans', 'skip_missing=True') }}"
 ```
@@ -686,9 +683,8 @@ In our next task we will start creating the vrfs. Make a new file load_nautobot/
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      name: "{{ item.name }}"
-      description: "{{ item.description }}"
+    name: "{{ item.name }}"
+    description: "{{ item.description }}"
     state: present
   loop: "{{ vrf }}"
 
@@ -700,12 +696,11 @@ In our next task we will start creating the vrfs. Make a new file load_nautobot/
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      family: 4
-      prefix: "{{ item.prefix }}"
-      description: "{{ item.description }}"
-      vrf: "{{ item.name }}"
-      status: active
+    family: 4
+    prefix: "{{ item.prefix }}"
+    description: "{{ item.description }}"
+    vrf: "{{ item.name }}"
+    status: active
     state: present  
   loop: "{{ vrf }}"
 ```
@@ -725,12 +720,11 @@ Then we will create the prefixes. Make a new file roles/load_nautobot/create_pre
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      family: 4
-      prefix: "{{ item.1.prefix }}"
-      site: "{{ item.0.slug }}"
-      description: "{{ item.1.description }}"
-      status: active
+    family: 4
+    prefix: "{{ item.1.prefix }}"
+    site: "{{ item.0.slug }}"
+    description: "{{ item.1.description }}"
+    status: active
     state: present  
   loop: "{{ sites | subelements('int_prefixes', 'skip_missing=True') }}"
 ```
@@ -756,8 +750,7 @@ Create more new files
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      name: "{{ item.name }}"
+    name: "{{ item.name }}"
     state: present
   loop: "{{ manufacturer }}"
 
@@ -769,10 +762,9 @@ Create more new files
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      name: "{{ item.1.name }}"
-      manufacturer: "{{ item.0.name }}"
-      napalm_driver: "{{ item.1.napalm_driver }}"
+    name: "{{ item.1.name }}"
+    manufacturer: "{{ item.0.name }}"
+    napalm_driver: "{{ item.1.napalm_driver }}"
     state: present
   loop: "{{ manufacturer | subelements('platform', 'skip_missing=True') }}"    
 
@@ -784,13 +776,12 @@ Create more new files
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      slug: "{{ item.1.slug }}"
-      model: "{{ item.1.name }}"
-      manufacturer: "{{ item.0.name }}"
-      part_number: "{{ item.1.part_number }}"
-      u_height: "{{ item.1.u_height }}"
-      is_full_depth: "{{ item.1.is_full_depth }}"
+    slug: "{{ item.1.slug }}"
+    model: "{{ item.1.name }}"
+    manufacturer: "{{ item.0.name }}"
+    part_number: "{{ item.1.part_number }}"
+    u_height: "{{ item.1.u_height }}"
+    is_full_depth: "{{ item.1.is_full_depth }}"
     state: present
   loop: "{{ manufacturer | subelements('device_types', 'skip_missing=True') }}"
 
@@ -802,9 +793,8 @@ Create more new files
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      name: "{{ item.1.name }}"
-      color: "{{ item.1.color }}"
+    name: "{{ item.1.name }}"
+    color: "{{ item.1.color }}"
     state: present
   loop: "{{ manufacturer | subelements('device_roles', 'skip_missing=True') }}"  
 ```
@@ -828,18 +818,17 @@ Next we can start creating the devices and related items. We will need to make s
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      device: "{{ item.0.name }}"
-      name: "{{ item.1.name }}"
-      description: "{{ item.1.description }}"
-      type: "{{ item.1.type }}"
-      enabled: "{{ item.1.enabled }}"
-      mode: "{{ item.1.mode }}"
-      untagged_vlan:
-        name: "{{ item.1.untag_vlan }}"
-        site: "{{ item.0.site }}"
-      mtu: "{{ item.1.mtu }}"
-      mgmt_only: "{{ item.1.mgmt_only }}"  
+    device: "{{ item.0.name }}"
+    name: "{{ item.1.name }}"
+    description: "{{ item.1.description }}"
+    type: "{{ item.1.type }}"
+    enabled: "{{ item.1.enabled }}"
+    mode: "{{ item.1.mode }}"
+    untagged_vlan:
+      name: "{{ item.1.untag_vlan }}"
+      site: "{{ item.0.site }}"
+    mtu: "{{ item.1.mtu }}"
+    mgmt_only: "{{ item.1.mgmt_only }}"  
     state: present
   loop: "{{ device_list | subelements('access_interfaces', 'skip_missing=True') }}"
 
@@ -851,25 +840,24 @@ Next we can start creating the devices and related items. We will need to make s
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      device: "{{ item.0.name }}"
-      name: "{{ item.1.name }}"
-      description: "{{ item.1.description }}"
-      type: "{{ item.1.type }}"
-      enabled: "{{ item.1.enabled }}"
-      mode: "{{ item.1.mode }}"
-      untagged_vlan:
-        name: "{{ item.1.untag_vlan }}"
+    device: "{{ item.0.name }}"
+    name: "{{ item.1.name }}"
+    description: "{{ item.1.description }}"
+    type: "{{ item.1.type }}"
+    enabled: "{{ item.1.enabled }}"
+    mode: "{{ item.1.mode }}"
+    untagged_vlan:
+      name: "{{ item.1.untag_vlan }}"
+      site: "{{ item.0.site }}"
+    tagged_vlans:
+      - name: "{{ item.1.tagged_vlan_1 }}"
         site: "{{ item.0.site }}"
-      tagged_vlans:
-        - name: "{{ item.1.tagged_vlan_1 }}"
-          site: "{{ item.0.site }}"
-        - name: "{{ item.1.tagged_vlan_2 }}"
-          site: "{{ item.0.site }}"
-        - name: "{{ item.1.tagged_vlan_3 }}"
-          site: "{{ item.0.site }}"    
-      mtu: "{{ item.1.mtu }}"
-      mgmt_only: "{{ item.1.mgmt_only }}"  
+      - name: "{{ item.1.tagged_vlan_2 }}"
+        site: "{{ item.0.site }}"
+      - name: "{{ item.1.tagged_vlan_3 }}"
+        site: "{{ item.0.site }}"    
+    mtu: "{{ item.1.mtu }}"
+    mgmt_only: "{{ item.1.mgmt_only }}"  
     state: present
   loop: "{{ device_list | subelements('trunk_interfaces', 'skip_missing=True') }}"
 
@@ -881,11 +869,10 @@ Next we can start creating the devices and related items. We will need to make s
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      device: "{{ item.0.name }}"
-      name: "{{ item.1.name }}"
-      lag:
-        name: "{{ item.1.lag }}" 
+    device: "{{ item.0.name }}"
+    name: "{{ item.1.name }}"
+    lag:
+      name: "{{ item.1.lag }}" 
     state: present
   loop: "{{ device_list | subelements('lag_interfaces', 'skip_missing=True') }}"
 
@@ -897,14 +884,13 @@ Next we can start creating the devices and related items. We will need to make s
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      device: "{{ item.0.name }}"
-      name: "{{ item.1.name }}"
-      description: "{{ item.1.description }}"
-      type: "{{ item.1.type }}"
-      enabled: "{{ item.1.enabled }}"
-      mtu: "{{ item.1.mtu }}"
-      mgmt_only: "{{ item.1.mgmt_only }}"  
+    device: "{{ item.0.name }}"
+    name: "{{ item.1.name }}"
+    description: "{{ item.1.description }}"
+    type: "{{ item.1.type }}"
+    enabled: "{{ item.1.enabled }}"
+    mtu: "{{ item.1.mtu }}"
+    mgmt_only: "{{ item.1.mgmt_only }}"  
     state: present
   loop: "{{ device_list | subelements('l3_interfaces', 'skip_missing=True') }}"
 
@@ -916,11 +902,10 @@ Next we can start creating the devices and related items. We will need to make s
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      device: "{{ item.0.name }}"
-      name: "{{ item.1.name }}"
-      type: "{{ item.1.type }}"
-      enabled: "{{ item.1.enabled }}" 
+    device: "{{ item.0.name }}"
+    name: "{{ item.1.name }}"
+    type: "{{ item.1.type }}"
+    enabled: "{{ item.1.enabled }}" 
     state: present
   loop: "{{ device_list | subelements('disabled_interfaces', 'skip_missing=True') }}"
 ```
@@ -943,13 +928,12 @@ Lets make a couple more files
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      address: "{{ item.1.ipv4_address }}"
-      vrf: "{{ item.1.vrf }}"
-      status: "{{ item.1.status }}"
-      assigned_object:
-        name: "{{ item.1.name }}"
-        device: "{{ item.0.name }}"
+    address: "{{ item.1.ipv4_address }}"
+    vrf: "{{ item.1.vrf }}"
+    status: "{{ item.1.status }}"
+    assigned_object:
+      name: "{{ item.1.name }}"
+      device: "{{ item.0.name }}"
     state: present
   loop: "{{ device_list | subelements('l3_interfaces', 'skip_missing=True') }}"
   when: item.1.mgmt_only == true
@@ -962,12 +946,11 @@ Lets make a couple more files
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      address: "{{ item.1.ipv4_address }}"
-      status: "{{ item.1.status }}"
-      assigned_object:
-        name: "{{ item.1.name }}"
-        device: "{{ item.0.name }}"
+    address: "{{ item.1.ipv4_address }}"
+    status: "{{ item.1.status }}"
+    assigned_object:
+      name: "{{ item.1.name }}"
+      device: "{{ item.0.name }}"
     state: present
   loop: "{{ device_list | subelements('l3_interfaces', 'skip_missing=True') }}"
   when: item.1.mgmt_only == false
@@ -981,9 +964,8 @@ Lets make a couple more files
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      name: "{{ item.name }}"
-      description: "{{ item.description }}"
+    name: "{{ item.name }}"
+    description: "{{ item.description }}"
     state: present  
   loop: "{{ tags }}"
 
@@ -995,13 +977,12 @@ Lets make a couple more files
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      address: "{{ item.1.ipv4_address }}"
-      status: "{{ item.1.status }}"
-      tags: "{{ item.1.tags }}"
-      assigned_object:
-        name: "{{ item.1.name }}"
-        device: "{{ item.0.name }}"
+    address: "{{ item.1.ipv4_address }}"
+    status: "{{ item.1.status }}"
+    tags: "{{ item.1.tags }}"
+    assigned_object:
+      name: "{{ item.1.name }}"
+      device: "{{ item.0.name }}"
     state: present
   loop: "{{ device_list | subelements('l3_interfaces', 'skip_missing=True') }}"
   when: item.1.tags is defined
