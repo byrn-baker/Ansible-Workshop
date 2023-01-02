@@ -7,11 +7,10 @@
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      address: "{{ item.1.ipv4_address }}"
-      vrf: "{{ item.1.vrf }}"
-      status: "{{ item.1.status }}"
-      assigned_object:
+    address: "{{ item.1.ipv4_address }}"
+    vrf: "{{ item.1.vrf }}"
+    status: "{{ item.1.status }}"
+    assigned_object:
         name: "{{ item.1.name }}"
         device: "{{ item.0.name }}"
     state: present
@@ -26,12 +25,11 @@
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      address: "{{ item.1.ipv4_address }}"
-      status: "{{ item.1.status }}"
-      assigned_object:
-        name: "{{ item.1.name }}"
-        device: "{{ item.0.name }}"
+    address: "{{ item.1.ipv4_address }}"
+    status: "{{ item.1.status }}"
+    assigned_object:
+      name: "{{ item.1.name }}"
+      device: "{{ item.0.name }}"
     state: present
   loop: "{{ device_list | subelements('l3_interfaces', 'skip_missing=True') }}"
   when: item.1.mgmt_only == false

@@ -7,7 +7,6 @@
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      name: "{{ item.name }}"
+    name: "{{ item.name }}"
     state: present
   loop: "{{ manufacturer }}"

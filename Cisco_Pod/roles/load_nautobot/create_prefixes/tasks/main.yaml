@@ -7,11 +7,10 @@
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      family: 4
-      prefix: "{{ item.1.prefix }}"
-      site: "{{ item.0.slug }}"
-      description: "{{ item.1.description }}"
-      status: active
+    family: 4
+    prefix: "{{ item.1.prefix }}"
+    site: "{{ item.0.slug }}"
+    description: "{{ item.1.description }}"
+    status: active
     state: present  
   loop: "{{ sites | subelements('int_prefixes', 'skip_missing=True') }}"

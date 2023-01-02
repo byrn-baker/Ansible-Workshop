@@ -7,9 +7,8 @@
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      name: "{{ item.name }}"
-      description: "{{ item.description }}"
+    name: "{{ item.name }}"
+    description: "{{ item.description }}"
     state: present
   loop: "{{ vrf }}"
 
@@ -21,11 +20,10 @@
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      family: 4
-      prefix: "{{ item.prefix }}"
-      description: "{{ item.description }}"
-      vrf: "{{ item.name }}"
-      status: active
+    family: 4
+    prefix: "{{ item.prefix }}"
+    description: "{{ item.description }}"
+    vrf: "{{ item.name }}"
+    status: active
     state: present  
   loop: "{{ vrf }}"

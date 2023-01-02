@@ -7,9 +7,8 @@ Create Interfaces on the Device Types in Nautobot
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      device_type: "{{ item.0.slug }}" 
-      name: "{{ item.1.name }}"
-      type: "{{ item.1.type }}"
+    device_type: "{{ item.0.slug }}" 
+    name: "{{ item.1.name }}"
+    type: "{{ item.1.type }}"
     state: present
   loop: "{{ device_types  | subelements('interfaces', 'skip_missing=True') }}"

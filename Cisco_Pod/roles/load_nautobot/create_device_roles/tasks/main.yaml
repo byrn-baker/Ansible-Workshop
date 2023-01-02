@@ -7,8 +7,7 @@
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      name: "{{ item.1.name }}"
-      color: "{{ item.1.color }}"
+    name: "{{ item.1.name }}"
+    color: "{{ item.1.color }}"
     state: present
   loop: "{{ manufacturer | subelements('device_roles', 'skip_missing=True') }}"

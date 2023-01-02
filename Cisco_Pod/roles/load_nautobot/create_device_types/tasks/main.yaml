@@ -7,12 +7,11 @@
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      slug: "{{ item.1.slug }}"
-      model: "{{ item.1.name }}"
-      manufacturer: "{{ item.0.name }}"
-      part_number: "{{ item.1.part_number }}"
-      u_height: "{{ item.1.u_height }}"
-      is_full_depth: "{{ item.1.is_full_depth }}"
+    slug: "{{ item.1.slug }}"
+    model: "{{ item.1.name }}"
+    manufacturer: "{{ item.0.name }}"
+    part_number: "{{ item.1.part_number }}"
+    u_height: "{{ item.1.u_height }}"
+    is_full_depth: "{{ item.1.is_full_depth }}"
     state: present
   loop: "{{ manufacturer | subelements('device_types', 'skip_missing=True') }}"

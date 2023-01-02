@@ -7,13 +7,12 @@
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      device: "{{ item.0.name }}"
-      name: "{{ item.1.name }}"
-      description: "{{ item.1.description }}"
-      type: "{{ item.1.type }}"
-      enabled: "{{ item.1.enabled }}"
-      mtu: "{{ item.1.mtu }}"
-      mgmt_only: "{{ item.1.mgmt_only }}"  
+    device: "{{ item.0.name }}"
+    name: "{{ item.1.name }}"
+    description: "{{ item.1.description }}"
+    type: "{{ item.1.type }}"
+    enabled: "{{ item.1.enabled }}"
+    mtu: "{{ item.1.mtu }}"
+    mgmt_only: "{{ item.1.mgmt_only }}"  
     state: present
   loop: "{{ device_list | subelements('l3_interfaces', 'skip_missing=True') }}"

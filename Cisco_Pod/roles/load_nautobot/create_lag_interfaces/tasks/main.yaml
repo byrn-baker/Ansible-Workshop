@@ -7,10 +7,9 @@
     url: "{{ nb_url }}"
     token: "{{ nb_token }}"
     validate_certs: no
-    data:
-      device: "{{ item.0.name }}"
-      name: "{{ item.1.name }}"
-      lag:
-        name: "{{ item.1.lag }}" 
+    device: "{{ item.0.name }}"
+    name: "{{ item.1.name }}"
+    lag:
+      name: "{{ item.1.lag }}" 
     state: present
   loop: "{{ device_list | subelements('lag_interfaces', 'skip_missing=True') }}"
