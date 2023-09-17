@@ -2,9 +2,9 @@
 
 {% include intro.html %}
 
-This workshop intention is to introduce you to Ansible and tools that can help you develop playbooks to be used with Ansible. We will walk through installing python packages including Ansible and proceed to learning how to build playbooks and to push configurations to routers and switches.
+The primary objective of this workshop is to provide an in-depth introduction to Ansible and the associated tools essential for playbook development within the Ansible framework. Throughout this workshop, we will guide you through the process of installing Python packages, with a particular focus on Ansible, and subsequently, we will delve into the intricacies of crafting playbooks and deploying configurations to network routers and switches.
 
-What we will be working toward in this workshop is developing playbooks to help us deploy our standardized office deployment. Below is the diagram of the physical connectivity on each pod. 
+Our ultimate goal during this workshop is to equip participants with the knowledge and skills required to construct playbooks that facilitate the deployment of our standardized office infrastructure. Below, you will find a schematic representation of the physical network connectivity within each pod for reference. 
 <img src="/assets/images/Ansible-WorkShop.png" alt="">
 Using the diagram above as a reference we have several tasks that need to be completed before we can call our deployment completed.
 1. (1) Access switch
