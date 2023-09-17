@@ -1,5 +1,7 @@
 # Welcome to the Ansible_Workshop
-The primary objective of this workshop is to provide an informative introduction to Ansible and the associated tools essential for playbook development in conjunction with Ansible. Throughout this session, we will delve into the installation of Python packages, including Ansible, and subsequently focus on the comprehensive construction of playbooks. Our aim is to equip you with the knowledge and skills necessary for configuring routers and switches efficiently through the utilization of Ansible playbooks.
+The primary objective of this workshop is to provide an in-depth introduction to Ansible and the associated tools essential for playbook development within the Ansible framework. Throughout this workshop, we will guide you through the process of installing Python packages, with a particular focus on Ansible, and subsequently, we will delve into the intricacies of crafting playbooks and deploying configurations to network routers and switches.
+
+Our ultimate goal during this workshop is to equip participants with the knowledge and skills required to construct playbooks that facilitate the deployment of our standardized office infrastructure. Below, you will find a schematic representation of the physical network connectivity within each pod for reference.
 ## Section 1: Install Python3, pip3 and Ansible
 Open the terminal window. type pwd in the terminal and it should be showing you your home directory (/home/lab_user1) for example.
 In the terminal window type the below commands one at a time.
