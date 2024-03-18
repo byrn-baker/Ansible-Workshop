@@ -3,8 +3,8 @@ There are a lot of great Nautobot apps that compliment and extend the usefullnes
 
 We need a Dockerfile:
 ```
-ARG NAUTOBOT_VERSION=1.4.2
-ARG PYTHON_VERSION=3.9
+ARG NAUTOBOT_VERSION=2.1.5
+ARG PYTHON_VERSION=3.11
 FROM ghcr.io/nautobot/nautobot:${NAUTOBOT_VERSION}-py${PYTHON_VERSION}
 ```
 
@@ -147,7 +147,9 @@ We can also add this secret to our cluster as well.
 $ kubectl create secret docker-registry --docker-server=ghcr.io --docker-username=byrn-baker --docker-password=$GITHUB_FLUX_TOKEN -n nautobot ghcr.io
 secret/ghcr.io created
 ```
-Commit and push the changes to your repo.
+Update the helm chart being used in the ```./kubernetes/helmrelease.yaml``` file to the latest version 2.0.5 and makesure that we have the nautobot-ingress described as a ConfigMap with the values pointed to our ingress. You will also need to update the posgresql password key in the ```./kubernetes/values.yaml``` so that it follows this structure - ```postgresql.auth.password```. We will also want to update ```./kubernetes/ingress.yaml``` under routes.services make sure the name is ```nautobot-default```, as this new version changes the name of the service we are trying to match. 
+
+Now commit and push the changes to your repo.
 
 Should see the nautobot pods restarting now, and after a few minutes it should finish initializing.
 ```
@@ -167,3 +169,33 @@ We can also see that the image being used was pulled from our repo
 $ kubectl describe pod -n nautobot nautobot-5b65b45bd8-5lnhj | grep Image
     Image:          ghcr.io/byrn-baker/nautobot-kubernetes:main
 ```
+
+If you notice that the nautobot containers are not fully booting and going through a reboot cycle because of a livelyness checking failing. Check to see if the helm install completed succesfully
+```
+$ kubectl get helmreleases -n nautobot
+NAME       AGE   READY   STATUS
+nautobot   25h   False   Helm upgrade failed for release nautobot/nautobot with chart nautobot@1.3.14: context deadline exceeded
+```
+I ran into an odd issue where the container did not want to update from the networktocode to my customer container. So I uninstalled the deployment ```helm uninstall -n nautobot nautobot```. To have flux install it again run ```flux reconcile helmrelease nautobot -n nautobot```, which tell the cluster to pull the latest commit from the repo and this should fire up the pods for nautobot.
+
+```
+$ kubectl get pods -n nautobot
+NAME                                       READY   STATUS    RESTARTS      AGE
+nautobot-celery-beat-689f8b6df8-m8gxn      1/1     Running   0             65m
+nautobot-celery-default-6b558d5484-gc2lf   1/1     Running   1 (65m ago)   65m
+nautobot-celery-default-6b558d5484-p6cfp   1/1     Running   1 (65m ago)   65m
+nautobot-default-79f9b4f674-55vln          1/1     Running   0             65m
+nautobot-default-79f9b4f674-vm9hc          1/1     Running   0             65m
+nautobot-postgresql-0                      1/1     Running   0             65m
+nautobot-redis-master-0                    1/1     Running   0             65m
+```
+
+We now have the most recent nautobot deployed from our own custom image on our repo.
+
+```
+$ kubectl get pods -n nautobot
+Image:         ghcr.io/byrn-baker/nautobot-kubernetes:main
+```
+
+<img src="/assets/images/kubernetes/nautobot-2.1.5.png" alt="">
+
