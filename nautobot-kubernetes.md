@@ -7,6 +7,6 @@ For great walk throughs on k3s, traefik, metallb and deploying your cluster with
 
 For the original content to the majority of my walk through check out this blog series from networktocode - [part 1](https://blog.networktocode.com/post/deploying-nautobot-to-kubernetes-01/), [part 2](https://blog.networktocode.com/post/deploying-nautobot-to-kubernetes-02/), and [part 3](https://blog.networktocode.com/post/deploying-nautobot-to-kubernetes-03/)
 
-[Part 1 - Setup Flux and deploy Nautobot to your cluster](nautobot-kubernetes_part01.md)
+[Part 1 - Setup Flux and deploy Nautobot to your cluster](nautobot-kubernetes_part1.md)
 
-[Part 2 - Creating your own custom container](nautobot-kubernetes_part02.md)
+[Part 2 - Creating your own custom container](nautobot-kubernetes_part2.md)
